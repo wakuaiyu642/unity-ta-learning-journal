@@ -2188,6 +2188,19 @@ p {
   margin-top: 15px;
 }
 
+.password-settings-panel {
+  margin-top: 15px;
+}
+
+.password-form {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+}
+
+.password-form .success-message {
+  grid-column: 1 / -1;
+}
+
 .stack-form {
   display: grid;
   gap: 13px;
@@ -2827,6 +2840,10 @@ p {
   }
 
   .principles-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .password-form {
     grid-template-columns: 1fr;
   }
 

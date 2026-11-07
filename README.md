@@ -9,7 +9,7 @@ Unity 技术美术学习打卡与作品集 PWA，基于 `Unity_TA_月度与每�
 - 每周手动完成状态
 - 月度路线搜索与展开
 - 作品集验收看板、演示/源码链接和首页发布开关
-- 公开只读、邮箱验证码所有者、受邀编辑者
+- 公开只读、邮箱密码所有者、受邀编辑者
 - PWA 安装、离线外壳和最近数据查看
 - 本地演示模式，无需 Supabase 即可体验
 
@@ -26,7 +26,7 @@ npm run dev
 
 1. 新建 Supabase 项目。
 2. 在 SQL Editor 中执行 `supabase/migrations/202611070001_learning_journal.sql`。
-3. 在 Authentication → Email 配置邮箱验证码模板。模板中需要显示 `{{ .Token }}`。
+3. 在 Authentication → Users 中创建所有者邮箱账号并设置登录密码。
 4. 把前端配置写入 `.env.local`：
 
 ```env
@@ -38,14 +38,15 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
 `SUPABASE_SERVICE_ROLE_KEY` 只用于本地种子脚本和 Edge Function，绝不能加 `VITE_` 前缀，也不能提交到 Git。
 
-5. 启动页面，用所有者邮箱登录一次。
-6. 导入计划并把该账号设为所有者：
+5. 导入计划并把该账号设为所有者：
 
 ```powershell
 npm run seed:supabase -- --owner-email=you@example.com
 ```
 
 种子脚本可以安全重跑：它会刷新课程内容并保留每周状态、复盘、每日记录、附件和已编辑的作品集。
+
+6. 登录网站后，在“协作者 → 修改登录密码”中设置自己的密码。
 
 7. 部署协作者管理函数：
 

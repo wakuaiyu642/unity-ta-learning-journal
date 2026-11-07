@@ -21,15 +21,14 @@ import {
   listCloudCollaborators,
   loadCloudBundle,
   revokeCloudCollaborator,
-  sendEmailOtp,
   signInWithEmailPassword,
   signOutCloud,
   updateCloudPortfolio,
+  updateCloudPassword,
   updateCloudTask,
   updateCloudWeek,
   uploadCloudAttachment,
-  upsertCloudDailyLog,
-  verifyEmailOtp
+  upsertCloudDailyLog
 } from "../lib/supabase-data";
 import { supabase } from "../lib/supabase";
 import {
@@ -72,9 +71,8 @@ interface AppContextValue {
   uploadAttachment: (weekId: string, file: File) => Promise<void>;
   deleteAttachment: (attachment: Attachment) => Promise<void>;
   updatePortfolio: (itemId: string, patch: PortfolioPatch) => Promise<void>;
-  sendOtp: (email: string) => Promise<void>;
   signInWithPassword: (email: string, password: string) => Promise<void>;
-  verifyOtp: (email: string, token: string) => Promise<void>;
+  changePassword: (password: string) => Promise<void>;
   signOut: () => Promise<void>;
   listCollaborators: () => Promise<PlanMember[]>;
   inviteCollaborator: (
@@ -392,10 +390,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [mutateLocal, refresh]
   );
 
-  const sendOtp = useCallback(async (email: string) => {
-    await sendEmailOtp(email);
-  }, []);
-
   const signInWithPassword = useCallback(
     async (email: string, password: string) => {
       await signInWithEmailPassword(email, password);
@@ -405,13 +399,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [queryClient]
   );
 
-  const verifyOtp = useCallback(
-    async (email: string, token: string) => {
-      await verifyEmailOtp(email, token);
-      await queryClient.invalidateQueries({ queryKey: ["plan-role"] });
-    },
-    [queryClient]
-  );
+  const changePassword = useCallback(async (password: string) => {
+    await updateCloudPassword(password);
+  }, []);
 
   const signOut = useCallback(async () => {
     await signOutCloud();
@@ -466,9 +456,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       uploadAttachment,
       deleteAttachment,
       updatePortfolio,
-      sendOtp,
       signInWithPassword,
-      verifyOtp,
+      changePassword,
       signOut,
       listCollaborators,
       inviteCollaborator,
@@ -488,7 +477,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
       revokeCollaborator,
       role,
       saveDailyLog,
-      sendOtp,
       session,
       setDemoEditing,
       signInWithPassword,
@@ -498,7 +486,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       updateWeek,
       uploadAttachment,
       deleteAttachment,
-      verifyOtp
+      changePassword
     ]
   );
 

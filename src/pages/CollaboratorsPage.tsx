@@ -39,6 +39,7 @@ export function CollaboratorsPage() {
     listCollaborators,
     inviteCollaborator,
     revokeCollaborator,
+    changePassword,
     resetDemo
   } = useApp();
   const [members, setMembers] = useState<PlanMember[]>([]);
@@ -48,6 +49,10 @@ export function CollaboratorsPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordBusy, setPasswordBusy] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState("");
 
   useEffect(() => {
     if (!cloudMode || role !== "owner") return;
@@ -96,6 +101,33 @@ export function CollaboratorsPage() {
       setMessage("权限已撤销。");
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : "撤销失败");
+    }
+  };
+
+  const updatePassword = async (event: FormEvent) => {
+    event.preventDefault();
+    setError("");
+    setPasswordMessage("");
+    if (newPassword.length < 10) {
+      setError("密码至少需要 10 个字符。");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setError("两次输入的密码不一致。");
+      return;
+    }
+    setPasswordBusy(true);
+    try {
+      await changePassword(newPassword);
+      setNewPassword("");
+      setConfirmPassword("");
+      setPasswordMessage("登录密码已更新，下次登录请使用新密码。");
+    } catch (nextError) {
+      setError(
+        nextError instanceof Error ? nextError.message : "密码修改失败。"
+      );
+    } finally {
+      setPasswordBusy(false);
     }
   };
 
@@ -264,6 +296,51 @@ export function CollaboratorsPage() {
             )}
           </section>
         </div>
+      )}
+
+      {cloudMode && canEdit && (
+        <section className="panel password-settings-panel">
+          <div className="panel-heading">
+            <div>
+              <p className="eyebrow">账号安全</p>
+              <h2>修改登录密码</h2>
+            </div>
+            <KeyRound size={21} />
+          </div>
+          <form className="stack-form password-form" onSubmit={updatePassword}>
+            <label className="field">
+              <FieldLabel hint="至少 10 个字符">新密码</FieldLabel>
+              <TextInput
+                type="password"
+                value={newPassword}
+                onChange={(event) => setNewPassword(event.target.value)}
+                autoComplete="new-password"
+                required
+              />
+            </label>
+            <label className="field">
+              <FieldLabel>再次输入</FieldLabel>
+              <TextInput
+                type="password"
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+                autoComplete="new-password"
+                required
+              />
+            </label>
+            <Button disabled={passwordBusy}>
+              {passwordBusy ? (
+                <LoaderCircle className="spin" size={17} />
+              ) : (
+                <KeyRound size={17} />
+              )}
+              更新密码
+            </Button>
+            {passwordMessage && (
+              <p className="success-message">{passwordMessage}</p>
+            )}
+          </form>
+        </section>
       )}
 
       {cloudMode && !canEdit && (

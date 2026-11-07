@@ -354,19 +354,6 @@ export async function updateCloudPortfolio(
   if (error) throw error;
 }
 
-export async function sendEmailOtp(email: string) {
-  const client = requireClient();
-  const redirectTo = `${window.location.origin}${import.meta.env.BASE_URL}`;
-  const { error } = await client.auth.signInWithOtp({
-    email,
-    options: {
-      shouldCreateUser: true,
-      emailRedirectTo: redirectTo
-    }
-  });
-  if (error) throw error;
-}
-
 export async function signInWithEmailPassword(
   email: string,
   password: string
@@ -379,13 +366,9 @@ export async function signInWithEmailPassword(
   if (error) throw error;
 }
 
-export async function verifyEmailOtp(email: string, token: string) {
+export async function updateCloudPassword(password: string) {
   const client = requireClient();
-  const { error } = await client.auth.verifyOtp({
-    email,
-    token,
-    type: "email"
-  });
+  const { error } = await client.auth.updateUser({ password });
   if (error) throw error;
 }
 
