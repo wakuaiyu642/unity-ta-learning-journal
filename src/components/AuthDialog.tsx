@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import { KeyRound, Mail, X } from "lucide-react";
 import { useApp } from "../context/AppContext";
 import { Spinner } from "./Feedback";
@@ -9,17 +9,39 @@ interface AuthDialogProps {
 }
 
 export function AuthDialog({ open, onClose }: AuthDialogProps) {
-  const { sendOtp, verifyOtp } = useApp();
+  const { session, sendOtp, signInWithPassword, verifyOtp } = useApp();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
   const [step, setStep] = useState<"email" | "code">("email");
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    if (open && session) onClose();
+  }, [onClose, open, session]);
+
   if (!open) return null;
 
-  const submitEmail = async (event: FormEvent) => {
+  const submitPassword = async (event: FormEvent) => {
     event.preventDefault();
+    setError("");
+    setIsBusy(true);
+    try {
+      await signInWithPassword(email.trim(), password);
+      setPassword("");
+      onClose();
+    } catch (nextError) {
+      setError(
+        nextError instanceof Error ? nextError.message : "邮箱或密码不正确。"
+      );
+    } finally {
+      setIsBusy(false);
+    }
+  };
+
+  const submitEmail = async (event?: FormEvent) => {
+    event?.preventDefault();
     setError("");
     setIsBusy(true);
     try {
@@ -75,16 +97,16 @@ export function AuthDialog({ open, onClose }: AuthDialogProps) {
         </span>
         <p className="eyebrow">所有者 / 协作者</p>
         <h2 id="auth-title">
-          {step === "email" ? "登录后编辑计划" : "输入邮箱验证码"}
+          {step === "email" ? "登录后编辑计划" : "检查登录邮件"}
         </h2>
         <p className="modal-copy">
           {step === "email"
-            ? "访问者无需登录即可查看。登录只用于修改进度、复盘和作品资料。"
-            : `验证码已发送到 ${email}。如果邮件里是登录链接，也请把其中的数字验证码填在这里。`}
+            ? "访问者无需登录即可查看。使用邮箱密码登录，或发送一次性登录邮件。"
+            : `登录邮件已发送到 ${email}。请点击邮件里的登录链接；如果邮件同时显示数字验证码，也可以填在下方。`}
         </p>
 
         {step === "email" ? (
-          <form className="stack-form" onSubmit={submitEmail}>
+          <form className="stack-form" onSubmit={submitPassword}>
             <label className="field">
               <span>邮箱</span>
               <input
@@ -97,8 +119,28 @@ export function AuthDialog({ open, onClose }: AuthDialogProps) {
                 autoFocus
               />
             </label>
+            <label className="field">
+              <span>密码</span>
+              <input
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="输入账号密码"
+                autoComplete="current-password"
+                required
+              />
+            </label>
             <button className="button button-primary" disabled={isBusy}>
-              {isBusy ? <Spinner label="正在发送" /> : "发送验证码"}
+              {isBusy ? <Spinner label="正在登录" /> : "密码登录"}
+            </button>
+            <button
+              className="button button-secondary"
+              type="button"
+              disabled={isBusy || !email.includes("@")}
+              onClick={() => void submitEmail()}
+            >
+              <Mail size={16} />
+              改用一次性登录邮件
             </button>
           </form>
         ) : (
@@ -123,7 +165,7 @@ export function AuthDialog({ open, onClose }: AuthDialogProps) {
               type="button"
               onClick={() => setStep("email")}
             >
-              换一个邮箱
+              返回密码登录
             </button>
           </form>
         )}

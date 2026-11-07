@@ -367,6 +367,18 @@ export async function sendEmailOtp(email: string) {
   if (error) throw error;
 }
 
+export async function signInWithEmailPassword(
+  email: string,
+  password: string
+) {
+  const client = requireClient();
+  const { error } = await client.auth.signInWithPassword({
+    email,
+    password
+  });
+  if (error) throw error;
+}
+
 export async function verifyEmailOtp(email: string, token: string) {
   const client = requireClient();
   const { error } = await client.auth.verifyOtp({

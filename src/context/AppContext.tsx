@@ -22,6 +22,7 @@ import {
   loadCloudBundle,
   revokeCloudCollaborator,
   sendEmailOtp,
+  signInWithEmailPassword,
   signOutCloud,
   updateCloudPortfolio,
   updateCloudTask,
@@ -72,6 +73,7 @@ interface AppContextValue {
   deleteAttachment: (attachment: Attachment) => Promise<void>;
   updatePortfolio: (itemId: string, patch: PortfolioPatch) => Promise<void>;
   sendOtp: (email: string) => Promise<void>;
+  signInWithPassword: (email: string, password: string) => Promise<void>;
   verifyOtp: (email: string, token: string) => Promise<void>;
   signOut: () => Promise<void>;
   listCollaborators: () => Promise<PlanMember[]>;
@@ -394,6 +396,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
     await sendEmailOtp(email);
   }, []);
 
+  const signInWithPassword = useCallback(
+    async (email: string, password: string) => {
+      await signInWithEmailPassword(email, password);
+      await queryClient.invalidateQueries({ queryKey: ["plan-role"] });
+      await queryClient.invalidateQueries({ queryKey: ["plan", PLAN_SLUG] });
+    },
+    [queryClient]
+  );
+
   const verifyOtp = useCallback(
     async (email: string, token: string) => {
       await verifyEmailOtp(email, token);
@@ -456,6 +467,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       deleteAttachment,
       updatePortfolio,
       sendOtp,
+      signInWithPassword,
       verifyOtp,
       signOut,
       listCollaborators,
@@ -479,6 +491,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       sendOtp,
       session,
       setDemoEditing,
+      signInWithPassword,
       signOut,
       updatePortfolio,
       updateTask,
