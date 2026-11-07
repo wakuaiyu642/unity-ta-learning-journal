@@ -1,76 +1,137 @@
 {
-  "schemaVersion": 2,
-  "importedAt": "2026-11-07T17:21:41.560Z",
+  "schemaVersion": 3,
+  "importedAt": "2026-11-07T18:36:08.314Z",
   "sourceDocument": "新建 文本文档.txt",
   "plan": {
     "id": "local-unity-ta",
     "slug": "unity-ta",
-    "title": "Unity 技术美术 TA",
-    "subtitle": "月度主线 · 每日打卡 · 每周复盘",
+    "title": "Unity 技术美术（TA）成长计划",
+    "subtitle": "个人主页 · 成长规划 · 作品集",
     "periodLabel": "2026.11 — 2028.06",
     "primaryFocus": "Unity 技术美术：Shader / HLSL / URP 实时渲染",
-    "supportingFocus": "C#、Unity Editor 工具、渲染调试与性能优化",
-    "stageGoal": "2028 年大四期间，具备应聘 Unity TA 实习的能力。主线聚焦 Unity 6、URP、HLSL、C#、实时渲染与技术美术工具开发。",
-    "principle": "每月只回答三个问题：学什么、做什么、达到什么水平。验收没过就补齐，再进入下一阶段。",
+    "supportingFocus": "C# / Editor 工具、渲染调试与性能优化、DCC 资产管线",
+    "stageGoal": "2027 年暑期尝试实习投递，2027 年秋季（2028 届秋招）达到 Unity TA 实习/初级岗位的可投递水平；20 个月内不承诺独立负责复杂渲染方案。",
+    "principle": "每月只回答三个问题：学什么、做什么、达到什么水平；独立完成度比覆盖面重要。",
     "principles": [
-      "C# 不作为独立课程刷，而是服务于 Unity 项目和 Editor 工具开发。",
-      "数学在光照、坐标、水面和性能问题中按需补，不单独安排漫长复习。",
-      "每个核心效果都要保留一次不看教程的独立复现。",
+      "先有作品，再谈知识面：每月至少一个可运行、可演示、可讲解的交付物。",
+      "每个核心效果都至少保留一次不看教程、不使用 AI 的独立复现；做不到就如实记录卡点。",
+      "AI 可以解释和检查，但 AI 辅助完成的部分必须在作品集与周复盘里标注，不计入独立能力。",
+      "C# 不作为独立课程刷，而是服务于 Unity 项目和 Editor 工具；数学在光照、坐标、水面和性能问题中按需补。",
       "周重点只用于安排节奏，不形成新的周任务或周完成状态。",
-      "每月验收没过时先补齐，不用日期压力掩盖能力缺口。"
+      "每 4 个月留一个缓冲周；考试周、秋招期主动降载，不用赶进度掩盖能力缺口。",
+      "每月验收以能否脱稿解释数据流、能否在新工程里复现为准，不以看完教程为准。"
     ],
     "weeklyTargets": [
       {
         "label": "Shader / HLSL / 教材",
-        "value": "8 小时"
+        "value": "4–5 小时"
       },
       {
-        "label": "C# / Unity",
-        "value": "5 小时"
+        "label": "C# / Editor 工具",
+        "value": "3–4 小时"
       },
       {
-        "label": "数学 / 图形学",
-        "value": "4 小时"
+        "label": "图形学 / 数学",
+        "value": "2 小时"
       },
       {
-        "label": "作品制作 + Git / 总结",
-        "value": "11 小时"
+        "label": "作品制作 + 文档 / 录屏",
+        "value": "4–5 小时"
       }
     ],
     "startDate": "2026-11-09",
     "endDate": "2028-06-30",
     "isPublic": true
   },
+  "profile": {
+    "planId": "local-unity-ta",
+    "displayName": "老王",
+    "headline": "数字媒体艺术本科生 · 大三 · 目标 Unity 技术美术（TA）",
+    "avatarUrl": "",
+    "location": "",
+    "school": "",
+    "major": "数字媒体艺术",
+    "degree": "本科",
+    "grade": "大三",
+    "graduationYear": 2028,
+    "targetRole": "Unity 技术美术（TA）· 实时渲染 / Shader 开发",
+    "targetCompanies": "",
+    "bio": "数字媒体艺术专业本科生，预计 2028 年毕业。目前主攻 Unity 6 + URP + HLSL，方向是实时渲染、Shader 开发与技术美术工具；有 Blender 建模、材质与风格化渲染基础，正在补图形学与 C#。",
+    "selfPositioning": "不是零基础，但还没达到能独立承担 Unity TA 工作的水平：看教程能理解一部分，能跟做和修改已有代码；独立设计技术方案、写完整代码、定位问题和解释底层原理还比较弱。这里记录的是真实进度，不是已经掌握。",
+    "honestyNote": "作品集标注完成度（学习中 / 能跟做 / 能独立 / 可复用）以及是否使用 AI 辅助。AI 辅助完成的部分不计入独立能力。",
+    "skills": [
+      {
+        "name": "Unity 6 / URP",
+        "level": "guided",
+        "note": "了解 GameObject/Component/Transform、Rigidbody/Collider 与生命周期；做过 2D 横版原型（角色移动、相机跟随、Tilemap、随机地图方案）；独立写复杂功能还不足。"
+      },
+      {
+        "name": "C#",
+        "level": "aware",
+        "note": "掌握基础语法与简单 Unity 脚本；类/继承/接口/集合不系统，调试与排错经验少，常需 AI 辅助。"
+      },
+      {
+        "name": "Shader / HLSL",
+        "level": "guided",
+        "note": "《Unity Shader 入门精要》学到 9.3；理解 appdata/v2f/vert/frag、UV、坐标空间与矩阵；做过溶解、Fresnel、UV 动画、Lambert；还不能稳定独立编写。"
+      },
+      {
+        "name": "图形学 / 数学",
+        "level": "aware",
+        "note": "上过 GAMES101，对向量、矩阵、光照模型有印象但比较零散，需要在 Shader 项目中逐步补。"
+      },
+      {
+        "name": "Blender / 美术",
+        "level": "guided",
+        "note": "能基础建模、材质、灯光和场景制作，接触过三渲二与水彩风格化；对材质与渲染底层还需深入。"
+      }
+    ],
+    "highlights": [
+      "2D 横版游戏原型尝试：角色移动、相机跟随、Tilemap 与随机地图方案",
+      "Unity Shader 基础效果合集：溶解、Fresnel、UV 动画、Lambert 光照",
+      "Blender 风格化视觉练习（三渲二 / 水彩风格）",
+      "GAMES101 图形学基础学习",
+      "正在系统补 C#、Editor 工具与实时渲染"
+    ],
+    "links": {
+      "githubUrl": "https://github.com/wakuaiyu642",
+      "email": "",
+      "resumeUrl": "",
+      "websiteUrl": "",
+      "showEmail": false
+    },
+    "updatedAt": "2026-11-08T00:00:00.000Z"
+  },
   "phases": [
     {
       "id": "phase-foundation",
-      "title": "第一阶段：补齐基础，真正理解 Shader",
-      "range": "2026.11—2027.01",
-      "description": "从当前进度继续，围绕顶点片元数据流、纹理、光照和 URP 结构建立可解释、可独立实现的基础。"
+      "title": "第一阶段：基础与独立复现",
+      "range": "2026.11—2027.02",
+      "description": "把 Shader 数据流、坐标空间、光照与 URP 最小结构练到能脱离教程写出来；同时补 C# 基础与 Git，为作品集打底。"
     },
     {
-      "id": "phase-advanced",
-      "title": "第二阶段：进阶学习与作品制作",
-      "range": "2027.02—2027.04",
-      "description": "围绕动态效果、水面、环境材质和可讲述的完整作品展开。"
+      "id": "phase-portfolio",
+      "title": "第二阶段：作品集 v1",
+      "range": "2027.03—2027.06",
+      "description": "围绕风格化渲染、水面/环境效果和 Editor 工具做出 3 个能讲清楚的作品；6 月冻结作品集 v1 与简历初稿。"
     },
     {
-      "id": "phase-specialize",
-      "title": "第三阶段：深入 URP、工具与专项能力",
-      "range": "2027.05—2027.08",
-      "description": "从单体效果进入工程化、性能分析与 Editor 工具，形成可展示的作品集。"
+      "id": "phase-apply",
+      "title": "第三阶段：投递与面试",
+      "range": "2027.07—2027.10",
+      "description": "暑期/日常实习与 2028 届提前批、秋招并行；学习以面试反馈驱动，作品集 v2 边投边改。"
     },
     {
-      "id": "phase-career",
-      "title": "第四阶段：集中投递与面试迭代",
-      "range": "2027.09—2027.10",
-      "description": "通过投递、模拟面试和作品复盘，发现并补齐真实岗位差距。"
+      "id": "phase-iterate",
+      "title": "第四阶段：面试驱动补齐",
+      "range": "2027.11—2028.02",
+      "description": "按面试反馈补性能优化、渲染管线与工具短板；准备春招与毕设开题。"
     },
     {
-      "id": "phase-job-ready",
-      "title": "第五阶段：高级能力与岗位衔接",
-      "range": "2027.11—2028.06",
-      "description": "在实战中提升 GPU 计算、渲染优化和技术表达，面向实习与初级岗位。"
+      "id": "phase-graduate",
+      "title": "第五阶段：春招与毕业",
+      "range": "2028.03—2028.06",
+      "description": "春招/补录、毕设收尾与入职衔接；保持轻量学习，不再开新大主题。"
     }
   ],
   "months": [
@@ -94,29 +155,23 @@
         "模型空间、世界空间、观察空间和裁剪空间",
         "矩阵如何组合 MVP 变换，以及乘法顺序为什么重要",
         "向量点乘、叉乘、归一化在光照和方向判断中的用途",
-        "UV 插值、顶点颜色插值和屏幕空间插值的直觉",
-        "ShaderLab 中 Properties、SubShader、Pass、Tags 的基础结构",
-        "Alpha Test 与 Alpha Blend 的初步区别",
-        "URP 中 `#pragma vertex`、`#pragma fragment` 的基础写法"
+        "C# 基础：变量 / 方法 / 组件引用在 Unity 脚本中的写法"
       ],
       "practice": [
         "从空白 Shader 写出顶点片元最小结构，并能在 URP 中运行",
         "分别显示 UV、顶点颜色和法线三种可视化结果",
         "手写 Lambert 漫反射并逐项解释计算含义",
-        "写一个可调颜色与强度的基础材质",
-        "绘制一张从模型顶点到片元像素的数据流图"
+        "Git 提交 + README 记录本月交付物"
       ],
       "weeklyFocus": [
         "先补齐 ShaderLab/HLSL 基础语法和 URP 最小结构",
         "专门理解坐标空间与矩阵，不急于堆复杂效果",
-        "把 Lambert 公式拆成法线、光照方向和点乘",
-        "独立复写一次基础 Shader，并录下讲解"
+        "把 Lambert 公式拆成法线、光照方向和点乘"
       ],
       "acceptance": [
         "从空白工程独立写出一个可运行的 URP 顶点片元 Shader",
         "能口头解释顶点数据如何到达片元着色器",
-        "能解释 UV、Normal、顶点颜色三种数据分别如何参与输出",
-        "基础 Shader 至少保留一次不看教程的独立复写"
+        "能解释 UV、Normal、顶点颜色三种数据分别如何参与输出"
       ],
       "pitfalls": [
         "把 Shader 的运行成功当成理解，但无法说明每个变量来自哪里",
@@ -142,7 +197,10 @@
         "能够独立编写基础顶点/片元 Shader",
         "理解并可视化常见顶点数据和坐标空间",
         "形成 Shader 数据流与技术说明的雏形"
-      ]
+      ],
+      "deliverable": "一个能在 URP 中运行的最小顶点/片元 Shader + 一张手绘渲染数据流图",
+      "evidenceGate": "无教程重写 vert/frag，解释每个语义变量来源，并录 2 分钟讲解",
+      "estimatedHours": 56
     },
     {
       "id": "month-2026-12",
@@ -164,29 +222,23 @@
         "Alpha Test 与 Alpha Blend 的渲染差异",
         "透明物体排序、深度测试和深度写入",
         "step、smoothstep、lerp、saturate 的值域与用途",
-        "噪声纹理的基本采样与阈值控制",
-        "Fresnel 边缘光与视线、法线的关系",
-        "溶解效果的阈值、边缘区间与颜色控制",
-        "URP 光照模式下纹理与颜色的基本组合"
+        "C# 基础：变量 / 方法 / 组件引用在 Unity 脚本中的写法"
       ],
       "practice": [
         "完成 UV 滚动、UV 扭曲和滚动速度参数",
         "完成透明材质与 Alpha 裁剪两种对照实验",
         "独立实现带边缘颜色的溶解 Shader",
-        "完成 Fresnel 边缘光与可控强度参数",
-        "整理至少 5 个效果的效果合集和截图"
+        "Git 提交 + README 记录本月交付物"
       ],
       "weeklyFocus": [
         "先把采样、过滤和 MipMap 观察清楚，再写效果",
         "对比 Alpha Test 与 Alpha Blend 的视觉和排序差异",
-        "用 smoothstep 控制溶解边缘并独立推导参数范围",
-        "整理效果合集，删除只能复制代码的无效案例"
+        "用 smoothstep 控制溶解边缘并独立推导参数范围"
       ],
       "acceptance": [
         "效果合集中至少 5 个效果可独立复现",
         "能解释纹理过滤、Wrap Mode 和 MipMap 的作用",
-        "能说明透明物体出现排序问题的原因",
-        "溶解效果包含可调阈值和边缘颜色，并能讲清核心计算"
+        "能说明透明物体出现排序问题的原因"
       ],
       "pitfalls": [
         "复制节点或代码后只调参数，没有理解采样与阈值逻辑",
@@ -212,14 +264,17 @@
         "具备纹理采样、透明混合和溶解效果实现经验",
         "能够为 Shader 参数设计可视化调节项",
         "完成一套可展示的基础 Shader 效果合集"
-      ]
+      ],
+      "deliverable": "UV / 贴图 / 顶点色可视化 + 一次透明排序对比记录",
+      "evidenceGate": "独立实现一次 UV 动画或溶解效果，并说明参数与混合方式",
+      "estimatedHours": 56
     },
     {
       "id": "month-2027-01",
       "month": "2027.01",
       "monthKey": "2027-01",
       "stageId": "phase-foundation",
-      "title": "光照模型与 URP 基础渲染结构",
+      "title": "光照模型与 URP 基础结构（期末缓冲月）",
       "phaseGoal": "光照模型与 URP 基础渲染结构",
       "startDate": "2027-01-01",
       "endDate": "2027-01-31",
@@ -234,29 +289,23 @@
         "PBR 中 Albedo、Metallic、Roughness、Normal 的含义",
         "URP Shader 的 LightMode、Pass 和 Tags 基础",
         "Built-in 与 URP 在 Shader include 和光照宏上的差异",
-        "阴影采样和光照衰减的基本概念",
-        "卡通光照的色阶化处理与阈值",
-        "风格化渲染中形状、颜色与光照的取舍",
-        "顶点/片元计算成本和常见性能约束"
+        "C# 基础：变量 / 方法 / 组件引用在 Unity 脚本中的写法"
       ],
       "practice": [
         "独立实现 Lambert、Half-Lambert 和 Blinn-Phong 对照场景",
         "制作一个带高光和阴影控制的卡通光照材质",
         "实现一个风格化材质并录制参数变化演示",
-        "把一份 Built-in 基础 Shader 改写为 URP 可运行版本",
-        "整理一张 Lambert 与 Blinn-Phong 的计算对照表"
+        "Git 提交 + README 记录本月交付物"
       ],
       "weeklyFocus": [
         "把光照公式逐项写出，不依赖宏或教程抄写",
         "比较 Lambert、Half-Lambert 和 Blinn-Phong 的差异",
-        "完成 Built-in 到 URP 的迁移，记录 API 变化",
-        "集中打磨一个风格化材质，而不是同时做多个半成品"
+        "完成 Built-in 到 URP 的迁移，记录 API 变化"
       ],
       "acceptance": [
         "能独立实现基础光照并解释每个向量和参数",
         "能展示 Built-in 到 URP 的一次完整改写",
-        "完成一个有展示价值的风格化光照 Shader",
-        "能从计算成本角度说明为什么选择某种光照模型"
+        "完成一个有展示价值的风格化光照 Shader"
       ],
       "pitfalls": [
         "只会使用 URP 自带光照宏，无法解释公式",
@@ -282,14 +331,17 @@
         "掌握基础光照模型并能迁移到 URP",
         "具备风格化 Shader 设计和参数调优能力",
         "形成可以进入作品集的光照实验记录"
-      ]
+      ],
+      "deliverable": "Lambert / 半兰伯特 / Blinn-Phong 可切换 Demo",
+      "evidenceGate": "手写光照公式并解释点乘与法线变换；期末周只要求保底复现",
+      "estimatedHours": 40
     },
     {
       "id": "month-2027-02",
       "month": "2027.02",
       "monthKey": "2027-02",
-      "stageId": "phase-advanced",
-      "title": "动态 Shader 与程序化视觉",
+      "stageId": "phase-foundation",
+      "title": "动态 Shader、程序化视觉与 C# 基础（寒假）",
       "phaseGoal": "动态 Shader 与程序化视觉",
       "startDate": "2027-02-01",
       "endDate": "2027-02-28",
@@ -304,29 +356,23 @@
         "插值、阈值和平滑过渡的动态控制",
         "噪声纹理、FBM 和扰动的基本思想",
         "Fresnel 边缘光随时间变化的应用",
-        "火焰、扫描线、护盾等效果的结构拆解",
-        "顶点风动与物体空间方向的关系",
-        "动态溶解的阈值、边缘和噪声组合",
-        "效果参数的可复用组织方式"
+        "C# 基础：变量 / 方法 / 组件引用在 Unity 脚本中的写法"
       ],
       "practice": [
         "完成流动纹理、扫描线和顶点波动三个基础实验",
         "实现一个可调速度、方向和强度的动态水面原型",
         "制作能量护盾、Fresnel 边缘和扰动组合效果",
-        "完成动态溶解与自定义边缘颜色",
-        "制作动态 Shader 效果合集并录制演示"
+        "Git 提交 + README 记录本月交付物"
       ],
       "weeklyFocus": [
         "先掌握时间、UV 和周期函数的共同结构",
         "比较顶点动画与片元动画的视觉差异和成本",
-        "完成护盾或能量类综合效果",
-        "整理 5 个动态效果并逐个讲清核心公式"
+        "完成护盾或能量类综合效果"
       ],
       "acceptance": [
         "至少 5 个动态效果能脱离教程独立复现",
         "能解释时间、UV、噪声和顶点位移的组合关系",
-        "参数变化能够稳定呈现预期视觉，不依赖固定资源",
-        "具备一个可继续扩展的动态 Shader 原型"
+        "参数变化能够稳定呈现预期视觉，不依赖固定资源"
       ],
       "pitfalls": [
         "效果只在某一套贴图上成立，换成基础纹理就无法工作",
@@ -352,14 +398,17 @@
         "能够使用时间、UV 和噪声构建动态 Shader",
         "掌握顶点与片元阶段的效果分工",
         "完成可展示的动态效果合集"
-      ]
+      ],
+      "deliverable": "溶解 + 顶点波动效果 + 一个控制参数的 C# 脚本",
+      "evidenceGate": "脱离教程完成一次溶解效果，说明噪声、阈值与边缘宽度的关系",
+      "estimatedHours": 72
     },
     {
       "id": "month-2027-03",
       "month": "2027.03",
       "monthKey": "2027-03",
-      "stageId": "phase-advanced",
-      "title": "动态水面系统与作品化",
+      "stageId": "phase-portfolio",
+      "title": "动态水面系统与性能基线",
       "phaseGoal": "动态水面系统与作品化",
       "startDate": "2027-03-01",
       "endDate": "2027-03-31",
@@ -374,29 +423,23 @@
         "透明混合、渲染顺序和深度写入",
         "反射、折射与简化的环境颜色近似",
         "顶点波动与片元法线扰动的配合",
-        "岸边泡沫、深度交界和遮罩控制",
-        "参数面板、材质属性与脚本控制",
-        "水面场景的灯光、相机和展示构图",
-        "性能预算与效果复杂度取舍"
+        "C# 基础：变量 / 方法 / 组件引用在 Unity 脚本中的写法"
       ],
       "practice": [
         "搭建 URP 水面基础场景和可调材质",
         "实现双层法线滚动和顶点波动",
         "加入水深颜色、Fresnel 和岸边泡沫",
-        "增加脚本统一控制流速、强度和颜色",
-        "录制演示、整理源码、参数说明与限制"
+        "Git 提交 + README 记录本月交付物"
       ],
       "weeklyFocus": [
         "先完成能运行的水面基础，再逐项叠加效果",
         "优先解决透明度、深度和法线方向问题",
-        "做一轮性能观察并记录瓶颈",
-        "整理成作品：演示视频、README 和关键代码"
+        "做一轮性能观察并记录瓶颈"
       ],
       "acceptance": [
         "水面项目在 Unity 6 + URP 中稳定运行",
         "至少包含双层法线、波动、Fresnel 和深度交界",
-        "参数可调并有清晰的场景演示",
-        "具备演示视频、技术说明和一次独立复写记录"
+        "参数可调并有清晰的场景演示"
       ],
       "pitfalls": [
         "只在演示场景好看，换相机或光照后效果失效",
@@ -422,14 +465,17 @@
         "完成 Unity 6 + URP 动态水面作品",
         "具备多纹理、深度与透明效果整合经验",
         "能够围绕渲染效果写技术说明和展示材料"
-      ]
+      ],
+      "deliverable": "水面 Demo v1（双层法线 / 波动 / Fresnel / 深度交界）+ Frame Debugger 基线记录",
+      "evidenceGate": "独立复现水面，并能逐层解释每张纹理在数据流里的作用",
+      "estimatedHours": 56
     },
     {
       "id": "month-2027-04",
       "month": "2027.04",
       "monthKey": "2027-04",
-      "stageId": "phase-advanced",
-      "title": "环境材质与风格化渲染",
+      "stageId": "phase-portfolio",
+      "title": "环境材质、风格化渲染与 Blender 资产管线",
       "phaseGoal": "环境材质与风格化渲染",
       "startDate": "2027-04-01",
       "endDate": "2027-04-30",
@@ -444,29 +490,23 @@
         "高度混合、噪声遮罩和过渡控制",
         "法线混合的基础方法与常见失真",
         "积雪、湿润和地表材质的状态变化",
-        "风格化草地的形状、颜色与风动",
-        "水彩、手绘或卡通材质的实现原则",
-        "参数组织和材质变体控制",
-        "环境材质系统的可维护性设计"
+        "C# 基础：变量 / 方法 / 组件引用在 Unity 脚本中的写法"
       ],
       "practice": [
         "完成地面多纹理和遮罩混合实验",
         "实现积雪、湿润地面和岩石过渡",
         "制作基于顶点颜色的材质控制",
-        "完成风格化草地与风动效果",
-        "搭建一个可展示的环境材质场景"
+        "Git 提交 + README 记录本月交付物"
       ],
       "weeklyFocus": [
         "先做通用混合框架，再添加不同材质",
         "验证世界/物体坐标变化时纹理是否稳定",
-        "集中处理法线、颜色和高光的统一性",
-        "把多个原型收拢成一个环境材质系统"
+        "集中处理法线、颜色和高光的统一性"
       ],
       "acceptance": [
         "环境场景至少整合三种材质变化",
         "能解释纹理混合、坐标空间和遮罩的作用",
-        "至少完成一种风格化环境材质",
-        "材质参数可调且效果在场景中保持一致"
+        "至少完成一种风格化环境材质"
       ],
       "pitfalls": [
         "纹理混合只靠固定贴图，坐标变化后失效",
@@ -492,14 +532,17 @@
         "掌握环境材质混合与风格化渲染",
         "能够将多个 Shader 效果整合成系统",
         "具备可展现场景与材质参数设计能力"
-      ]
+      ],
+      "deliverable": "环境材质场景（积雪 / 湿润 / 混合）+ 一份 Blender→Unity 资产规范笔记",
+      "evidenceGate": "独立完成一次积雪/湿润混合并解释遮罩来源；能说明导入设置与贴图预算",
+      "estimatedHours": 56
     },
     {
       "id": "month-2027-05",
       "month": "2027.05",
       "monthKey": "2027-05",
-      "stageId": "phase-specialize",
-      "title": "URP 渲染管线、Pass 与后处理",
+      "stageId": "phase-portfolio",
+      "title": "URP 渲染管线、Renderer Feature 与后处理",
       "phaseGoal": "URP 渲染管线、Pass 与后处理",
       "startDate": "2027-05-01",
       "endDate": "2027-05-31",
@@ -514,29 +557,23 @@
         "全屏 Blit、后处理和屏幕空间采样",
         "灰度、描边、屏幕扭曲等基础后处理",
         "CommandBuffer 与渲染指令组织",
-        "RenderGraph 的基本概念与使用边界",
-        "渲染事件的执行顺序",
-        "后处理对性能与分辨率的影响",
-        "自定义渲染功能的调试方法"
+        "C# 基础：变量 / 方法 / 组件引用在 Unity 脚本中的写法"
       ],
       "practice": [
         "实现一个简单全屏灰度或色彩后处理",
         "完成基于法线/深度的描边实验",
         "实现一个自定义 Renderer Feature",
-        "用 Frame Debugger 记录完整 Pass 顺序",
-        "将一个后处理原型整理成可复用组件"
+        "Git 提交 + README 记录本月交付物"
       ],
       "weeklyFocus": [
         "先理解 URP 渲染顺序，再写自定义 Pass",
         "完成最小 Renderer Feature 并验证注入点",
-        "用 Frame Debugger 对照代码与渲染事件",
-        "整理一个后处理案例与性能观察"
+        "用 Frame Debugger 对照代码与渲染事件"
       ],
       "acceptance": [
         "能够说明自定义 Pass 在 URP 流程中的位置",
         "完成一个可稳定运行的 Renderer Feature",
-        "能解释 Depth/Opaque Texture 的来源和用途",
-        "至少保留一个基于 Frame Debugger 的调试记录"
+        "能解释 Depth/Opaque Texture 的来源和用途"
       ],
       "pitfalls": [
         "只调用现成后处理组件，没有理解 Pass 注入",
@@ -556,24 +593,23 @@
         {
           "label": "Unity 6 · URP 全屏 Pass",
           "href": "https://docs.unity3d.com/cn/6000.0/Manual/urp/renderer-features/renderer-feature-full-screen-pass.html"
-        },
-        {
-          "label": "Unity 6 · Frame Debugger",
-          "href": "https://docs.unity3d.com/cn/6000.0/ScriptReference/FrameDebugger.html"
         }
       ],
       "resumeEvidence": [
         "能够开发 URP 自定义 Renderer Feature",
         "理解渲染管线阶段、全屏后处理与纹理读取",
         "具备使用 Frame Debugger 定位渲染问题的经验"
-      ]
+      ],
+      "deliverable": "一个自定义 Renderer Feature / 后处理效果 + 前后对比",
+      "evidenceGate": "能画出 URP 一帧渲染顺序，并解释 Pass 的插入位置",
+      "estimatedHours": 56
     },
     {
       "id": "month-2027-06",
       "month": "2027.06",
       "monthKey": "2027-06",
-      "stageId": "phase-specialize",
-      "title": "C# 与 Unity Editor 工具开发",
+      "stageId": "phase-portfolio",
+      "title": "C#、Editor 工具与作品集 v1 冻结",
       "phaseGoal": "C# 与 Unity Editor 工具开发",
       "startDate": "2027-06-01",
       "endDate": "2027-06-30",
@@ -588,29 +624,23 @@
         "EditorWindow、MenuItem 与 Custom Inspector",
         "SerializedObject、SerializedProperty 和撤销支持",
         "材质、Shader 和贴图资源的引用检查",
-        "批量修改参数与异常输入处理",
-        "进度、提示、预览和用户体验",
-        "工具代码的模块拆分和可测试性",
-        "Unity Editor API 的版本兼容意识"
+        "C# 基础：变量 / 方法 / 组件引用在 Unity 脚本中的写法"
       ],
       "practice": [
         "实现材质扫描并输出结果列表",
         "检查材质缺失贴图和无效引用",
         "实现批量修改材质参数",
-        "制作查找指定 Shader 或材质的 EditorWindow",
-        "导出资源检查报告并提供错误提示"
+        "Git 提交 + README 记录本月交付物"
       ],
       "weeklyFocus": [
         "先做资源扫描最小闭环",
         "把数据读取、规则判断和 UI 展示拆开",
-        "补齐异常处理和撤销支持",
-        "整理成能在真实项目运行的工具"
+        "补齐异常处理和撤销支持"
       ],
       "acceptance": [
         "工具能在 Editor 中扫描并修改真实材质",
         "可处理缺失资源、空引用和无效输入",
-        "界面能看到结果、进度和错误原因",
-        "具备 README、演示和至少一次独立复写"
+        "界面能看到结果、进度和错误原因"
       ],
       "pitfalls": [
         "工具仅在测试资源上有效，真实工程路径和权限未验证",
@@ -632,14 +662,17 @@
         "具备 Unity Editor 工具开发经验",
         "能够设计资源扫描与批量处理流程",
         "形成可运行、可演示的工具项目"
-      ]
+      ],
+      "deliverable": "材质/贴图检查与批量处理工具 v1，以及作品集 v1（3 个核心作品 + README/演示）",
+      "evidenceGate": "工具能在新工程独立跑通并解释 AssetDatabase 流程；作品集可在 30 秒内看懂方向",
+      "estimatedHours": 64
     },
     {
       "id": "month-2027-07",
       "month": "2027.07",
       "monthKey": "2027-07",
-      "stageId": "phase-specialize",
-      "title": "动态环境材质系统与工程整合",
+      "stageId": "phase-apply",
+      "title": "投递窗口：日常实习与 2028 届提前批",
       "phaseGoal": "动态环境材质系统与工程整合",
       "startDate": "2027-07-01",
       "endDate": "2027-07-31",
@@ -647,69 +680,57 @@
       "completedAt": null,
       "sortOrder": 9,
       "learning": [
-        "环境 Shader 的统一参数接口",
-        "全局 Shader 参数与场景状态控制",
-        "MaterialPropertyBlock 的适用边界",
-        "C# 脚本与 Shader 参数的交互",
-        "积雪、湿润、混合和风动的统一更新",
-        "批量材质的性能与 Draw Call 基础",
-        "资源组织的命名、目录和依赖规范",
-        "状态切换的过渡与防抖",
-        "工具与运行时代码的职责分离",
-        "可调参数和预设的持久化",
-        "项目 README 与技术讲解结构"
+        "TA 实习/校招的岗位画像与筛选标准",
+        "简历结构：项目证据、量化结果、技术关键词",
+        "作品集叙事：问题—方案—结果",
+        "高频 TA 面试题：渲染管线、光照模型、性能定位",
+        "投递渠道与内推方式"
       ],
       "practice": [
-        "建立统一的材质参数管理组件",
-        "实现积雪、湿润和草地状态联动",
-        "用 Editor 工具批量维护材质资源",
-        "加入天气/时间状态切换与过渡",
-        "录制完整系统演示并整理技术文档"
+        "把 3 个作品改写成可投递的项目条目",
+        "完成一版 TA 简历并找 1 个人 review",
+        "整理 20 道高频 TA 面试题并标出不会的",
+        "投递 5 个日常实习 / 提前批岗位并记录反馈"
       ],
       "weeklyFocus": [
-        "先确定统一参数与状态模型",
-        "完成 Shader 与 C# 的闭环控制",
-        "检查批量和性能数据",
-        "集中完成展示、文档和工程清理"
+        "先改简历与作品集描述，再投",
+        "每场沟通后 24 小时内复盘",
+        "不会的面试题当天补，不攒"
       ],
       "acceptance": [
-        "环境材质系统包含至少三种可协同效果",
-        "能通过脚本统一控制场景表现",
-        "Editor 工具能辅助维护材质",
-        "具备演示视频、性能记录和可运行工程"
+        "简历 v1 完成，能 60 秒讲清 3 个项目",
+        "投递 ≥5 个岗位且有记录",
+        "整理出 20 道高频题并标出 3 个以上薄弱点"
       ],
       "pitfalls": [
-        "每个效果独立调参，状态切换后互相覆盖",
-        "滥用 MaterialPropertyBlock 导致材质状态不可追踪",
-        "工具和运行时脚本重复维护同一套参数",
-        "工程依赖混乱，换机器后无法打开"
+        "只投不总结，把投递数量当成果",
+        "简历或作品集说法不一致、链接失效",
+        "只等结果不补弱"
       ],
       "references": [
         {
-          "label": "Unity 6 · URP 无光照 Shader",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/urp/writing-shaders-urp-basic-unlit-structure.html"
+          "label": "Unity 6 官方文档",
+          "href": "https://docs.unity3d.com/cn/6000.0/Manual/index.html"
         },
         {
-          "label": "Unity 6 · URP 自定义渲染通道",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/urp/renderer-features/custom-rendering-pass-workflow-in-urp.html"
-        },
-        {
-          "label": "《Unity Shader 入门精要》",
+          "label": "目标公司招聘页（自行补充）",
           "href": ""
         }
       ],
       "resumeEvidence": [
-        "完成动态环境材质系统项目",
-        "掌握 Shader、C# 与 Editor 工具联动",
-        "能够从工程结构角度组织技术美术项目"
-      ]
+        "完成 TA 简历 v1 与 3 个作品的项目条目",
+        "建立投递记录与高频面试题库"
+      ],
+      "deliverable": "简历 v1 + 投递记录表 + 高频面试题库 v1",
+      "evidenceGate": "完成至少 5 个岗位投递或内推沟通，并逐条记录反馈",
+      "estimatedHours": 40
     },
     {
       "id": "month-2027-08",
       "month": "2027.08",
       "monthKey": "2027-08",
-      "stageId": "phase-specialize",
-      "title": "作品集整理与专业表达",
+      "stageId": "phase-apply",
+      "title": "技术表达与提前批投递",
       "phaseGoal": "作品集整理与专业表达",
       "startDate": "2027-08-01",
       "endDate": "2027-08-31",
@@ -717,65 +738,56 @@
       "completedAt": null,
       "sortOrder": 10,
       "learning": [
-        "技术美术作品集应证明什么能力",
-        "项目痛点、方案、结果三段式叙事",
-        "核心技术亮点的筛选方法",
-        "演示视频的节奏、画面对比和字幕",
-        "README、架构图和技术说明结构",
-        "GitHub 仓库清理与运行依赖说明",
-        "性能数据如何表达才可信",
-        "作品截图与封面设计规范",
-        "不同岗位对 Shader/工具/环境方向的要求",
-        "简历中的项目责任与结果描述",
-        "作品集入口与链接组织"
+        "演示视频的节奏、对比画面与字幕",
+        "README / 技术说明的结构",
+        "项目技术取舍与失败实验的表达",
+        "提前批流程与面试安排"
       ],
       "practice": [
-        "筛选至少三个可以公开展示的核心作品",
-        "为每个作品录制 30–90 秒演示视频",
-        "补齐 README、核心代码、截图和性能分析",
-        "整理 GitHub 仓库与可运行说明",
-        "做一版个人作品集入口页"
+        "为 3 个作品各录 60–90 秒演示视频",
+        "补齐每个作品的 README、截图与核心代码说明",
+        "完成提前批投递并记录",
+        "准备 3 分钟作品讲解稿"
       ],
       "weeklyFocus": [
-        "盘点项目，坚决删掉缺乏完成度的 Demo",
-        "统一视频与截图风格",
-        "补齐每个项目的技术说明和性能证据",
-        "从招聘方视角审阅一遍作品集"
+        "视频先讲问题再放效果",
+        "README 只写能验证的内容",
+        "提前批越早投越好"
       ],
       "acceptance": [
-        "至少 3 个完整作品可在新环境中运行",
-        "每个作品有视频、源码、截图和技术说明",
-        "作品集首页能在 30 秒内看出方向与能力",
-        "性能和核心实现不是只靠口头描述"
+        "3 个作品都有视频、README 和可运行说明",
+        "能在 3 分钟内讲清一个作品的技术点",
+        "提前批投递完成并有记录"
       ],
       "pitfalls": [
-        "堆叠大量半成品，没有完整项目",
-        "视频只展示效果，不说明实现和取舍",
-        "仓库缺少依赖、运行步骤或平台说明",
-        "把学习笔记当作技术能力证明"
+        "只投不总结，把投递数量当成果",
+        "简历或作品集说法不一致、链接失效",
+        "只等结果不补弱"
       ],
       "references": [
         {
-          "label": "Unity 6 · URP 无光照 Shader",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/urp/writing-shaders-urp-basic-unlit-structure.html"
+          "label": "Unity 6 官方文档",
+          "href": "https://docs.unity3d.com/cn/6000.0/Manual/index.html"
         },
         {
-          "label": "Microsoft Learn · C# 指南",
-          "href": "https://learn.microsoft.com/zh-cn/dotnet/csharp/"
+          "label": "Unity 6 · URP 手册",
+          "href": "https://docs.unity3d.com/cn/6000.0/Manual/urp/index.html"
         }
       ],
       "resumeEvidence": [
-        "拥有可公开展示的 Unity TA 作品集",
-        "具备项目包装、技术表达和演示制作能力",
-        "形成多个可复用的项目案例"
-      ]
+        "完成 3 个作品的演示视频与技术说明",
+        "完成提前批投递并留存记录"
+      ],
+      "deliverable": "3 个 60–90 秒演示视频 + 每个作品的 README/技术说明",
+      "evidenceGate": "能在 3 分钟内讲清一个作品的问题—方案—结果；提前批完成投递",
+      "estimatedHours": 40
     },
     {
       "id": "month-2027-09",
       "month": "2027.09",
       "monthKey": "2027-09",
-      "stageId": "phase-career",
-      "title": "技术提升与招聘准备",
+      "stageId": "phase-apply",
+      "title": "秋招正式批与面试复盘",
       "phaseGoal": "技术提升与招聘准备",
       "startDate": "2027-09-01",
       "endDate": "2027-09-30",
@@ -783,69 +795,56 @@
       "completedAt": null,
       "sortOrder": 11,
       "learning": [
-        "GPU 与 CPU 的工作分工",
-        "Draw Call、Batching 与 Instancing 基础",
-        "Shader 变体与关键字",
-        "纹理压缩和带宽的直观影响",
-        "Profiler、Frame Debugger 的定位流程",
-        "性能瓶颈的分类与验证方法",
-        "常见 Shader 面试题的知识结构",
-        "作品讲解中的技术取舍表达",
-        "Unity TA、Shader 开发和实时特效岗位差异",
-        "简历关键词与项目证据的对应",
-        "目标岗位能力矩阵"
+        "秋招流程与投递节奏",
+        "TA 面试常见问题：渲染管线、光照、材质、性能",
+        "面试复盘方法",
+        "根据反馈定位知识缺口"
       ],
       "practice": [
-        "对一个现有作品做性能分析",
-        "优化至少一个 Shader 或渲染配置",
-        "整理技术博客或原理说明",
-        "收集目标岗位招聘要求并建立能力矩阵",
-        "完成一版技术简历"
+        "秋招投递并记录",
+        "每场面试后写复盘",
+        "每周补 1 个高频面试题",
+        "按反馈调整作品集排序与讲解重点"
       ],
       "weeklyFocus": [
-        "建立性能分析基线",
-        "把优化前后结果量化",
-        "研究真实招聘要求而非泛泛准备",
-        "完成简历与作品链接的统一叙事"
+        "投递与复盘优先于学新内容",
+        "不会的问题当天查清",
+        "保持作品集随时可演示"
       ],
       "acceptance": [
-        "能解释一次真实性能瓶颈和优化结果",
-        "完成岗位能力矩阵和简历初稿",
-        "至少一篇技术说明能支撑作品讲解",
-        "能区分不同 TA 岗位的技术侧重点"
+        "完成秋招投递并保留记录",
+        "每场面试都有复盘",
+        "至少补齐 5 个高频问题"
       ],
       "pitfalls": [
-        "优化只凭感觉，没有 Profiler 证据",
-        "简历堆技术名词，没有可验证项目",
-        "把 Draw Call 降低误认为性能一定提升",
-        "目标岗位范围过大，准备没有优先级"
+        "只投不总结，把投递数量当成果",
+        "简历或作品集说法不一致、链接失效",
+        "只等结果不补弱"
       ],
       "references": [
         {
-          "label": "Unity 6 · Profiler 窗口",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/profiler-window-navigating.html"
+          "label": "目标公司招聘页（自行补充）",
+          "href": ""
         },
         {
-          "label": "Unity 6 · Frame Debugger",
-          "href": "https://docs.unity3d.com/cn/6000.0/ScriptReference/FrameDebugger.html"
-        },
-        {
-          "label": "Microsoft Learn · C# 指南",
-          "href": "https://learn.microsoft.com/zh-cn/dotnet/csharp/"
+          "label": "Unity 6 官方文档",
+          "href": "https://docs.unity3d.com/cn/6000.0/Manual/index.html"
         }
       ],
       "resumeEvidence": [
-        "能够使用 Profiler 和 Frame Debugger 分析渲染问题",
-        "具备性能优化与结果验证经验",
-        "完成面向 Unity TA 岗位的求职材料"
-      ]
+        "完成秋招投递与逐场面试复盘",
+        "补齐高频面试问题清单"
+      ],
+      "deliverable": "秋招投递记录 + 每场面试复盘（问题 / 不会的点 / 补法）",
+      "evidenceGate": "每场面试后 24 小时内写复盘，并补齐 1 个高频问题",
+      "estimatedHours": 32
     },
     {
       "id": "month-2027-10",
       "month": "2027.10",
       "monthKey": "2027-10",
-      "stageId": "phase-career",
-      "title": "实习投递与面试反馈迭代",
+      "stageId": "phase-apply",
+      "title": "面试迭代与作品集 v2 方向",
       "phaseGoal": "实习投递与面试反馈迭代",
       "startDate": "2027-10-01",
       "endDate": "2027-10-31",
@@ -853,69 +852,56 @@
       "completedAt": null,
       "sortOrder": 12,
       "learning": [
-        "岗位 JD 的硬性要求与加分项拆解",
-        "简历投递渠道与岗位匹配方法",
-        "技术面试中的项目追问方式",
-        "Shader 基础题的表达结构",
-        "C#、Unity 生命周期和组件题",
-        "矩阵、光照、深度和渲染流程口述",
-        "面试反馈记录与复盘方法",
-        "作品集针对性调整策略",
-        "技术演示中的边界与局限性说明",
-        "常见行为面试问题",
-        "投递节奏与时间管理"
+        "作品集 v2 方向：按岗位反馈取舍",
+        "面试 Q&A 与项目追问",
+        "性能 / 管线问题专项",
+        "简历迭代"
       ],
       "practice": [
-        "每周投递一批匹配岗位并记录反馈",
-        "进行至少两轮模拟技术面试",
-        "根据反馈修改简历和作品集",
-        "完成一次 10 分钟项目讲解",
-        "整理面试错题和知识缺口"
+        "整理 ≥3 场面试反馈",
+        "完成作品集 v2 修改清单",
+        "补 5 个高频原理题",
+        "更新简历 v2"
       ],
       "weeklyFocus": [
-        "建立持续投递和反馈记录",
-        "围绕高频面试题做口头训练",
-        "针对反馈只补最重要短板",
-        "复盘项目讲述而非重复背答案"
+        "按反馈改，不按想象改",
+        "每个作品只留最能打的部分",
+        "简历与作品集口径一致"
       ],
       "acceptance": [
-        "正式开始实习投递并形成记录表",
-        "至少完成两轮模拟面试",
-        "能连续讲清一个作品的痛点、方案和结果",
-        "根据真实反馈完成一次简历或作品修订"
+        "有 ≥3 场面试反馈记录",
+        "作品集 v2 修改清单明确到条目",
+        "简历 v2 完成并自查"
       ],
       "pitfalls": [
-        "只投递不记录，无法判断问题来源",
-        "面试后只记题目，不分析回答结构",
-        "被拒后立刻更换学习方向",
-        "项目讲解只讲功能，不讲技术选择与限制"
+        "只投不总结，把投递数量当成果",
+        "简历或作品集说法不一致、链接失效",
+        "只等结果不补弱"
       ],
       "references": [
         {
-          "label": "Unity 6 · Profiler 窗口",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/profiler-window-navigating.html"
+          "label": "目标公司招聘页（自行补充）",
+          "href": ""
         },
         {
-          "label": "Unity 6 · Frame Debugger",
-          "href": "https://docs.unity3d.com/cn/6000.0/ScriptReference/FrameDebugger.html"
-        },
-        {
-          "label": "Microsoft Learn · C# 指南",
-          "href": "https://learn.microsoft.com/zh-cn/dotnet/csharp/"
+          "label": "Unity 6 · URP 手册",
+          "href": "https://docs.unity3d.com/cn/6000.0/Manual/urp/index.html"
         }
       ],
       "resumeEvidence": [
-        "具备完整实习投递和面试复盘流程",
-        "能够围绕 Unity TA 项目进行技术表达",
-        "形成基于岗位反馈的持续改进机制"
-      ]
+        "基于真实面试反馈迭代作品集与简历",
+        "整理高频面试 Q&A"
+      ],
+      "deliverable": "作品集 v2 修改清单 + 高频面试 Q&A",
+      "evidenceGate": "根据至少 3 场真实反馈调整作品集与简历",
+      "estimatedHours": 32
     },
     {
       "id": "month-2027-11",
       "month": "2027.11",
       "monthKey": "2027-11",
-      "stageId": "phase-job-ready",
-      "title": "Compute Shader 入门",
+      "stageId": "phase-iterate",
+      "title": "性能优化专项（面试驱动）",
       "phaseGoal": "Compute Shader 入门",
       "startDate": "2027-11-01",
       "endDate": "2027-11-30",
@@ -923,65 +909,56 @@
       "completedAt": null,
       "sortOrder": 13,
       "learning": [
-        "CPU 与 GPU 并行执行模型的差异",
-        "Compute Shader 资产与 kernel",
-        "线程组、线程 ID 和分组 ID",
-        "numthreads 与 Dispatch 的参数关系",
-        "ComputeBuffer 的创建、填充、读取与释放",
-        "StructuredBuffer、纹理与 RWTexture 的基础用途",
-        "CPU 与 GPU 数据同步和异步回读",
-        "边界判断、越界访问与线程安全",
-        "简单并行算法的分解方式",
-        "平台支持与运行能力检查",
-        "Compute Shader 调试与性能观察"
+        "Draw Call、Batching、Instancing 与 SRP Batcher",
+        "Overdraw、带宽、纹理压缩与 Shader 变体",
+        "Profiler / Frame Debugger / RenderDoc 使用",
+        "优化前后数据记录方法"
       ],
       "practice": [
-        "运行最小 Compute Shader 并输出结果",
-        "用 ComputeBuffer 在 CPU/GPU 间传递数组",
-        "实现一个简单并行计算 Demo",
-        "比较不同线程组大小的执行结果",
-        "整理一次 Dispatch 参数与数据流说明"
+        "选一个作品做完整性能分析",
+        "定位至少 1 个瓶颈并优化",
+        "记录优化前后 GPU/CPU 时间与 draw call",
+        "写一篇优化 case 文档"
       ],
       "weeklyFocus": [
-        "先跑通最小 kernel 和 Dispatch",
-        "理解线程索引与 buffer 下标",
-        "验证边界条件和资源释放",
-        "完成一个可解释的小型计算案例"
+        "先测量再优化",
+        "一次只改一个变量",
+        "记录数据而不是感觉"
       ],
       "acceptance": [
-        "能从 C# 创建并 dispatch 一个 Compute Shader",
-        "能解释线程组和全局线程索引的关系",
-        "资源使用后正确释放，没有明显内存泄漏",
-        "至少完成一个可重复运行的并行计算实验"
+        "有可复现的瓶颈定位过程",
+        "优化前后有量化数据对比",
+        "能解释优化为什么有效"
       ],
       "pitfalls": [
-        "Dispatch 线程数与 numthreads 混为一谈",
-        "数组越界导致结果随机或崩溃",
-        "频繁同步回读造成 CPU/GPU 性能下降",
-        "只会在固定设备上运行，没有检查平台支持"
+        "只投不总结，把投递数量当成果",
+        "简历或作品集说法不一致、链接失效",
+        "只等结果不补弱"
       ],
       "references": [
         {
-          "label": "Unity 6 · 创建 Compute Shader",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/class-ComputeShader-create.html"
+          "label": "Unity 6 官方文档",
+          "href": "https://docs.unity3d.com/cn/6000.0/Manual/index.html"
         },
         {
-          "label": "Microsoft Learn · C# 指南",
-          "href": "https://learn.microsoft.com/zh-cn/dotnet/csharp/"
+          "label": "Unity 6 · URP 手册",
+          "href": "https://docs.unity3d.com/cn/6000.0/Manual/urp/index.html"
         }
       ],
       "resumeEvidence": [
-        "具备 Compute Shader 数据传递和 Dispatch 基础",
-        "理解 GPU 并行计算与线程索引",
-        "完成可运行的 GPU 计算实验"
-      ]
+        "完成一次可复现的渲染性能优化案例",
+        "能用数据说明优化前后差异"
+      ],
+      "deliverable": "一个作品的性能优化案例：瓶颈定位、修改、优化前后数据对比",
+      "evidenceGate": "能用 Frame Debugger / Profiler 复现瓶颈，并解释优化为什么有效",
+      "estimatedHours": 40
     },
     {
       "id": "month-2027-12",
       "month": "2027.12",
       "monthKey": "2027-12",
-      "stageId": "phase-job-ready",
-      "title": "GPU 粒子与实时特效",
+      "stageId": "phase-iterate",
+      "title": "渲染管线进阶与作品集 v2",
       "phaseGoal": "GPU 粒子与实时特效",
       "startDate": "2027-12-01",
       "endDate": "2027-12-31",
@@ -989,65 +966,56 @@
       "completedAt": null,
       "sortOrder": 14,
       "learning": [
-        "粒子位置、速度和生命周期的模拟结构",
-        "基于时间的积分和边界处理",
-        "粒子发射、回收与容量管理",
-        "Compute Shader 写入粒子 Buffer",
-        "Instanced Mesh 或 DrawMeshInstancedIndirect",
-        "粒子材质、排序与混合模式",
-        "噪声、外力与随机种子",
-        "CPU/GPU 参数同步",
-        "粒子系统性能预算",
-        "交互输入与特效反馈",
-        "GPU 粒子调试与可视化"
+        "URP 渲染流程与 SRP 扩展点",
+        "Renderer Feature 与 CommandBuffer",
+        "RenderGraph（如版本支持）",
+        "一帧数据流与插入点"
       ],
       "practice": [
-        "实现 CPU 版粒子原型作为对照",
-        "用 Compute Shader 更新粒子位置与速度",
-        "渲染一万级粒子并观察性能",
-        "加入噪声、风力和交互吸引效果",
-        "制作并录制一个实时特效 Demo"
+        "实现一个 CommandBuffer / Renderer Feature 小实验",
+        "画出 URP 一帧渲染顺序图",
+        "作品集 v2 补充管线实验",
+        "准备管线面试回答"
       ],
       "weeklyFocus": [
-        "先完成最小粒子状态更新",
-        "把模拟与渲染链路接通",
-        "加入交互并控制粒子数量",
-        "记录性能数据并完成展示材料"
+        "先画流程再写扩展",
+        "实验只做一个点",
+        "作品集更新与实验同步"
       ],
       "acceptance": [
-        "GPU 粒子系统可连续运行并正确回收粒子",
-        "粒子效果包含至少一种外部扰动或交互",
-        "完成 CPU/GPU 方案在性能或实现上的对比",
-        "项目具备演示视频和关键技术说明"
+        "小实验能运行并有前后对比",
+        "能脱稿解释一帧渲染顺序",
+        "作品集 v2 完成"
       ],
       "pitfalls": [
-        "粒子容量无限增长，长时间运行后崩溃",
-        "随机数与时间状态不稳定，导致效果闪烁",
-        "只优化模拟而忽略绘制和 Overdraw",
-        "项目展示效果好看但无法解释 Buffer 数据流"
+        "只投不总结，把投递数量当成果",
+        "简历或作品集说法不一致、链接失效",
+        "只等结果不补弱"
       ],
       "references": [
         {
-          "label": "Unity 6 · 创建 Compute Shader",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/class-ComputeShader-create.html"
+          "label": "Unity 6 · URP 手册",
+          "href": "https://docs.unity3d.com/cn/6000.0/Manual/urp/index.html"
         },
         {
-          "label": "Unity 6 · Profiler 窗口",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/profiler-window-navigating.html"
+          "label": "Unity 6 官方文档",
+          "href": "https://docs.unity3d.com/cn/6000.0/Manual/index.html"
         }
       ],
       "resumeEvidence": [
-        "完成 GPU 粒子实时特效项目",
-        "掌握 Compute Shader 与 Instanced 渲染组合",
-        "具备 GPU 资源管理和性能分析经验"
-      ]
+        "理解 URP 渲染流程与扩展点",
+        "完成作品集 v2 与管线小实验"
+      ],
+      "deliverable": "SRP / Renderer Feature / CommandBuffer 小实验 + 作品集 v2",
+      "evidenceGate": "能解释一次完整一帧的数据流与管线扩展点",
+      "estimatedHours": 48
     },
     {
       "id": "month-2028-01",
       "month": "2028.01",
       "monthKey": "2028-01",
-      "stageId": "phase-job-ready",
-      "title": "渲染优化与性能分析",
+      "stageId": "phase-iterate",
+      "title": "工具深化与期末缓冲",
       "phaseGoal": "渲染优化与性能分析",
       "startDate": "2028-01-01",
       "endDate": "2028-01-31",
@@ -1055,65 +1023,56 @@
       "completedAt": null,
       "sortOrder": 15,
       "learning": [
-        "GPU Instancing 和 SRP Batcher",
-        "Shader 变体、multi_compile 与 shader_feature",
-        "纹理压缩、尺寸和采样成本",
-        "Overdraw 与透明渲染成本",
-        "Draw Call 与状态切换",
-        "CPU/GPU 帧时间与瓶颈判断",
-        "Profiler 模块和采样解释",
-        "Frame Debugger 的 Draw Call 分析",
-        "RenderDoc 基础抓帧思路",
-        "不同平台的质量级别",
-        "性能优化前后对照记录"
+        "AssetDatabase / SerializedObject / Undo 等 Editor API",
+        "工具的错误处理与可用性",
+        "批处理与校验流程",
+        "工具文档与交付"
       ],
       "practice": [
-        "给现有项目建立性能基线",
-        "减少一组不必要的 Shader 变体",
-        "比较 Batching/Instancing 的实际效果",
-        "记录一次 Overdraw 优化",
-        "整理性能报告和可复现实验步骤"
+        "工具 v2：检查 + 批处理 + 报告",
+        "在新工程验证工具",
+        "补 README 与使用说明",
+        "整理工具面试可讲的点"
       ],
       "weeklyFocus": [
-        "先测基线，不先写优化",
-        "分别检查 CPU 和 GPU 指标",
-        "每次只改变一个变量并复测",
-        "用图表和抓帧证据整理结果"
+        "工具先可用再谈好看",
+        "错误处理优先",
+        "用别人的工程验证"
       ],
       "acceptance": [
-        "能定位至少一个真实性能瓶颈",
-        "优化前后有可复现的对比数据",
-        "能解释 Batching、Instancing 与 Draw Call 的关系",
-        "优化没有破坏视觉一致性或工程稳定性"
+        "工具 v2 能在新工程跑通",
+        "有错误处理与使用文档",
+        "能讲清工具解决的痛点"
       ],
       "pitfalls": [
-        "只盯着 Draw Call 数量",
-        "没有固定测试场景就进行前后对比",
-        "关闭效果换取性能，却不说明视觉取舍",
-        "将 Editor 数据当成目标平台真实数据"
+        "只投不总结，把投递数量当成果",
+        "简历或作品集说法不一致、链接失效",
+        "只等结果不补弱"
       ],
       "references": [
         {
-          "label": "Unity 6 · Profiler 窗口",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/profiler-window-navigating.html"
+          "label": "Unity 6 官方文档",
+          "href": "https://docs.unity3d.com/cn/6000.0/Manual/index.html"
         },
         {
-          "label": "Unity 6 · Frame Debugger",
-          "href": "https://docs.unity3d.com/cn/6000.0/ScriptReference/FrameDebugger.html"
+          "label": "《Unity Shader 入门精要》",
+          "href": ""
         }
       ],
       "resumeEvidence": [
-        "能够建立渲染性能基线并定位瓶颈",
-        "掌握 Batching、Instancing、Shader 变体优化",
-        "形成有数据支撑的优化案例"
-      ]
+        "完成 Editor 工具 v2 与使用文档",
+        "具备工具交付与错误处理经验"
+      ],
+      "deliverable": "Editor 工具 v2（检查 / 批处理 / 报告）+ 使用文档",
+      "evidenceGate": "工具在他人工程可用，有错误处理与 README",
+      "estimatedHours": 40
     },
     {
       "id": "month-2028-02",
       "month": "2028.02",
       "monthKey": "2028-02",
-      "stageId": "phase-job-ready",
-      "title": "高级 Shader 技术与屏幕空间效果",
+      "stageId": "phase-iterate",
+      "title": "春招准备、毕设开题与作品集升级",
       "phaseGoal": "高级 Shader 技术与屏幕空间效果",
       "startDate": "2028-02-01",
       "endDate": "2028-02-29",
@@ -1121,69 +1080,56 @@
       "completedAt": null,
       "sortOrder": 16,
       "learning": [
-        "深度缓冲重建世界坐标",
-        "屏幕空间 UV 和纹理采样",
-        "描边、雾、热扰动和色差效果",
-        "屏幕空间扭曲与采样偏移",
-        "边缘检测的 Sobel 基础",
-        "HDR、色彩空间和后处理顺序",
-        "透明与后处理的交互",
-        "URP Pass 注入与 RenderGraph",
-        "多 Pass 效果的性能成本",
-        "平台差异与纹理格式",
-        "高级 Shader 的可维护性"
+        "春招与补录时间线",
+        "毕设选题与技术要求",
+        "作品集终版结构",
+        "简历与面试材料更新"
       ],
       "practice": [
-        "实现基于深度的屏幕空间描边",
-        "完成一个屏幕扭曲或热扰动效果",
-        "实现灰度、色差与暗角组合后处理",
-        "用 Frame Debugger 验证 Pass 顺序",
-        "整理技术说明与性能结果"
+        "作品集终版自查（链接 / 运行 / 讲解）",
+        "完成毕设开题",
+        "更新春招版简历",
+        "准备 10 个面试问答"
       ],
       "weeklyFocus": [
-        "先打通深度纹理和屏幕坐标",
-        "完成单一高级效果而不混入过多功能",
-        "验证正确渲染顺序和透明物体",
-        "整理成可复用后处理组件"
+        "毕设与春招并行，先保底",
+        "作品集只留能运行的作品",
+        "所有链接匿名可用"
       ],
       "acceptance": [
-        "能说明屏幕空间效果如何在 URP Pass 中执行",
-        "至少完成两种基于深度或屏幕纹理的效果",
-        "效果有合理性能与平台限制说明",
-        "核心计算能够脱离教程独立复写"
+        "春招版作品集完成并通过自查",
+        "毕设开题完成",
+        "简历 v2 可用"
       ],
       "pitfalls": [
-        "直接复制全屏 Shader，不理解采样坐标和 Pass 注入",
-        "忽略透明或后处理顺序导致叠加错误",
-        "边缘检测参数无限放大，效果噪声明显",
-        "未检查移动端纹理采样和深度支持"
+        "只投不总结，把投递数量当成果",
+        "简历或作品集说法不一致、链接失效",
+        "只等结果不补弱"
       ],
       "references": [
         {
-          "label": "Unity 6 · URP Renderer Feature",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/urp/urp-renderer-feature.html"
+          "label": "目标公司招聘页（自行补充）",
+          "href": ""
         },
         {
-          "label": "Unity 6 · URP 自定义渲染通道",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/urp/renderer-features/custom-rendering-pass-workflow-in-urp.html"
-        },
-        {
-          "label": "Unity 6 · URP 全屏 Pass",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/urp/renderer-features/renderer-feature-full-screen-pass.html"
+          "label": "Unity 6 官方文档",
+          "href": "https://docs.unity3d.com/cn/6000.0/Manual/index.html"
         }
       ],
       "resumeEvidence": [
-        "掌握 URP 屏幕空间后处理与 Pass 注入",
-        "能够使用深度纹理和屏幕坐标构建高级效果",
-        "具备后处理性能和兼容性分析能力"
-      ]
+        "完成春招版作品集与简历",
+        "完成毕设开题"
+      ],
+      "deliverable": "春招版作品集 + 简历 v2 + 毕设开题",
+      "evidenceGate": "作品集所有链接未登录可用，能在 30 秒讲清核心能力",
+      "estimatedHours": 40
     },
     {
       "id": "month-2028-03",
       "month": "2028.03",
       "monthKey": "2028-03",
-      "stageId": "phase-job-ready",
-      "title": "综合实时渲染项目",
+      "stageId": "phase-graduate",
+      "title": "春招投递与面试",
       "phaseGoal": "综合实时渲染项目",
       "startDate": "2028-03-01",
       "endDate": "2028-03-31",
@@ -1191,69 +1137,50 @@
       "completedAt": null,
       "sortOrder": 17,
       "learning": [
-        "场景美术方向与技术约束的统一",
-        "Shader 效果与场景灯光的配合",
-        "材质系统、后处理和性能预算",
-        "模块拆分、接口与参数组织",
-        "资源加载与版本管理",
-        "相机、分辨率和画质设置",
-        "项目演示场景与镜头设计",
-        "性能数据采集与优化闭环",
-        "跨场景稳定性",
-        "项目风险与功能取舍",
-        "技术文档结构"
+        "春招投递节奏",
+        "面试高频问题复盘",
+        "Offer 比较维度"
       ],
       "practice": [
-        "确定项目范围、视觉目标和验收指标",
-        "整合至少两项此前作品中的技术",
-        "搭建完整展示场景和交互",
-        "进行性能优化与跨场景测试",
-        "完成演示视频、README 和技术架构图"
+        "春招投递并记录",
+        "每场面试后写复盘",
+        "补 3 个薄弱项"
       ],
       "weeklyFocus": [
-        "锁定范围，优先完成稳定可演示的闭环",
-        "整合已有技术而不是继续堆新名词",
-        "处理性能和平台兼容问题",
-        "完成项目包装与完整验收"
+        "投递优先",
+        "每场面试都复盘",
+        "不放弃补录窗口"
       ],
       "acceptance": [
-        "综合场景能够在新环境稳定运行",
-        "至少整合两项此前核心技术并说明取舍",
-        "具备演示视频、技术文档和性能数据",
-        "项目有清晰的完成边界，不依赖未说明资源"
+        "完成春招投递",
+        "有面试复盘记录",
+        "薄弱项有补充动作"
       ],
       "pitfalls": [
-        "范围持续扩张，最终没有完整版本",
-        "视觉效果依赖开发机环境和未提交资源",
-        "只有功能展示，没有性能与工程说明",
-        "多技术叠加后系统不稳定，无法复现"
+        "只投不总结，把投递数量当成果",
+        "简历或作品集说法不一致、链接失效",
+        "只等结果不补弱"
       ],
       "references": [
         {
-          "label": "Unity 6 · URP Renderer Feature",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/urp/urp-renderer-feature.html"
-        },
-        {
-          "label": "Unity 6 · 创建 Compute Shader",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/class-ComputeShader-create.html"
-        },
-        {
-          "label": "Unity 6 · Profiler 窗口",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/profiler-window-navigating.html"
+          "label": "目标公司招聘页（自行补充）",
+          "href": ""
         }
       ],
       "resumeEvidence": [
-        "完成综合 Unity 实时渲染项目",
-        "能够整合 Shader、工具与性能优化能力",
-        "具备完整项目的架构和交付经验"
-      ]
+        "完成春招投递与面试复盘",
+        "具备持续投递与复盘能力"
+      ],
+      "deliverable": "春招投递记录 + 面试复盘",
+      "evidenceGate": "完成目标公司春招投递并跟进",
+      "estimatedHours": 32
     },
     {
       "id": "month-2028-04",
       "month": "2028.04",
       "monthKey": "2028-04",
-      "stageId": "phase-job-ready",
-      "title": "作品集升级与面试材料",
+      "stageId": "phase-graduate",
+      "title": "毕设收尾与作品集终版",
       "phaseGoal": "作品集升级与面试材料",
       "startDate": "2028-04-01",
       "endDate": "2028-04-30",
@@ -1261,69 +1188,50 @@
       "completedAt": null,
       "sortOrder": 18,
       "learning": [
-        "作品集的岗位匹配和排序策略",
-        "项目亮点与关键难点重构",
-        "技术取舍与失败实验的表达",
-        "架构图、数据流图和效果对比",
-        "演示视频的画面节奏与字幕",
-        "GitHub 目录、提交历史和发布说明",
-        "性能报告的可信度",
-        "求职平台作品链接组织",
-        "面试中的反问与岗位匹配",
-        "技术博客与作品集的关系",
-        "作品集维护节奏"
+        "毕设推进",
+        "作品集终版收尾",
+        "技术文档整理"
       ],
       "practice": [
-        "重构至少一个项目的代码结构",
-        "为每个核心作品补齐技术说明",
-        "录制或重剪高质量演示视频",
-        "整理 GitHub README 和运行步骤",
-        "完成一版面向目标岗位的作品集"
+        "完成毕设里程碑",
+        "作品集终版发布",
+        "做一次完整自查"
       ],
       "weeklyFocus": [
-        "从一个最强项目开始升级",
-        "补齐工程可运行性和代码可读性",
-        "统一所有作品的视觉与叙事",
-        "做一次模拟面试式作品讲解"
+        "毕设优先",
+        "作品集只做收尾",
+        "文档补齐"
       ],
       "acceptance": [
-        "核心作品能够一站式查看视频、代码和说明",
-        "至少一个项目完成代码重构和性能补测",
-        "每个作品都能讲清一个问题、一个方案和一个结果",
-        "所有公开链接在未登录状态可用"
+        "毕设达到阶段目标",
+        "作品集终版上线",
+        "自查清单全部通过"
       ],
       "pitfalls": [
-        "不断添加项目却不提升现有项目质量",
-        "项目说明泄露依赖但没有提供安装步骤",
-        "演示视频只追求炫技，缺少技术信息",
-        "代码与 README 在后续改动中失配"
+        "只投不总结，把投递数量当成果",
+        "简历或作品集说法不一致、链接失效",
+        "只等结果不补弱"
       ],
       "references": [
         {
-          "label": "Unity 6 · Profiler 窗口",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/profiler-window-navigating.html"
-        },
-        {
-          "label": "Unity 6 · Frame Debugger",
-          "href": "https://docs.unity3d.com/cn/6000.0/ScriptReference/FrameDebugger.html"
-        },
-        {
-          "label": "Microsoft Learn · C# 指南",
-          "href": "https://learn.microsoft.com/zh-cn/dotnet/csharp/"
+          "label": "Unity 6 官方文档",
+          "href": "https://docs.unity3d.com/cn/6000.0/Manual/index.html"
         }
       ],
       "resumeEvidence": [
-        "完成高质量 Unity TA 作品集升级",
-        "能够组织项目技术证据和性能结果",
-        "掌握面向岗位的演示与技术沟通"
-      ]
+        "完成作品集终版与毕设阶段成果",
+        "具备项目收尾与文档整理能力"
+      ],
+      "deliverable": "终版作品集站点 + 毕设进度",
+      "evidenceGate": "作品集终版通过自查清单（链接 / 运行 / 讲解）",
+      "estimatedHours": 40
     },
     {
       "id": "month-2028-05",
       "month": "2028.05",
       "monthKey": "2028-05",
-      "stageId": "phase-job-ready",
-      "title": "集中求职、岗位专项与面试反馈",
+      "stageId": "phase-graduate",
+      "title": "补录、Offer 决策与入职衔接",
       "phaseGoal": "集中求职、岗位专项与面试反馈",
       "startDate": "2028-05-01",
       "endDate": "2028-05-31",
@@ -1331,69 +1239,50 @@
       "completedAt": null,
       "sortOrder": 19,
       "learning": [
-        "目标岗位分层与投递策略",
-        "JD 关键词与项目证据映射",
-        "Shader 手写题和代码题训练",
-        "Unity/C# 基础问题复盘",
-        "图形学原理的口述结构",
-        "行为面试中的项目冲突与取舍",
-        "面试记录和问题归类",
-        "offer 选择与岗位成长空间",
-        "作品集定向修改方法",
-        "持续学习与求职时间分配",
-        "招聘流程中的风险信号"
+        "补录与内推",
+        "入职前技能清单",
+        "Offer 决策"
       ],
       "practice": [
-        "持续投递高度匹配的岗位",
-        "每周完成一轮模拟面试",
-        "根据反馈修补一个核心作品",
-        "建立面试题库和回答提纲",
-        "定期更新求职进度与下一步行动"
+        "跟进补录 / 内推",
+        "制定入职学习计划",
+        "整理入职前预习清单"
       ],
       "weeklyFocus": [
-        "维持稳定投递节奏",
-        "优先修补重复出现的技术短板",
-        "把项目讲述压缩到 5–10 分钟",
-        "在反馈中调整岗位和作品策略"
+        "保持窗口跟进",
+        "开始向岗位靠拢",
+        "记录决策依据"
       ],
       "acceptance": [
-        "保持连续投递并记录完整反馈",
-        "至少完成四轮模拟或真实技术面试",
-        "主要高频问题形成自己的回答提纲",
-        "作品集根据岗位反馈完成至少一次升级"
+        "补录/内推跟进有记录",
+        "入职预习清单完成",
+        "Offer 决策有记录和理由"
       ],
       "pitfalls": [
-        "只追求投递数量，忽略岗位匹配",
-        "面试失败后开始无计划地学习新内容",
-        "没有记录问题，导致同类错误重复出现",
-        "把全部时间投入求职，作品维护停滞"
+        "只投不总结，把投递数量当成果",
+        "简历或作品集说法不一致、链接失效",
+        "只等结果不补弱"
       ],
       "references": [
         {
-          "label": "Unity 6 · Profiler 窗口",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/profiler-window-navigating.html"
-        },
-        {
-          "label": "Unity 6 · Frame Debugger",
-          "href": "https://docs.unity3d.com/cn/6000.0/ScriptReference/FrameDebugger.html"
-        },
-        {
-          "label": "Microsoft Learn · C# 指南",
-          "href": "https://learn.microsoft.com/zh-cn/dotnet/csharp/"
+          "label": "目标公司招聘页（自行补充）",
+          "href": ""
         }
       ],
       "resumeEvidence": [
-        "具备持续求职和面试迭代经验",
-        "能够围绕目标岗位调整技术表达",
-        "形成系统化面试题库和反馈闭环"
-      ]
+        "完成入职前技能预习清单",
+        "具备 Offer 决策与入职准备能力"
+      ],
+      "deliverable": "Offer 决策表 + 入职技能清单",
+      "evidenceGate": "完成入职前技术预习清单",
+      "estimatedHours": 32
     },
     {
       "id": "month-2028-06",
       "month": "2028.06",
       "monthKey": "2028-06",
-      "stageId": "phase-job-ready",
-      "title": "毕业与岗位能力衔接",
+      "stageId": "phase-graduate",
+      "title": "毕业复盘与入职准备",
       "phaseGoal": "毕业与岗位能力衔接",
       "startDate": "2028-06-01",
       "endDate": "2028-06-30",
@@ -1401,58 +1290,41 @@
       "completedAt": null,
       "sortOrder": 20,
       "learning": [
-        "最终作品集与技术材料归档",
-        "岗位职责与入职能力差距",
-        "项目交接、文档与版本管理",
-        "持续学习路线与专项深化",
-        "技术表达中的事实与边界",
-        "职业初期的协作方式",
-        "求职风险与备选方案",
-        "维护个人作品入口",
-        "复盘能力成长与项目结果",
-        "下一阶段学习优先级",
-        "实习/正式岗位评估方法"
+        "年度复盘",
+        "下一阶段规划"
       ],
       "practice": [
-        "整理最终作品集和技术备份",
-        "完成一次综合能力自测",
-        "更新简历和岗位匹配矩阵",
-        "准备入职后的学习计划",
-        "把当前网站与作品集整理成长期入口"
+        "写年度复盘",
+        "列出入职前 1 个月准备清单"
       ],
       "weeklyFocus": [
-        "完成材料归档和最终检查",
-        "做一次完整技术复盘",
-        "确定入职或继续求职的优先级",
-        "为下一阶段留下可执行的路线"
+        "复盘要写数据",
+        "不粉饰差距",
+        "计划落到具体动作"
       ],
       "acceptance": [
-        "作品集、源码、视频和文档均有备份",
-        "能完整陈述个人能力、项目和限制",
-        "明确下一阶段的岗位方向和能力缺口",
-        "网站与作品集链接在手机和电脑均可用"
+        "年度复盘完成",
+        "下一阶段计划完成",
+        "下一阶段计划可执行"
       ],
       "pitfalls": [
-        "求职结束后停止整理，资料分散丢失",
-        "把计划结果当成实际能力结果",
-        "没有说明个人职责，夸大项目贡献",
-        "把所有时间用于继续学习，忽略真实岗位反馈"
+        "只投不总结，把投递数量当成果",
+        "简历或作品集说法不一致、链接失效",
+        "只等结果不补弱"
       ],
       "references": [
         {
-          "label": "Unity 6 · Profiler 窗口",
-          "href": "https://docs.unity3d.com/cn/6000.0/Manual/profiler-window-navigating.html"
-        },
-        {
-          "label": "Microsoft Learn · C# 指南",
-          "href": "https://learn.microsoft.com/zh-cn/dotnet/csharp/"
+          "label": "Unity 6 官方文档",
+          "href": "https://docs.unity3d.com/cn/6000.0/Manual/index.html"
         }
       ],
       "resumeEvidence": [
-        "形成可持续维护的 Unity TA 作品集",
-        "具备岗位导向的自我评估与学习规划能力",
-        "完成从学习阶段到职业阶段的衔接"
-      ]
+        "完成 20 个月成长复盘",
+        "形成下一阶段可执行计划"
+      ],
+      "deliverable": "年度复盘（数据 / 作品 / 差距）",
+      "evidenceGate": "写清下一阶段 6 个月计划",
+      "estimatedHours": 24
     }
   ],
   "portfolio": [
@@ -1462,7 +1334,7 @@
       "title": "Shader 效果合集",
       "summary": "溶解、UV 流动、Fresnel、卡通光照、基础水面等",
       "acceptance": "至少 4 个效果；至少 1 个能从空白工程独立实现；有视频、源码和原理说明",
-      "status": "not_started",
+      "status": "in_progress",
       "completedOn": null,
       "notes": "",
       "demoUrl": "",
@@ -1470,7 +1342,10 @@
       "coverUrl": "",
       "techStack": [],
       "published": false,
-      "sortOrder": 1
+      "sortOrder": 1,
+      "evidenceLevel": "guided",
+      "aiAssisted": true,
+      "perfNotes": ""
     },
     {
       "id": "portfolio-02",
@@ -1478,7 +1353,7 @@
       "title": "动态水面",
       "summary": "双层法线、流动、波动、Fresnel、深度交界",
       "acceptance": "Unity 6 + URP 可运行；参数可调；有展示场景、视频、技术文档",
-      "status": "not_started",
+      "status": "in_progress",
       "completedOn": null,
       "notes": "",
       "demoUrl": "",
@@ -1486,7 +1361,10 @@
       "coverUrl": "",
       "techStack": [],
       "published": false,
-      "sortOrder": 2
+      "sortOrder": 2,
+      "evidenceLevel": "guided",
+      "aiAssisted": true,
+      "perfNotes": ""
     },
     {
       "id": "portfolio-03",
@@ -1494,7 +1372,7 @@
       "title": "动态环境材质系统",
       "summary": "积雪、湿润、纹理混合、统一参数控制",
       "acceptance": "多个效果能协同使用；有场景展示、代码说明和基础性能记录",
-      "status": "not_started",
+      "status": "in_progress",
       "completedOn": null,
       "notes": "",
       "demoUrl": "",
@@ -1502,7 +1380,10 @@
       "coverUrl": "",
       "techStack": [],
       "published": false,
-      "sortOrder": 3
+      "sortOrder": 3,
+      "evidenceLevel": "learning",
+      "aiAssisted": true,
+      "perfNotes": ""
     },
     {
       "id": "portfolio-04",
@@ -1510,7 +1391,7 @@
       "title": "Unity Editor 工具",
       "summary": "材质扫描、批量修改、缺失贴图检查",
       "acceptance": "Editor 中实际可运行；有错误处理、使用说明和演示",
-      "status": "not_started",
+      "status": "in_progress",
       "completedOn": null,
       "notes": "",
       "demoUrl": "",
@@ -1518,7 +1399,34 @@
       "coverUrl": "",
       "techStack": [],
       "published": false,
-      "sortOrder": 4
+      "sortOrder": 4,
+      "evidenceLevel": "learning",
+      "aiAssisted": true,
+      "perfNotes": ""
+    },
+    {
+      "id": "portfolio-perf-case",
+      "code": "作品 05",
+      "title": "渲染性能优化案例",
+      "summary": "对已有渲染效果做 Frame Debugger / Profiler 分析，定位瓶颈并记录优化前后数据对比。",
+      "acceptance": "至少一次可复现的性能优化：记录瓶颈现象、修改内容与优化前后 draw call / GPU 时间对比。",
+      "status": "not_started",
+      "completedOn": null,
+      "notes": "",
+      "demoUrl": "",
+      "repoUrl": "",
+      "coverUrl": "",
+      "techStack": [
+        "Frame Debugger",
+        "Profiler",
+        "RenderDoc",
+        "URP"
+      ],
+      "evidenceLevel": "learning",
+      "aiAssisted": false,
+      "perfNotes": "",
+      "published": false,
+      "sortOrder": 5
     },
     {
       "id": "portfolio-05",
@@ -1534,7 +1442,10 @@
       "coverUrl": "",
       "techStack": [],
       "published": false,
-      "sortOrder": 5
+      "sortOrder": 6,
+      "evidenceLevel": "learning",
+      "aiAssisted": false,
+      "perfNotes": ""
     },
     {
       "id": "portfolio-06",
@@ -1550,7 +1461,10 @@
       "coverUrl": "",
       "techStack": [],
       "published": false,
-      "sortOrder": 6
+      "sortOrder": 7,
+      "evidenceLevel": "learning",
+      "aiAssisted": false,
+      "perfNotes": ""
     },
     {
       "id": "portfolio-07",
@@ -1566,7 +1480,10 @@
       "coverUrl": "",
       "techStack": [],
       "published": false,
-      "sortOrder": 7
+      "sortOrder": 8,
+      "evidenceLevel": "learning",
+      "aiAssisted": false,
+      "perfNotes": ""
     },
     {
       "id": "portfolio-08",
@@ -1582,7 +1499,10 @@
       "coverUrl": "",
       "techStack": [],
       "published": false,
-      "sortOrder": 8
+      "sortOrder": 9,
+      "evidenceLevel": "learning",
+      "aiAssisted": false,
+      "perfNotes": ""
     },
     {
       "id": "portfolio-09",
@@ -1598,7 +1518,10 @@
       "coverUrl": "",
       "techStack": [],
       "published": false,
-      "sortOrder": 9
+      "sortOrder": 10,
+      "evidenceLevel": "learning",
+      "aiAssisted": false,
+      "perfNotes": ""
     }
   ]
 }

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
   BookOpenCheck,
-  CalendarDays,
   Compass,
   Home,
   LockKeyhole,
@@ -15,17 +14,17 @@ import {
 } from "lucide-react";
 import { NavLink, Outlet, useParams } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import { SITE } from "../lib/config";
 import { cn } from "../lib/utils";
 import { AuthDialog } from "./AuthDialog";
 import { ErrorState, FullPageLoading } from "./Feedback";
-import { findRelevantMonth } from "../lib/date";
 
 const navItems = [
-  { to: "", label: "概览", icon: Home, end: true },
-  { to: "months", label: "本月", icon: CalendarDays },
-  { to: "roadmap", label: "路线", icon: Compass },
+  { to: "", label: "首页", icon: Home, end: true },
   { to: "portfolio", label: "作品集", icon: Shapes },
-  { to: "collaborators", label: "协作者", icon: Settings2 }
+  { to: "roadmap", label: "成长路线", icon: Compass },
+  { to: "journal", label: "学习记录", icon: BookOpenCheck },
+  { to: "collaborators", label: "协作者", icon: Settings2, ownerOnly: true }
 ];
 
 export function AppShell() {
@@ -61,13 +60,8 @@ export function AppShell() {
   if (!bundle) return null;
 
   const base = `/plans/${planSlug}`;
-  const currentMonthKey = findRelevantMonth(bundle.months).month.monthKey;
-  const routeFor = (path: string) =>
-    path === "months"
-      ? `${base}/months/${currentMonthKey}`
-      : path
-        ? `${base}/${path}`
-        : base;
+  const routeFor = (path: string) => (path ? `${base}/${path}` : base);
+  const visibleNav = navItems.filter((item) => !item.ownerOnly || canEdit);
   const accountLabel = cloudMode
     ? session
       ? role === "owner"
@@ -84,15 +78,15 @@ export function AppShell() {
     <div className="app-shell">
       <aside className="sidebar">
         <NavLink to={base} className="brand">
-          <span className="brand-glyph">TA</span>
+          <span className="brand-glyph">{SITE.glyph}</span>
           <span>
-            <strong>My TA Journey</strong>
-            <small>Learn · build · ship</small>
+            <strong>{SITE.name}</strong>
+            <small>{SITE.tagline}</small>
           </span>
         </NavLink>
 
         <nav className="side-nav" aria-label="主要导航">
-          {navItems.map((item) => (
+          {visibleNav.map((item) => (
             <NavLink
               key={item.to}
               to={routeFor(item.to)}
@@ -130,8 +124,8 @@ export function AppShell() {
             {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
           <NavLink to={base} className="mobile-brand">
-            <span className="brand-glyph small">TA</span>
-            <strong>My TA Journey</strong>
+            <span className="brand-glyph small">{SITE.glyph}</span>
+            <strong>{SITE.name}</strong>
           </NavLink>
           <div className="topbar-spacer" />
 
@@ -193,7 +187,7 @@ export function AppShell() {
 
         {mobileMenuOpen && (
           <nav className="mobile-drawer" aria-label="移动端导航">
-            {navItems.map((item) => (
+            {visibleNav.map((item) => (
               <NavLink
                 key={item.to}
                 to={routeFor(item.to)}
@@ -215,7 +209,7 @@ export function AppShell() {
         </main>
 
         <nav className="bottom-nav" aria-label="移动端主要导航">
-          {navItems.slice(0, 4).map((item) => (
+          {visibleNav.slice(0, 4).map((item) => (
             <NavLink
               key={item.to}
               to={routeFor(item.to)}

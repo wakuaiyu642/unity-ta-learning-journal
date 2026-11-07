@@ -5,6 +5,56 @@ export type ProgressStatus =
   | "deferred";
 export type PlanRole = "owner" | "editor" | "viewer";
 
+/** 作品/能力的真实完成度，用于面试时诚实标注。 */
+export type EvidenceLevel = "learning" | "guided" | "independent" | "reusable";
+
+/** 个人能力自评等级：以“能否脱离教程独立复现”为准。 */
+export type ProfileSkillLevel =
+  | "aware"
+  | "guided"
+  | "independent"
+  | "explainable";
+
+export interface ProfileSkill {
+  name: string;
+  level: ProfileSkillLevel;
+  note: string;
+}
+
+export interface ProfileLink {
+  githubUrl: string;
+  email: string;
+  resumeUrl: string;
+  websiteUrl: string;
+  showEmail: boolean;
+}
+
+export interface PlanProfile {
+  planId: string;
+  displayName: string;
+  headline: string;
+  avatarUrl: string;
+  location: string;
+  school: string;
+  major: string;
+  degree: string;
+  grade: string;
+  graduationYear: number | null;
+  targetRole: string;
+  targetCompanies: string;
+  bio: string;
+  selfPositioning: string;
+  honestyNote: string;
+  skills: ProfileSkill[];
+  highlights: string[];
+  links: ProfileLink;
+  updatedAt: string;
+}
+
+export type ProfilePatch = Partial<
+  Omit<PlanProfile, "planId" | "updatedAt">
+>;
+
 export interface PlanPhase {
   id: string;
   title: string;
@@ -45,6 +95,12 @@ export interface PlanMonth {
   status: ProgressStatus;
   completedAt: string | null;
   sortOrder: number;
+  /** 本月唯一交付物：必须可演示、可链接或可运行。 */
+  deliverable: string;
+  /** 独立完成门槛：无教程复现、口述讲解、Git 记录等。 */
+  evidenceGate: string;
+  /** 本月预计投入小时数（单月预算）。 */
+  estimatedHours: number;
   learning: string[];
   practice: string[];
   weeklyFocus: string[];
@@ -106,6 +162,9 @@ export interface PortfolioItem {
   repoUrl: string;
   coverUrl: string;
   techStack: string[];
+  evidenceLevel: EvidenceLevel;
+  aiAssisted: boolean;
+  perfNotes: string;
   published: boolean;
   sortOrder: number;
 }
@@ -121,6 +180,7 @@ export interface PlanMember {
 
 export interface PlanBundle {
   plan: Plan;
+  profile: PlanProfile;
   phases: PlanPhase[];
   months: PlanMonth[];
   dailyLogs: DailyLog[];
@@ -167,5 +227,8 @@ export interface PortfolioPatch {
   repoUrl?: string;
   coverUrl?: string;
   techStack?: string[];
+  evidenceLevel?: EvidenceLevel;
+  aiAssisted?: boolean;
+  perfNotes?: string;
   published?: boolean;
 }

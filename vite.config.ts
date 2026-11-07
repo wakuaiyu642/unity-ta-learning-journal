@@ -15,9 +15,9 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["favicon.svg", "apple-touch-icon.png"],
       manifest: {
-        name: "My TA Journey",
-        short_name: "TA Journey",
-        description: "Unity 技术美术月度学习计划、每日打卡与作品集",
+        name: "成长管线 · Growth Pipeline",
+        short_name: "成长管线",
+        description: "Unity 技术美术成长规划、个人主页与作品集",
         theme_color: "#123f3a",
         background_color: "#f6f2e9",
         display: "standalone",
@@ -45,6 +45,7 @@ export default defineConfig({
       workbox: {
         navigateFallback: "index.html",
         globPatterns: ["**/*.{js,css,html,svg,png,woff2}"],
+        globIgnores: ["media/og-cover.png"],
         runtimeCaching: [
           {
             urlPattern: ({ url }) =>

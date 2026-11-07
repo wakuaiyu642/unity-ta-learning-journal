@@ -9,12 +9,14 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import { useDocumentMeta } from "../lib/meta";
 import { todayInShanghai } from "../lib/date";
 import { cn } from "../lib/utils";
 import { PageHeader, StatusBadge } from "../components/UI";
 
 export function RoadmapPage() {
   const { bundle } = useApp();
+  useDocumentMeta("成长路线 · 成长管线", "20 个月、5 个阶段的 Unity TA 成长路线");
   const [query, setQuery] = useState("");
 
   const filteredPhases = useMemo(() => {

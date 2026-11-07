@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Default avatar TA">
+  <title>Default avatar TA</title>
+  <defs>
+    <radialGradient id="avatar-bg" cx="0.34" cy="0.26" r="0.86">
+      <stop offset="0" stop-color="#1d5850"/>
+      <stop offset="0.55" stop-color="#123f3a"/>
+      <stop offset="1" stop-color="#0a2b27"/>
+    </radialGradient>
+    <linearGradient id="avatar-ink" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f6f2e9"/>
+      <stop offset="0.62" stop-color="#96e3cd"/>
+      <stop offset="1" stop-color="#ecc387"/>
+    </linearGradient>
+    <clipPath id="avatar-clip">
+      <circle cx="256" cy="256" r="256"/>
+    </clipPath>
+    <pattern id="avatar-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#f6f2e9" stroke-opacity="0.06"/>
+    </pattern>
+    <filter id="avatar-grain" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="20261109" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix in="noise" type="saturate" values="0" result="gray"/>
+      <feComponentTransfer in="gray">
+        <feFuncA type="linear" slope="0.4"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="avatar-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="36"/>
+    </filter>
+  </defs>
+  <g clip-path="url(#avatar-clip)">
+    <circle cx="256" cy="256" r="256" fill="url(#avatar-bg)"/>
+    <rect width="512" height="512" fill="url(#avatar-grid)"/>
+    <g filter="url(#avatar-glow)">
+      <circle cx="150" cy="120" r="140" fill="#58c4a6" fill-opacity="0.3"/>
+      <circle cx="392" cy="400" r="130" fill="#c98f4f" fill-opacity="0.16"/>
+    </g>
+    <path d="M -20 372 C 120 300 240 380 360 320 C 440 280 500 300 540 270" fill="none" stroke="#96e3cd" stroke-opacity="0.18" stroke-width="1.4"/>
+    <path d="M -20 404 C 120 332 240 412 360 352 C 440 312 500 332 540 302" fill="none" stroke="#96e3cd" stroke-opacity="0.1" stroke-width="1"/>
+    <rect width="512" height="512" filter="url(#avatar-grain)" opacity="0.14"/>
+  </g>
+  <circle cx="256" cy="256" r="252" fill="none" stroke="#f6f2e9" stroke-opacity="0.16"/>
+  <circle cx="256" cy="256" r="224" fill="none" stroke="#f6f2e9" stroke-opacity="0.12" stroke-width="1.4"/>
+  <circle cx="256" cy="256" r="196" fill="none" stroke="#58c4a6" stroke-opacity="0.32" stroke-dasharray="2 12" stroke-linecap="round"/>
+  <text x="256" y="330" text-anchor="middle" font-family="'Segoe UI', 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', Arial, sans-serif" font-size="176" font-weight="700" letter-spacing="4" fill="url(#avatar-ink)">TA</text>
+  <circle cx="398" cy="116" r="9" fill="#ecc387" fill-opacity="0.9"/>
+  <circle cx="398" cy="116" r="18" fill="none" stroke="#ecc387" stroke-opacity="0.3"/>
+</svg>

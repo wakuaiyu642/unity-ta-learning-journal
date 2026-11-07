@@ -1,4 +1,4 @@
-import { type FormEvent, useMemo, useState } from "react";
+import { type FormEvent, useMemo, useRef, useState } from "react";
 import {
   ArrowUpRight,
   CheckCircle2,
@@ -8,11 +8,20 @@ import {
   GitBranch,
   LoaderCircle,
   Pencil,
-  Sparkles
+  Sparkles,
+  Upload
 } from "lucide-react";
 import { useApp } from "../context/AppContext";
-import type { PortfolioItem, ProgressStatus } from "../types";
-import { cn, statusLabels, statusOptions } from "../lib/utils";
+import { WorkVisual } from "../components/WorkVisual";
+import { useDocumentMeta } from "../lib/meta";
+import type { EvidenceLevel, PortfolioItem, ProgressStatus } from "../types";
+import {
+  cn,
+  evidenceLabels,
+  evidenceOptions,
+  statusLabels,
+  statusOptions
+} from "../lib/utils";
 import {
   Button,
   FieldLabel,
@@ -23,6 +32,14 @@ import {
   TextArea,
   TextInput
 } from "../components/UI";
+
+function EvidenceBadge({ level }: { level: EvidenceLevel }) {
+  return (
+    <span className={cn("evidence-badge", `evidence-${level}`)}>
+      完成度：{evidenceLabels[level]}
+    </span>
+  );
+}
 
 function PortfolioCard({
   item,
@@ -40,17 +57,60 @@ function PortfolioCard({
       <div
         className={cn(
           "portfolio-card-art",
-          `portfolio-art-${(index % 4) + 1}`
+          item.coverUrl
+            ? "portfolio-card-art-cover"
+            : `portfolio-art-${(index % 4) + 1}`
         )}
       >
-        <div className="portfolio-card-grid" />
-        <span>{item.code || "能力模块"}</span>
-        <Sparkles size={35} />
+        {item.coverUrl ? (
+          <img
+            className="portfolio-card-cover"
+            src={item.coverUrl}
+            alt={item.title}
+            style={{
+              position: "absolute",
+              inset: 0,
+              zIndex: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover"
+            }}
+          />
+        ) : /^作品\s*\d+/.test(item.code) ? (
+          <WorkVisual
+            code={item.code}
+            index={index}
+            title={item.title}
+            className="portfolio-card-cover"
+          />
+        ) : (
+          <>
+            <div className="portfolio-card-grid" />
+            <span>{item.code || "能力模块"}</span>
+            <Sparkles size={35} />
+          </>
+        )}
         <small>{item.published ? "已公开" : "筹备中"}</small>
       </div>
       <div className="portfolio-card-body">
         <div className="portfolio-card-topline">
-          <StatusBadge status={item.status} />
+          <div
+            className="portfolio-card-badges"
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              gap: 8
+            }}
+          >
+            <span title="验收状态：是否通过本月验收">
+              <StatusBadge status={item.status} />
+            </span>
+            <span title="完成度：脱离教程后的独立程度">
+              <EvidenceBadge level={item.evidenceLevel} />
+            </span>
+            {item.aiAssisted && <span className="ai-badge">AI 辅助</span>}
+          </div>
           {canEdit && (
             <button className="icon-button" onClick={onEdit} aria-label="编辑作品">
               <Pencil size={17} />
@@ -63,6 +123,12 @@ function PortfolioCard({
           <span>验收要求</span>
           <p>{item.acceptance}</p>
         </div>
+        {item.perfNotes && (
+          <div className="perf-notes">
+            <span>性能记录</span>
+            <p>{item.perfNotes}</p>
+          </div>
+        )}
         {item.techStack.length > 0 && (
           <div className="tech-stack">
             {item.techStack.map((tech) => (
@@ -90,11 +156,13 @@ function PortfolioCard({
 }
 
 export function PortfolioPage() {
-  const { bundle, canEdit, updatePortfolio } = useApp();
+  const { bundle, canEdit, updatePortfolio, uploadProfileAsset } = useApp();
   const [editing, setEditing] = useState<PortfolioItem | null>(null);
+  const [coverPreview, setCoverPreview] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [statusFilter, setStatusFilter] = useState<ProgressStatus | "all">("all");
+  const coverInput = useRef<HTMLInputElement>(null);
   const portfolio = bundle?.portfolio ?? [];
   const filtered = useMemo(
     () =>
@@ -105,7 +173,44 @@ export function PortfolioPage() {
   );
   const finished = portfolio.filter((item) => item.status === "done").length;
 
+  useDocumentMeta("作品集 · 成长管线", "Unity TA 作品集：完成度、AI 标注、性能记录与验收状态");
+
   if (!bundle) return null;
+
+  const openEditor = (item: PortfolioItem) => {
+    setEditing(item);
+    setCoverPreview(item.coverUrl);
+    setError("");
+  };
+
+  const closeEditor = () => {
+    setEditing(null);
+    setCoverPreview("");
+    setBusy(false);
+    setError("");
+  };
+
+  const onCoverFile = async (file: File) => {
+    if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
+      setError("封面仅支持 PNG / JPG / WebP。");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setError("封面不能超过 2MB。");
+      return;
+    }
+    if (!editing) return;
+    setBusy(true);
+    setError("");
+    try {
+      const url = await uploadProfileAsset("cover", file, editing.id);
+      setCoverPreview(url);
+    } catch (nextError) {
+      setError(nextError instanceof Error ? nextError.message : "封面上传失败");
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -122,11 +227,14 @@ export function PortfolioPage() {
         notes: String(form.get("notes") ?? "").trim(),
         demoUrl: String(form.get("demoUrl") ?? "").trim(),
         repoUrl: String(form.get("repoUrl") ?? "").trim(),
-        coverUrl: String(form.get("coverUrl") ?? "").trim(),
+        coverUrl: coverPreview.trim(),
         techStack: String(form.get("techStack") ?? "")
           .split(/[,，]/)
           .map((value) => value.trim())
           .filter(Boolean),
+        evidenceLevel: String(form.get("evidenceLevel")) as EvidenceLevel,
+        aiAssisted: form.get("aiAssisted") === "on",
+        perfNotes: String(form.get("perfNotes") ?? "").trim(),
         completedOn:
           String(form.get("status")) === "done"
             ? String(form.get("completedOn") || new Date().toISOString().slice(0, 10))
@@ -134,6 +242,7 @@ export function PortfolioPage() {
         published: form.get("published") === "on"
       });
       setEditing(null);
+      setCoverPreview("");
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : "保存失败");
     } finally {
@@ -146,7 +255,7 @@ export function PortfolioPage() {
       <PageHeader
         eyebrow="作品集与能力验收"
         title="把学习结果变成可展示的证据"
-        description="每个作品都需要可运行的工程、演示视频、技术说明和一次独立复写验收。"
+        description="完成度表示独立程度（学习中 / 能跟做 / 能独立 / 可复用），验收状态表示是否通过本月验收；AI 辅助完成的部分单独标注。每个作品都需要可运行的工程、演示视频和技术说明。"
       />
 
       <section className="portfolio-summary">
@@ -156,7 +265,9 @@ export function PortfolioPage() {
             {finished}
             <span> / {bundle.portfolio.length}</span>
           </strong>
-          <small>项作品或能力模块通过验收</small>
+          <small>
+            项作品或能力模块通过验收（验收状态 ≠ 完成度，完成度看独立程度）
+          </small>
         </div>
         <div className="portfolio-progress">
           <span
@@ -206,7 +317,7 @@ export function PortfolioPage() {
             item={item}
             index={bundle.portfolio.findIndex((source) => source.id === item.id)}
             canEdit={canEdit}
-            onEdit={() => setEditing(item)}
+            onEdit={() => openEditor(item)}
           />
         ))}
       </div>
@@ -214,7 +325,7 @@ export function PortfolioPage() {
       <Modal
         open={Boolean(editing)}
         title={editing?.code ? `编辑 ${editing.code}` : "编辑能力模块"}
-        onClose={() => setEditing(null)}
+        onClose={closeEditor}
       >
         {editing && (
           <form className="stack-form edit-form" onSubmit={submit}>
@@ -244,6 +355,46 @@ export function PortfolioPage() {
                 name="acceptance"
                 defaultValue={editing.acceptance}
                 rows={3}
+              />
+            </label>
+            <div className="form-grid">
+              <label className="field">
+                <FieldLabel hint="能否脱离教程独立完成">完成度</FieldLabel>
+                <Select
+                  name="evidenceLevel"
+                  defaultValue={editing.evidenceLevel}
+                >
+                  {evidenceOptions.map((option) => (
+                    <option value={option.value} key={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </Select>
+              </label>
+              <div className="field">
+                <FieldLabel>AI 参与情况</FieldLabel>
+                <label className="checkbox-row">
+                  <input
+                    type="checkbox"
+                    name="aiAssisted"
+                    defaultChecked={editing.aiAssisted}
+                  />
+                  <span>
+                    <strong>AI 辅助完成</strong>
+                    <small>如实标注有 AI 参与的部分。</small>
+                  </span>
+                </label>
+              </div>
+            </div>
+            <label className="field">
+              <FieldLabel hint="优化前后数据、帧率、Draw Call 等">
+                性能记录
+              </FieldLabel>
+              <TextArea
+                name="perfNotes"
+                defaultValue={editing.perfNotes}
+                rows={3}
+                placeholder="例：优化后同场景 GPU 耗时从 8.2ms 降到 5.1ms"
               />
             </label>
             <div className="form-grid">
@@ -285,13 +436,55 @@ export function PortfolioPage() {
               </label>
             </div>
             <label className="field">
-              <FieldLabel>封面图片链接</FieldLabel>
+              <FieldLabel hint="PNG / JPG / WebP，≤2MB">
+                封面图片链接
+              </FieldLabel>
               <TextInput
                 type="url"
                 name="coverUrl"
-                defaultValue={editing.coverUrl}
+                value={coverPreview}
+                onChange={(event) => setCoverPreview(event.target.value)}
                 placeholder="https://"
               />
+              <div className="form-actions">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  disabled={busy}
+                  onClick={() => coverInput.current?.click()}
+                >
+                  {busy ? (
+                    <LoaderCircle className="spin" size={16} />
+                  ) : (
+                    <Upload size={16} />
+                  )}
+                  上传封面图
+                </Button>
+                <input
+                  ref={coverInput}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  hidden
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (file) void onCoverFile(file);
+                    event.target.value = "";
+                  }}
+                />
+              </div>
+              {coverPreview && (
+                <img
+                  className="cover-preview"
+                  src={coverPreview}
+                  alt="封面预览"
+                  style={{
+                    width: "100%",
+                    height: 120,
+                    objectFit: "cover",
+                    borderRadius: 10
+                  }}
+                />
+              )}
             </label>
             <label className="field">
               <FieldLabel>补充说明</FieldLabel>
@@ -311,11 +504,7 @@ export function PortfolioPage() {
             </label>
             {error && <p className="form-error">{error}</p>}
             <div className="form-actions form-actions-end">
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => setEditing(null)}
-              >
+              <Button type="button" variant="ghost" onClick={closeEditor}>
                 取消
               </Button>
               <Button disabled={busy}>

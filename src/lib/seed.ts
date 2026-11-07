@@ -1,10 +1,11 @@
 import seedData from "../data/unity-ta-monthly.json";
-import type { PlanBundle, ProgressStatus } from "../types";
+import type { PlanBundle, PlanProfile, ProgressStatus } from "../types";
 
 export function createSeedBundle(): PlanBundle {
   const data = structuredClone(seedData);
   return {
     plan: data.plan,
+    profile: data.profile as PlanProfile,
     phases: data.phases,
     months: data.months.map((month) => ({
       ...month,
@@ -16,7 +17,8 @@ export function createSeedBundle(): PlanBundle {
     attachments: [],
     portfolio: data.portfolio.map((item) => ({
       ...item,
-      status: item.status as ProgressStatus
+      status: item.status as ProgressStatus,
+      evidenceLevel: item.evidenceLevel as PlanBundle["portfolio"][number]["evidenceLevel"]
     }))
   };
 }

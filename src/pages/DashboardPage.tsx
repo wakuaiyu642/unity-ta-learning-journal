@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import { useDocumentMeta } from "../lib/meta";
 import {
   findRelevantMonth,
   formatDuration,
@@ -34,6 +35,7 @@ export function DashboardPage() {
     session,
     setDemoEditing
   } = useApp();
+  useDocumentMeta("学习记录 · 成长管线", "20 个月成长档案：本月进度、每日打卡与每周复盘");
   if (!bundle) return null;
 
   const base = `/plans/${bundle.plan.slug}`;

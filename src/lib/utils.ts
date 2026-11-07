@@ -1,4 +1,8 @@
-import type { ProgressStatus } from "../types";
+import type {
+  EvidenceLevel,
+  ProfileSkillLevel,
+  ProgressStatus
+} from "../types";
 
 export const statusLabels: Record<ProgressStatus, string> = {
   not_started: "未开始",
@@ -12,6 +16,37 @@ export const statusOptions: Array<{ value: ProgressStatus; label: string }> = [
   { value: "in_progress", label: "进行中" },
   { value: "done", label: "已完成" },
   { value: "deferred", label: "已顺延" }
+];
+
+export const skillLevelLabels: Record<ProfileSkillLevel, string> = {
+  aware: "了解",
+  guided: "能跟做",
+  independent: "能独立",
+  explainable: "能讲原理"
+};
+
+export const skillLevelOptions: Array<{
+  value: ProfileSkillLevel;
+  label: string;
+}> = [
+  { value: "aware", label: "了解" },
+  { value: "guided", label: "能跟做" },
+  { value: "independent", label: "能独立" },
+  { value: "explainable", label: "能讲原理" }
+];
+
+export const evidenceLabels: Record<EvidenceLevel, string> = {
+  learning: "学习中",
+  guided: "能跟做",
+  independent: "能独立",
+  reusable: "可复用"
+};
+
+export const evidenceOptions: Array<{ value: EvidenceLevel; label: string }> = [
+  { value: "learning", label: "学习中" },
+  { value: "guided", label: "能跟做" },
+  { value: "independent", label: "能独立" },
+  { value: "reusable", label: "可复用" }
 ];
 
 export const ALLOWED_ATTACHMENT_TYPES = [

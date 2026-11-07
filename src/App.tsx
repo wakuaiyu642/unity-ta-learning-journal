@@ -9,9 +9,19 @@ import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import { AppShell } from "./components/AppShell";
 import { ErrorState, FullPageLoading } from "./components/Feedback";
 
+const HomePage = lazy(() =>
+  import("./pages/HomePage").then((module) => ({
+    default: module.HomePage
+  }))
+);
 const DashboardPage = lazy(() =>
   import("./pages/DashboardPage").then((module) => ({
     default: module.DashboardPage
+  }))
+);
+const ProfileEditorPage = lazy(() =>
+  import("./pages/ProfileEditorPage").then((module) => ({
+    default: module.ProfileEditorPage
   }))
 );
 const MonthPage = lazy(() =>
@@ -67,12 +77,7 @@ function LegacyWeekRedirect() {
   const date = new Date("2026-11-09T00:00:00Z");
   date.setUTCDate(date.getUTCDate() + (number - 1) * 7);
   const monthKey = date.toISOString().slice(0, 7);
-  return (
-    <Navigate
-      to={`/plans/${planSlug}/months/${monthKey}`}
-      replace
-    />
-  );
+  return <Navigate to={`/plans/${planSlug}/months/${monthKey}`} replace />;
 }
 
 export function App() {
@@ -82,17 +87,17 @@ export function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/plans/unity-ta" replace />} />
           <Route path="/plans/:planSlug" element={<AppShell />}>
-            <Route index element={<DashboardPage />} />
+            <Route index element={<HomePage />} />
+            <Route path="journal" element={<DashboardPage />} />
+            <Route path="profile" element={<Navigate to="edit" replace />} />
+            <Route path="profile/edit" element={<ProfileEditorPage />} />
             <Route path="months/:monthKey" element={<MonthPage />} />
             <Route path="weeks/:weekNo?" element={<LegacyWeekRedirect />} />
             <Route path="roadmap" element={<RoadmapPage />} />
             <Route path="portfolio" element={<PortfolioPage />} />
             <Route path="collaborators" element={<CollaboratorsPage />} />
           </Route>
-          <Route
-            path="*"
-            element={<Navigate to="/plans/unity-ta" replace />}
-          />
+          <Route path="*" element={<Navigate to="/plans/unity-ta" replace />} />
         </Routes>
       </Suspense>
     </AppErrorBoundary>

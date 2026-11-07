@@ -26,9 +26,12 @@ import {
   updateCloudMonth,
   updateCloudPassword,
   updateCloudPortfolio,
+  updateCloudProfile,
   uploadCloudAttachment,
+  uploadPlanAsset,
   upsertCloudDailyLog,
-  upsertCloudWeeklyReview
+  upsertCloudWeeklyReview,
+  type ProfileAssetKind
 } from "../lib/supabase-data";
 import { supabase } from "../lib/supabase";
 import {
@@ -47,12 +50,14 @@ import type {
   PlanMember,
   PlanRole,
   PortfolioPatch,
+  ProfilePatch,
   WeeklyReviewInput
 } from "../types";
 import {
   validateDailyLog,
   validateMonthPatch,
   validatePortfolioPatch,
+  validateProfilePatch,
   validateWeeklyReview
 } from "../lib/validation";
 
@@ -73,6 +78,12 @@ interface AppContextValue {
   uploadAttachment: (monthId: string, file: File) => Promise<void>;
   deleteAttachment: (attachment: Attachment) => Promise<void>;
   updatePortfolio: (itemId: string, patch: PortfolioPatch) => Promise<void>;
+  saveProfile: (patch: ProfilePatch) => Promise<void>;
+  uploadProfileAsset: (
+    kind: ProfileAssetKind,
+    file: File,
+    itemId?: string
+  ) => Promise<string>;
   signInWithPassword: (email: string, password: string) => Promise<void>;
   changePassword: (password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -97,6 +108,29 @@ function authorNameFromSession(session: Session | null) {
     session?.user.email?.split("@")[0] ??
     "学习者"
   );
+}
+
+/** 本地演示模式下把图片压缩成 data URL，避免把大文件塞进 localStorage。 */
+async function imageFileToDataUrl(file: File, maxSize = 640): Promise<string> {
+  const objectUrl = URL.createObjectURL(file);
+  try {
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const element = new Image();
+      element.onload = () => resolve(element);
+      element.onerror = () => reject(new Error("图片读取失败，请换一张图片。"));
+      element.src = objectUrl;
+    });
+    const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(image.width * scale));
+    canvas.height = Math.max(1, Math.round(image.height * scale));
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("当前浏览器不支持图片处理。");
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL("image/jpeg", 0.82);
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
 }
 
 export function AppProvider({ children }: { children: ReactNode }) {
@@ -206,6 +240,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
           event: "*",
           schema: "public",
           table: "portfolio_items",
+          filter: `plan_id=eq.${bundle.plan.id}`
+        },
+        invalidate
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "plan_profiles",
           filter: `plan_id=eq.${bundle.plan.id}`
         },
         invalidate
@@ -412,6 +456,41 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [mutateLocal, refresh]
   );
 
+  const saveProfile = useCallback(
+    async (patch: ProfilePatch) => {
+      const validPatch = validateProfilePatch(patch);
+      if (cloudConfigured) {
+        await updateCloudProfile(bundle!.plan.id, validPatch);
+        await refresh();
+        return;
+      }
+      mutateLocal((current) => ({
+        ...current,
+        profile: {
+          ...current.profile,
+          ...validPatch,
+          updatedAt: new Date().toISOString()
+        }
+      }));
+    },
+    [bundle?.plan.id, mutateLocal, refresh]
+  );
+
+  const uploadProfileAsset = useCallback(
+    async (kind: ProfileAssetKind, file: File, itemId?: string) => {
+      if (cloudConfigured) {
+        return uploadPlanAsset(bundle!.plan.id, kind, file, itemId);
+      }
+      if (kind === "resume") {
+        throw new Error(
+          "本地演示模式暂不支持上传简历，请填写简历链接或使用云端模式。"
+        );
+      }
+      return imageFileToDataUrl(file);
+    },
+    [bundle?.plan.id]
+  );
+
   const signInWithPassword = useCallback(
     async (email: string, password: string) => {
       await signInWithEmailPassword(email, password);
@@ -478,6 +557,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       uploadAttachment,
       deleteAttachment,
       updatePortfolio,
+      saveProfile,
+      uploadProfileAsset,
       signInWithPassword,
       changePassword,
       signOut,
@@ -501,6 +582,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       revokeCollaborator,
       role,
       saveDailyLog,
+      saveProfile,
       saveWeeklyReview,
       session,
       setDemoEditing,
@@ -508,7 +590,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       signOut,
       updateMonth,
       updatePortfolio,
-      uploadAttachment
+      uploadAttachment,
+      uploadProfileAsset
     ]
   );
 

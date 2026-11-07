@@ -64,7 +64,7 @@ const planPayload = {
   stage_goal: seed.plan.stageGoal,
   principle: seed.plan.principle,
   principles: seed.plan.principles,
-  weekly_targets: [],
+  weekly_targets: seed.plan.weeklyTargets,
   phases: seed.phases,
   starts_on: seed.plan.startDate,
   ends_on: seed.plan.endDate,
@@ -97,6 +97,9 @@ const months = assertResult(
         starts_on: month.startDate,
         ends_on: month.endDate,
         sort_order: month.sortOrder,
+        deliverable: month.deliverable,
+        evidence_gate: month.evidenceGate,
+        estimated_hours: month.estimatedHours,
         updated_at: new Date().toISOString()
       })),
       { onConflict: "plan_id,month_label" }
@@ -166,33 +169,119 @@ for (const month of months) {
 const existingPortfolio = assertResult(
   await client
     .from("portfolio_items")
-    .select("id")
-    .eq("plan_id", planId)
-    .limit(1),
+    .select("id, code, evidence_level, ai_assisted, perf_notes")
+    .eq("plan_id", planId),
   "检查作品集"
 );
-if (!existingPortfolio.length) {
+const existingPortfolioCodes = new Set(
+  existingPortfolio.map((item) => item.code).filter(Boolean)
+);
+const portfolioRow = (item) => ({
+  plan_id: planId,
+  code: item.code,
+  title: item.title,
+  summary: item.summary,
+  acceptance_criteria: item.acceptance,
+  status: item.status,
+  completed_on: item.completedOn,
+  notes: item.notes,
+  demo_url: item.demoUrl,
+  repo_url: item.repoUrl,
+  cover_url: item.coverUrl,
+  tech_stack: item.techStack,
+  evidence_level: item.evidenceLevel ?? "learning",
+  ai_assisted: Boolean(item.aiAssisted),
+  perf_notes: item.perfNotes ?? "",
+  published: item.published,
+  sort_order: item.sortOrder
+});
+const portfolioRows =
+  existingPortfolio.length === 0
+    ? seed.portfolio.map(portfolioRow)
+    : seed.portfolio
+        .filter(
+          (item) => item.code && !existingPortfolioCodes.has(item.code)
+        )
+        .map(portfolioRow);
+if (portfolioRows.length) {
   assertResult(
-    await client.from("portfolio_items").insert(
-      seed.portfolio.map((item) => ({
-        plan_id: planId,
-        code: item.code,
-        title: item.title,
-        summary: item.summary,
-        acceptance_criteria: item.acceptance,
-        status: item.status,
-        completed_on: item.completedOn,
-        notes: item.notes,
-        demo_url: item.demoUrl,
-        repo_url: item.repoUrl,
-        cover_url: item.coverUrl,
-        tech_stack: item.techStack,
-        published: item.published,
-        sort_order: item.sortOrder
-      }))
-    ),
+    await client.from("portfolio_items").insert(portfolioRows),
     "写入作品集"
   );
+}
+
+// 只回填「仍是默认值」的旧作品行（learning / false / 空性能记录），
+// 保留用户在线编辑过的完成度、AI 标注和性能记录。
+const seedByCode = new Map(
+  seed.portfolio.filter((item) => item.code).map((item) => [item.code, item])
+);
+let relabeled = 0;
+for (const existing of existingPortfolio) {
+  const item = seedByCode.get(existing.code);
+  if (!item) continue;
+  const isDefault =
+    existing.evidence_level === "learning" &&
+    existing.ai_assisted === false &&
+    !existing.perf_notes;
+  const nextLevel = item.evidenceLevel ?? "learning";
+  const nextAi = Boolean(item.aiAssisted);
+  const nextPerf = item.perfNotes ?? "";
+  const needsUpdate =
+    existing.evidence_level !== nextLevel ||
+    existing.ai_assisted !== nextAi ||
+    (existing.perf_notes ?? "") !== nextPerf;
+  if (isDefault && needsUpdate) {
+    assertResult(
+      await client
+        .from("portfolio_items")
+        .update({
+          evidence_level: nextLevel,
+          ai_assisted: nextAi,
+          perf_notes: nextPerf
+        })
+        .eq("id", existing.id),
+      `回填作品标注 ${existing.code}`
+    );
+    relabeled += 1;
+  }
+}
+if (relabeled) console.log(`Backfilled honest labels for ${relabeled} portfolio rows.`);
+
+const existingProfile = assertResult(
+  await client
+    .from("plan_profiles")
+    .select("plan_id")
+    .eq("plan_id", planId)
+    .maybeSingle(),
+  "检查个人资料"
+);
+if (!existingProfile) {
+  const profile = seed.profile;
+  assertResult(
+    await client.from("plan_profiles").insert({
+      plan_id: planId,
+      display_name: profile.displayName,
+      headline: profile.headline,
+      avatar_url: profile.avatarUrl,
+      location: profile.location,
+      school: profile.school,
+      major: profile.major,
+      degree: profile.degree,
+      grade: profile.grade,
+      graduation_year: profile.graduationYear,
+      target_role: profile.targetRole,
+      target_companies: profile.targetCompanies,
+      bio: profile.bio,
+      self_positioning: profile.selfPositioning,
+      honesty_note: profile.honestyNote,
+      skills: profile.skills,
+      highlights: profile.highlights,
+      links: profile.links,
+      updated_at: new Date().toISOString()
+    }),
+    "写入个人资料"
+  );
+  console.log("Inserted initial personal profile (edit it online afterwards).");
 }
 
 if (owner) {

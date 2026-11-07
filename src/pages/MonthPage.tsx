@@ -30,6 +30,7 @@ import {
 } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import { useDocumentMeta } from "../lib/meta";
 import {
   findRelevantMonth,
   formatDuration,
@@ -406,6 +407,10 @@ function MonthPageContent({
   const previousMonth = bundle.months[monthIndex - 1];
   const nextMonth = bundle.months[monthIndex + 1];
   const base = `/plans/${bundle.plan.slug}`;
+  useDocumentMeta(
+    `${month.month} · ${month.title} · 成长管线`,
+    `本月交付物：${month.deliverable}`
+  );
   const monthLogs = getMonthLogs(bundle.dailyLogs, month.id);
   const monthMinutes = monthLogs.reduce((sum, log) => sum + log.minutes, 0);
   const attachments = bundle.attachments.filter(
@@ -684,6 +689,38 @@ function MonthPageContent({
                   <small>以验收标准为准</small>
                 </span>
               </button>
+            </div>
+          </section>
+
+          <section className="panel deliverable-panel">
+            <div className="panel-heading compact">
+              <div>
+                <p className="eyebrow">本月唯一交付物</p>
+                <h2>{month.deliverable}</h2>
+              </div>
+              <span className="quiet-pill">
+                <Clock3 size={15} />
+                预计投入 {month.estimatedHours} 小时
+              </span>
+            </div>
+            <div className="month-focus-grid">
+              <article>
+                <span>独立完成门槛</span>
+                <strong>达不到就补，不进入下个月</strong>
+                <p>{month.evidenceGate}</p>
+              </article>
+              <article>
+                <span>本月预算</span>
+                <strong>
+                  已记录 {formatDuration(monthMinutes)} / 预算 {month.estimatedHours} 小时
+                </strong>
+                <p>打卡只记录过程，不自动完成月份；预算用于自查节奏，不强制凑满。</p>
+              </article>
+              <article>
+                <span>写进简历</span>
+                <strong>{month.resumeEvidence.length} 条能力证据</strong>
+                <p>{month.resumeEvidence.join("；")}</p>
+              </article>
             </div>
           </section>
 

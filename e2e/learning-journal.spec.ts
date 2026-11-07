@@ -1,14 +1,87 @@
 import { expect, test } from "@playwright/test";
 
+const HOME = "/plans/unity-ta";
+const JOURNAL = "/plans/unity-ta/journal";
+const FIRST_MONTH = "/plans/unity-ta/months/2026-11";
+
 test.beforeEach(async ({ page }) => {
-  await page.goto("/plans/unity-ta");
+  await page.goto(HOME);
   await page.evaluate(() => localStorage.clear());
   await page.reload();
 });
 
-test("public visitor can read the monthly plan without edit controls", async ({
+test("public visitor sees the personal homepage without edit controls", async ({
   page
 }) => {
+  await expect(
+    page.getByRole("heading", { name: "老王", exact: true })
+  ).toBeVisible();
+  await expect(page.locator(".home-headline")).toContainText("数字媒体艺术");
+  await expect(page.locator(".home-headline")).toContainText("Unity 技术美术");
+
+  await expect(page.getByText("当前是公开浏览模式")).toBeVisible();
+  await expect(page.getByText("能力自评", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /能否独立复现/ })
+  ).toBeVisible();
+  expect(await page.locator(".skill-card").count()).toBeGreaterThanOrEqual(5);
+
+  await expect(page.getByText("精选作品", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "能展示的学习成果" })
+  ).toBeVisible();
+  expect(await page.locator(".home-work-card").count()).toBeGreaterThan(0);
+  await expect(page.getByRole("link", { name: /查看作品集/ })).toBeVisible();
+
+  await expect(page.getByRole("button", { name: "开始体验" })).toBeVisible();
+  await expect(page.getByRole("link", { name: /编辑资料/ })).toHaveCount(0);
+
+  // 旧的周次链接按日期重定向到月份页。
+  await page.goto("/plans/unity-ta/weeks/W01");
+  await expect(page).toHaveURL(/\/plans\/unity-ta\/months\/2026-11$/);
+  await expect(
+    page.getByRole("heading", { name: /Shader 基础与 GPU 渲染数据流/ })
+  ).toBeVisible();
+});
+
+test("local demo edits the public profile and keeps it after reload", async ({
+  page
+}) => {
+  await page.getByRole("button", { name: "开始体验" }).click();
+  await expect(
+    page.getByRole("link", { name: "编辑资料" }).first()
+  ).toBeVisible();
+  await page.getByRole("link", { name: "编辑资料" }).first().click();
+  await expect(page).toHaveURL(/\/plans\/unity-ta\/profile\/edit$/);
+  await expect(
+    page.getByRole("heading", { name: "编辑个人资料" })
+  ).toBeVisible();
+
+  await page.getByLabel("显示名称").fill("测试名字");
+  await page.getByRole("button", { name: "保存资料" }).click();
+
+  await expect(page).toHaveURL(/\/plans\/unity-ta$/);
+  await expect(
+    page.getByRole("heading", { name: "测试名字", exact: true })
+  ).toBeVisible();
+
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: "测试名字", exact: true })
+  ).toBeVisible();
+
+  await page.getByRole("link", { name: "编辑资料" }).first().click();
+  await page.getByLabel("显示名称").fill("老王");
+  await page.getByRole("button", { name: "保存资料" }).click();
+  await expect(
+    page.getByRole("heading", { name: "老王", exact: true })
+  ).toBeVisible();
+});
+
+test("monthly journal is readable publicly and demo records progress", async ({
+  page
+}) => {
+  await page.goto(JOURNAL);
   await expect(
     page.getByRole("heading", { name: /一个月只做清楚/ })
   ).toBeVisible();
@@ -16,24 +89,21 @@ test("public visitor can read the monthly plan without edit controls", async ({
   await expect(page.getByText("公开浏览", { exact: true })).toBeVisible();
 
   await page.getByRole("link", { name: /打开 2026\.11/ }).click();
+  await expect(page).toHaveURL(/\/plans\/unity-ta\/months\/2026-11$/);
   await expect(
     page.getByRole("heading", { name: /Shader 基础与 GPU 渲染数据流/ })
   ).toBeVisible();
   await expect(page.getByText("公开查看")).toBeVisible();
-  await expect(page.getByRole("button", { name: "今日打卡" })).toHaveCount(0);
   await expect(page.getByText("学什么", { exact: true })).toBeVisible();
   await expect(page.getByText("做什么", { exact: true })).toBeVisible();
   await expect(page.getByText("达到什么水平", { exact: true })).toBeVisible();
-});
+  await expect(page.getByRole("button", { name: "今日打卡" })).toHaveCount(0);
 
-test("local demo persists daily check-in, weekly review and monthly acceptance", async ({
-  page
-}) => {
+  await page.goto(HOME);
   await page.getByRole("button", { name: "开始体验" }).click();
-  await page.getByRole("link", { name: /继续记录|查看月度计划/ }).click();
-  await expect(
-    page.getByRole("heading", { name: /Shader 基础与 GPU 渲染数据流/ })
-  ).toBeVisible();
+  await page.goto(JOURNAL);
+  await page.getByRole("link", { name: "继续记录" }).click();
+  await expect(page.getByRole("button", { name: "今日打卡" })).toBeVisible();
 
   await page.getByLabel("学习时长").fill("80");
   await page
@@ -43,7 +113,13 @@ test("local demo persists daily check-in, weekly review and monthly acceptance",
   await expect(page.getByText("今日打卡已写入")).toBeVisible();
 
   const firstWeek = page.locator(".weekly-review-card").first();
-  await firstWeek.locator("summary").click();
+  if (
+    !(await firstWeek.evaluate(
+      (element) => (element as HTMLDetailsElement).open
+    ))
+  ) {
+    await firstWeek.locator("summary").click();
+  }
   await firstWeek.getByLabel("本周完成").fill("写完基础顶点片元 Shader");
   await firstWeek.getByLabel("卡点").fill("矩阵顺序还不够熟");
   await firstWeek.getByLabel("下周重点").fill("补坐标空间");
@@ -64,17 +140,22 @@ test("local demo persists daily check-in, weekly review and monthly acceptance",
   ).toBeVisible();
   await expect(page.getByRole("button", { name: /本月已完成/ })).toBeVisible();
   const persistedWeek = page.locator(".weekly-review-card").first();
-  await persistedWeek.locator("summary").click();
-  await expect(
-    persistedWeek.getByLabel("下周重点")
-  ).toHaveValue("补坐标空间");
+  if (
+    !(await persistedWeek.evaluate(
+      (element) => (element as HTMLDetailsElement).open
+    ))
+  ) {
+    await persistedWeek.locator("summary").click();
+  }
+  await expect(persistedWeek.getByLabel("下周重点")).toHaveValue("补坐标空间");
 });
 
-test("local demo persists monthly attachments and portfolio edits", async ({
+test("portfolio edits, attachments and roadmap stay inside the viewport", async ({
   page
 }) => {
   await page.getByRole("button", { name: "开始体验" }).click();
-  await page.goto("/plans/unity-ta/months/2026-11");
+
+  await page.goto(FIRST_MONTH);
   await page.locator('input[type="file"]').setInputFiles({
     name: "november-notes.md",
     mimeType: "text/markdown",
@@ -91,22 +172,33 @@ test("local demo persists monthly attachments and portfolio edits", async ({
   await page.getByRole("button", { name: "保存作品资料" }).click();
   await expect(page.getByText("Shader 效果合集 · 月度验收版")).toBeVisible();
   await expect(page.getByText("已公开").first()).toBeVisible();
-});
 
-test("monthly roadmap and mobile layout stay within the viewport", async ({
-  page
-}) => {
   await page.goto("/plans/unity-ta/roadmap");
-  await expect(page.getByText("20 个月，围绕能力而不是堆积名词")).toBeVisible();
+  await expect(
+    page.getByText("20 个月，围绕能力而不是堆积名词")
+  ).toBeVisible();
   await expect(page.locator(".roadmap-month-card")).toHaveCount(20);
-  const overflow = await page.evaluate(
+  const roadmapOverflow = await page.evaluate(
     () => document.documentElement.scrollWidth - window.innerWidth
   );
-  expect(overflow).toBeLessThanOrEqual(0);
+  expect(roadmapOverflow).toBeLessThanOrEqual(0);
 
-  await page.goto("/plans/unity-ta/months/2026-11");
-  const mobileOverflow = await page.evaluate(
+  await page.goto(FIRST_MONTH);
+  // 等 React 渲染完成再量宽度，否则会把「正在加载」的窄页面误判为不溢出。
+  await page.locator(".deliverable-panel").waitFor();
+  await page.waitForTimeout(300);
+  const monthOverflow = await page.evaluate(
     () => document.documentElement.scrollWidth - window.innerWidth
   );
-  expect(mobileOverflow).toBeLessThanOrEqual(0);
+  expect(monthOverflow).toBeLessThanOrEqual(0);
+
+  // 360px 窄屏复查（Pixel 7 / 桌面 project 都覆盖）。
+  await page.setViewportSize({ width: 360, height: 780 });
+  await page.reload();
+  await page.locator(".deliverable-panel").waitFor();
+  await page.waitForTimeout(300);
+  const narrowOverflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - window.innerWidth
+  );
+  expect(narrowOverflow).toBeLessThanOrEqual(0);
 });

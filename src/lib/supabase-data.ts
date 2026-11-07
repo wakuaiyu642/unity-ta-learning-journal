@@ -8,14 +8,17 @@ import type {
   PlanMember,
   PlanMonth,
   PlanPhase,
+  PlanProfile,
   PlanReference,
   PlanRole,
   PortfolioItem,
   PortfolioPatch,
+  ProfilePatch,
   ProgressStatus,
   WeeklyReview,
   WeeklyReviewInput
 } from "../types";
+import { createSeedBundle } from "./seed";
 import { safeFileName } from "./utils";
 import { supabase } from "./supabase";
 
@@ -46,6 +49,44 @@ function mapPlan(row: CloudRow, phases: PlanPhase[]): Plan {
   };
 }
 
+function mapProfile(row: CloudRow, planId: string): PlanProfile {
+  const links = (row.links as Partial<PlanProfile["links"]> | null) ?? {};
+  return {
+    planId: String(row.plan_id ?? planId),
+    displayName: String(row.display_name ?? ""),
+    headline: String(row.headline ?? ""),
+    avatarUrl: String(row.avatar_url ?? ""),
+    location: String(row.location ?? ""),
+    school: String(row.school ?? ""),
+    major: String(row.major ?? ""),
+    degree: String(row.degree ?? ""),
+    grade: String(row.grade ?? ""),
+    graduationYear:
+      row.graduation_year === null || row.graduation_year === undefined
+        ? null
+        : Number(row.graduation_year),
+    targetRole: String(row.target_role ?? ""),
+    targetCompanies: String(row.target_companies ?? ""),
+    bio: String(row.bio ?? ""),
+    selfPositioning: String(row.self_positioning ?? ""),
+    honestyNote: String(row.honesty_note ?? ""),
+    skills: (row.skills as PlanProfile["skills"] | null) ?? [],
+    highlights: (row.highlights as string[] | null) ?? [],
+    links: {
+      githubUrl: String(links.githubUrl ?? ""),
+      email: String(links.email ?? ""),
+      resumeUrl: String(links.resumeUrl ?? ""),
+      websiteUrl: String(links.websiteUrl ?? ""),
+      showEmail: Boolean(links.showEmail)
+    },
+    updatedAt: String(row.updated_at ?? "")
+  };
+}
+
+function fallbackProfile(planId: string): PlanProfile {
+  return { ...createSeedBundle().profile, planId };
+}
+
 const sectionKeys: Record<string, keyof PlanMonth> = {
   learning: "learning",
   practice: "practice",
@@ -67,6 +108,9 @@ function mapMonth(row: CloudRow): PlanMonth {
     status: (row.status as ProgressStatus) ?? "not_started",
     completedAt: row.completed_at ? String(row.completed_at) : null,
     sortOrder: Number(row.sort_order),
+    deliverable: String(row.deliverable ?? ""),
+    evidenceGate: String(row.evidence_gate ?? ""),
+    estimatedHours: Number(row.estimated_hours ?? 0),
     learning: [],
     practice: [],
     weeklyFocus: [],
@@ -158,6 +202,10 @@ function mapPortfolio(row: CloudRow): PortfolioItem {
     repoUrl: String(row.repo_url ?? ""),
     coverUrl: String(row.cover_url ?? ""),
     techStack: (row.tech_stack as string[]) ?? [],
+    evidenceLevel:
+      (row.evidence_level as PortfolioItem["evidenceLevel"]) ?? "learning",
+    aiAssisted: Boolean(row.ai_assisted),
+    perfNotes: String(row.perf_notes ?? ""),
     published: Boolean(row.published),
     sortOrder: Number(row.sort_order)
   };
@@ -172,11 +220,9 @@ export async function loadCloudBundle(slug: string): Promise<PlanBundle> {
     .single();
   if (planError) throw planError;
 
-  const phases = ((planRow.phases as PlanPhase[]) ?? []).sort(
-    (a, b) => a.id.localeCompare(b.id)
-  );
+  const phases = (planRow.phases as PlanPhase[]) ?? [];
   const plan = mapPlan(planRow, phases);
-  const [months, dailyLogs, weeklyReviews, attachments, portfolio] =
+  const [months, dailyLogs, weeklyReviews, attachments, portfolio, profileRow] =
     await Promise.all([
       client
         .from("plan_months")
@@ -204,7 +250,12 @@ export async function loadCloudBundle(slug: string): Promise<PlanBundle> {
         .from("portfolio_items")
         .select("*")
         .eq("plan_id", plan.id)
-        .order("sort_order")
+        .order("sort_order"),
+      client
+        .from("plan_profiles")
+        .select("*")
+        .eq("plan_id", plan.id)
+        .maybeSingle()
     ]);
 
   const firstError = [months, dailyLogs, weeklyReviews, attachments, portfolio]
@@ -214,6 +265,11 @@ export async function loadCloudBundle(slug: string): Promise<PlanBundle> {
 
   return {
     plan,
+    // 个人资料表是增量迁移；未迁移/未 seed 时不阻断整站，回退到内置默认资料。
+    profile:
+      profileRow.error || !profileRow.data
+        ? fallbackProfile(plan.id)
+        : mapProfile(profileRow.data as CloudRow, plan.id),
     phases,
     months: (months.data ?? []).map((row) => mapMonth(row as CloudRow)),
     dailyLogs: (dailyLogs.data ?? []).map((row) =>
@@ -443,6 +499,9 @@ export async function updateCloudPortfolio(
     repoUrl: "repo_url",
     coverUrl: "cover_url",
     techStack: "tech_stack",
+    evidenceLevel: "evidence_level",
+    aiAssisted: "ai_assisted",
+    perfNotes: "perf_notes",
     published: "published"
   };
   for (const [key, value] of Object.entries(patch)) {
@@ -452,6 +511,80 @@ export async function updateCloudPortfolio(
     .from("portfolio_items")
     .update(payload)
     .eq("id", itemId);
+  if (error) throw error;
+}
+
+const profileColumnMap: Record<string, string> = {
+  displayName: "display_name",
+  headline: "headline",
+  avatarUrl: "avatar_url",
+  location: "location",
+  school: "school",
+  major: "major",
+  degree: "degree",
+  grade: "grade",
+  graduationYear: "graduation_year",
+  targetRole: "target_role",
+  targetCompanies: "target_companies",
+  bio: "bio",
+  selfPositioning: "self_positioning",
+  honestyNote: "honesty_note",
+  skills: "skills",
+  highlights: "highlights",
+  links: "links"
+};
+
+export async function updateCloudProfile(planId: string, patch: ProfilePatch) {
+  const client = requireClient();
+  const payload: Record<string, unknown> = {
+    plan_id: planId,
+    updated_at: new Date().toISOString()
+  };
+  for (const [key, value] of Object.entries(patch)) {
+    const column = profileColumnMap[key];
+    if (column) payload[column] = value;
+  }
+  const { error } = await client
+    .from("plan_profiles")
+    .upsert(payload, { onConflict: "plan_id" });
+  if (error) throw error;
+}
+
+export type ProfileAssetKind = "avatar" | "resume" | "cover";
+
+export async function uploadPlanAsset(
+  planId: string,
+  kind: ProfileAssetKind,
+  file: File,
+  itemId?: string
+): Promise<string> {
+  const client = requireClient();
+  const id = crypto.randomUUID();
+  const extension = (file.name.split(".").pop() || "bin").toLowerCase();
+  const prefix =
+    kind === "cover"
+      ? `portfolio/${itemId ?? "item"}-cover`
+      : `profile/${kind}`;
+  const path = `${planId}/${prefix}-${id}.${extension}`;
+  const { error } = await client.storage
+    .from("learning-files")
+    .upload(path, file, {
+      contentType: file.type || "application/octet-stream",
+      upsert: false,
+      cacheControl: "3600"
+    });
+  if (error) throw error;
+  const { data } = client.storage.from("learning-files").getPublicUrl(path);
+  return data.publicUrl;
+}
+
+export async function deleteCloudAsset(publicUrl: string) {
+  const client = requireClient();
+  const marker = "/storage/v1/object/public/learning-files/";
+  const index = publicUrl.indexOf(marker);
+  if (index === -1) return;
+  const path = publicUrl.slice(index + marker.length);
+  const { error } = await client.storage.from("learning-files").remove([path]);
   if (error) throw error;
 }
 
