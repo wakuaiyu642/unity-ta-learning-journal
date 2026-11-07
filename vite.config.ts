@@ -17,7 +17,7 @@ export default defineConfig({
       manifest: {
         name: "My TA Journey",
         short_name: "TA Journey",
-        description: "Unity 技术美术学习路线、每周打卡与作品集",
+        description: "Unity 技术美术月度学习计划、每日打卡与作品集",
         theme_color: "#123f3a",
         background_color: "#f6f2e9",
         display: "standalone",

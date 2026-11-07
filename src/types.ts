@@ -1,9 +1,20 @@
-export type WeekStatus = "not_started" | "in_progress" | "done" | "deferred";
+export type ProgressStatus =
+  | "not_started"
+  | "in_progress"
+  | "done"
+  | "deferred";
 export type PlanRole = "owner" | "editor" | "viewer";
 
-export interface WeeklyTarget {
+export interface PlanPhase {
+  id: string;
+  title: string;
+  range: string;
+  description: string;
+}
+
+export interface PlanReference {
   label: string;
-  value: string;
+  href: string;
 }
 
 export interface Plan {
@@ -17,62 +28,36 @@ export interface Plan {
   stageGoal: string;
   principle: string;
   principles: string[];
-  weeklyTargets: WeeklyTarget[];
+  weeklyTargets: Array<{ label: string; value: string }>;
   startDate: string;
   endDate: string;
   isPublic: boolean;
 }
 
-export interface PlanTrack {
-  id: string;
-  key: string;
-  label: string;
-  shortLabel: string;
-  color: string;
-  icon: string;
-  sortOrder: number;
-}
-
-export interface PlanMonthItem {
-  id?: string;
-  trackKey: string;
-  content: string;
-}
-
 export interface PlanMonth {
   id: string;
   month: string;
-  phaseGoal: string;
-  items: PlanMonthItem[];
-  sortOrder: number;
-}
-
-export interface PlanWeekTask {
-  id: string;
-  trackKey: string;
+  monthKey: string;
+  stageId: string;
   title: string;
-  content: string;
-  sortOrder: number;
-}
-
-export interface PlanWeek {
-  id: string;
-  weekNo: string;
-  weekIndex: number;
   startDate: string;
   endDate: string;
-  dateLabel: string;
-  theme: string;
-  tasks: PlanWeekTask[];
-  status: WeekStatus;
-  reflection: string;
-  updatedAt: string | null;
+  status: ProgressStatus;
+  completedAt: string | null;
+  sortOrder: number;
+  learning: string[];
+  practice: string[];
+  weeklyFocus: string[];
+  acceptance: string[];
+  pitfalls: string[];
+  references: PlanReference[];
+  resumeEvidence: string[];
 }
 
 export interface DailyLog {
   id: string;
   planId: string;
-  weekId: string;
+  monthId: string;
   userId: string;
   logDate: string;
   minutes: number;
@@ -81,10 +66,24 @@ export interface DailyLog {
   createdAt: string;
 }
 
+export interface WeeklyReview {
+  id: string;
+  planId: string;
+  userId: string;
+  weekStart: string;
+  weekEnd: string;
+  completed: string;
+  blockers: string;
+  nextFocus: string;
+  authorName: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Attachment {
   id: string;
   planId: string;
-  weekId: string;
+  monthId: string;
   storagePath: string;
   fileName: string;
   mimeType: string;
@@ -100,7 +99,7 @@ export interface PortfolioItem {
   title: string;
   summary: string;
   acceptance: string;
-  status: WeekStatus;
+  status: ProgressStatus;
   completedOn: string | null;
   notes: string;
   demoUrl: string;
@@ -122,18 +121,25 @@ export interface PlanMember {
 
 export interface PlanBundle {
   plan: Plan;
-  tracks: PlanTrack[];
+  phases: PlanPhase[];
   months: PlanMonth[];
-  weeks: PlanWeek[];
   dailyLogs: DailyLog[];
+  weeklyReviews: WeeklyReview[];
   attachments: Attachment[];
   portfolio: PortfolioItem[];
 }
 
-export interface WeekPatch {
-  status?: WeekStatus;
-  theme?: string;
-  reflection?: string;
+export interface MonthPatch {
+  status?: ProgressStatus;
+  completedAt?: string | null;
+  title?: string;
+  learning?: string[];
+  practice?: string[];
+  weeklyFocus?: string[];
+  acceptance?: string[];
+  pitfalls?: string[];
+  references?: PlanReference[];
+  resumeEvidence?: string[];
 }
 
 export interface DailyLogInput {
@@ -142,8 +148,16 @@ export interface DailyLogInput {
   note: string;
 }
 
+export interface WeeklyReviewInput {
+  weekStart: string;
+  weekEnd: string;
+  completed: string;
+  blockers: string;
+  nextFocus: string;
+}
+
 export interface PortfolioPatch {
-  status?: WeekStatus;
+  status?: ProgressStatus;
   title?: string;
   summary?: string;
   acceptance?: string;
@@ -154,8 +168,4 @@ export interface PortfolioPatch {
   coverUrl?: string;
   techStack?: string[];
   published?: boolean;
-}
-
-export interface TaskPatch {
-  content: string;
 }

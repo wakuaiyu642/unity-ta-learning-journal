@@ -1,8 +1,8 @@
 import type { PlanBundle } from "../types";
 import { createSeedBundle } from "./seed";
 
-const STORAGE_KEY = "ta-journey-local-bundle-v1";
-const CLOUD_CACHE_KEY = "ta-journey-cloud-bundle-v1";
+const STORAGE_KEY = "ta-journey-local-monthly-v1";
+const CLOUD_CACHE_KEY = "ta-journey-cloud-monthly-v1";
 let memoryFallback: string | null = null;
 
 function getStorage() {
@@ -23,7 +23,7 @@ export function loadLocalBundle(): PlanBundle {
 
   try {
     const parsed = JSON.parse(raw) as PlanBundle;
-    if (!parsed.plan || !Array.isArray(parsed.weeks)) {
+    if (!parsed.plan || !Array.isArray(parsed.months)) {
       return createSeedBundle();
     }
     return parsed;
@@ -48,7 +48,7 @@ export function loadCloudSnapshot(): PlanBundle | null {
     const raw = getStorage()?.getItem(CLOUD_CACHE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as PlanBundle;
-    return parsed.plan && Array.isArray(parsed.weeks) ? parsed : null;
+    return parsed.plan && Array.isArray(parsed.months) ? parsed : null;
   } catch {
     return null;
   }

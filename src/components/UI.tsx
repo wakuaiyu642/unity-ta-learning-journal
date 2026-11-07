@@ -6,10 +6,10 @@ import type {
   TextareaHTMLAttributes
 } from "react";
 import { X } from "lucide-react";
-import type { WeekStatus } from "../types";
+import type { ProgressStatus } from "../types";
 import { cn, statusLabels } from "../lib/utils";
 
-export function StatusBadge({ status }: { status: WeekStatus }) {
+export function StatusBadge({ status }: { status: ProgressStatus }) {
   return (
     <span className={cn("status-badge", `status-${status}`)}>
       <span className="status-dot" />

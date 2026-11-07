@@ -2,16 +2,19 @@ import type {
   Attachment,
   DailyLog,
   DailyLogInput,
+  MonthPatch,
   Plan,
   PlanBundle,
   PlanMember,
   PlanMonth,
+  PlanPhase,
+  PlanReference,
   PlanRole,
-  PlanTrack,
-  PlanWeek,
   PortfolioItem,
   PortfolioPatch,
-  WeekPatch
+  ProgressStatus,
+  WeeklyReview,
+  WeeklyReviewInput
 } from "../types";
 import { safeFileName } from "./utils";
 import { supabase } from "./supabase";
@@ -23,7 +26,7 @@ function requireClient() {
   return supabase;
 }
 
-function mapPlan(row: CloudRow): Plan {
+function mapPlan(row: CloudRow, phases: PlanPhase[]): Plan {
   return {
     id: String(row.id),
     slug: String(row.slug),
@@ -43,67 +46,83 @@ function mapPlan(row: CloudRow): Plan {
   };
 }
 
-function mapTrack(row: CloudRow): PlanTrack {
-  return {
-    id: String(row.id),
-    key: String(row.track_key),
-    label: String(row.label),
-    shortLabel: String(row.short_label),
-    color: String(row.color),
-    icon: String(row.icon),
-    sortOrder: Number(row.sort_order)
-  };
-}
+const sectionKeys: Record<string, keyof PlanMonth> = {
+  learning: "learning",
+  practice: "practice",
+  weekly_focus: "weeklyFocus",
+  acceptance: "acceptance",
+  pitfalls: "pitfalls",
+  resume_evidence: "resumeEvidence"
+};
 
 function mapMonth(row: CloudRow): PlanMonth {
-  return {
+  const result: PlanMonth = {
     id: String(row.id),
     month: String(row.month_label),
-    phaseGoal: String(row.phase_goal),
-    items: ((row.items as CloudRow[]) ?? []).map((item) => ({
-      id: String(item.id),
-      trackKey: String(item.track_key),
-      content: String(item.content)
-    })),
-    sortOrder: Number(row.sort_order)
+    monthKey: String(row.month_key),
+    stageId: String(row.stage_key ?? ""),
+    title: String(row.title ?? row.phase_goal ?? ""),
+    startDate: String(row.starts_on),
+    endDate: String(row.ends_on),
+    status: (row.status as ProgressStatus) ?? "not_started",
+    completedAt: row.completed_at ? String(row.completed_at) : null,
+    sortOrder: Number(row.sort_order),
+    learning: [],
+    practice: [],
+    weeklyFocus: [],
+    acceptance: [],
+    pitfalls: [],
+    references: [],
+    resumeEvidence: []
   };
-}
 
-function mapWeek(row: CloudRow): PlanWeek {
-  return {
-    id: String(row.id),
-    weekNo: String(row.week_no),
-    weekIndex: Number(row.week_index),
-    startDate: String(row.start_date),
-    endDate: String(row.end_date),
-    dateLabel: String(row.date_label),
-    theme: String(row.theme),
-    tasks: ((row.tasks as CloudRow[]) ?? [])
-      .map((task) => ({
-        id: String(task.id),
-        trackKey: String(task.track_key),
-        title: String(task.title ?? ""),
-        content: String(task.content),
-        sortOrder: Number(task.sort_order)
-      }))
-      .sort((a, b) => a.sortOrder - b.sortOrder),
-    status: (row.status as PlanWeek["status"]) ?? "not_started",
-    reflection: String(row.reflection ?? ""),
-    updatedAt: row.updated_at ? String(row.updated_at) : null
-  };
+  const sections = ((row.sections as CloudRow[]) ?? []).sort(
+    (a, b) => Number(a.sort_order) - Number(b.sort_order)
+  );
+  for (const section of sections) {
+    const type = String(section.section_type);
+    if (type === "reference") {
+      result.references.push({
+        label: String(section.content),
+        href: String(section.href ?? "")
+      });
+      continue;
+    }
+    const key = sectionKeys[type];
+    if (key) {
+      (result[key] as string[]).push(String(section.content));
+    }
+  }
+  return result;
 }
 
 function mapDailyLog(row: CloudRow): DailyLog {
   return {
     id: String(row.id),
     planId: String(row.plan_id),
-    weekId: String(row.week_id),
+    monthId: String(row.month_id),
     userId: String(row.user_id),
     logDate: String(row.log_date),
     minutes: Number(row.minutes ?? 0),
     note: String(row.note ?? ""),
     authorName: String(row.author_name ?? "学习者"),
     createdAt: String(row.created_at)
+  };
+}
+
+function mapWeeklyReview(row: CloudRow): WeeklyReview {
+  return {
+    id: String(row.id),
+    planId: String(row.plan_id),
+    userId: String(row.user_id),
+    weekStart: String(row.week_start),
+    weekEnd: String(row.week_end),
+    completed: String(row.completed ?? ""),
+    blockers: String(row.blockers ?? ""),
+    nextFocus: String(row.next_focus ?? ""),
+    authorName: String(row.author_name ?? "学习者"),
+    createdAt: String(row.created_at),
+    updatedAt: String(row.updated_at)
   };
 }
 
@@ -114,7 +133,7 @@ function mapAttachment(row: CloudRow): Attachment {
   return {
     id: String(row.id),
     planId: String(row.plan_id),
-    weekId: String(row.week_id),
+    monthId: String(row.month_id),
     storagePath,
     fileName: String(row.file_name),
     mimeType: String(row.mime_type),
@@ -132,7 +151,7 @@ function mapPortfolio(row: CloudRow): PortfolioItem {
     title: String(row.title),
     summary: String(row.summary ?? ""),
     acceptance: String(row.acceptance_criteria ?? ""),
-    status: (row.status as PortfolioItem["status"]) ?? "not_started",
+    status: (row.status as ProgressStatus) ?? "not_started",
     completedOn: row.completed_on ? String(row.completed_on) : null,
     notes: String(row.notes ?? ""),
     demoUrl: String(row.demo_url ?? ""),
@@ -153,33 +172,33 @@ export async function loadCloudBundle(slug: string): Promise<PlanBundle> {
     .single();
   if (planError) throw planError;
 
-  const plan = mapPlan(planRow);
-  const [tracks, months, weeks, dailyLogs, attachments, portfolio] =
+  const phases = ((planRow.phases as PlanPhase[]) ?? []).sort(
+    (a, b) => a.id.localeCompare(b.id)
+  );
+  const plan = mapPlan(planRow, phases);
+  const [months, dailyLogs, weeklyReviews, attachments, portfolio] =
     await Promise.all([
       client
-        .from("plan_tracks")
-        .select("*")
-        .eq("plan_id", plan.id)
-        .order("sort_order"),
-      client
         .from("plan_months")
-        .select("*, items:plan_month_items(*)")
+        .select("*, sections:plan_month_sections(*)")
         .eq("plan_id", plan.id)
         .order("sort_order"),
-      client
-        .from("plan_weeks")
-        .select("*, tasks:plan_week_tasks(*)")
-        .eq("plan_id", plan.id)
-        .order("week_index"),
       client
         .from("daily_logs")
         .select("*")
         .eq("plan_id", plan.id)
+        .not("month_id", "is", null)
         .order("log_date", { ascending: false }),
+      client
+        .from("weekly_reviews")
+        .select("*")
+        .eq("plan_id", plan.id)
+        .order("week_start", { ascending: false }),
       client
         .from("attachments")
         .select("*")
         .eq("plan_id", plan.id)
+        .not("month_id", "is", null)
         .order("created_at", { ascending: false }),
       client
         .from("portfolio_items")
@@ -188,18 +207,20 @@ export async function loadCloudBundle(slug: string): Promise<PlanBundle> {
         .order("sort_order")
     ]);
 
-  const firstError = [tracks, months, weeks, dailyLogs, attachments, portfolio]
+  const firstError = [months, dailyLogs, weeklyReviews, attachments, portfolio]
     .map((result) => result.error)
     .find(Boolean);
   if (firstError) throw firstError;
 
   return {
     plan,
-    tracks: (tracks.data ?? []).map((row) => mapTrack(row as CloudRow)),
+    phases,
     months: (months.data ?? []).map((row) => mapMonth(row as CloudRow)),
-    weeks: (weeks.data ?? []).map((row) => mapWeek(row as CloudRow)),
     dailyLogs: (dailyLogs.data ?? []).map((row) =>
       mapDailyLog(row as CloudRow)
+    ),
+    weeklyReviews: (weeklyReviews.data ?? []).map((row) =>
+      mapWeeklyReview(row as CloudRow)
     ),
     attachments: (attachments.data ?? []).map((row) =>
       mapAttachment(row as CloudRow)
@@ -221,31 +242,78 @@ export async function fetchPlanRole(planId: string): Promise<PlanRole | null> {
   return (data?.role as PlanRole | undefined) ?? null;
 }
 
-export async function updateCloudWeek(
-  weekId: string,
-  patch: WeekPatch
+export async function updateCloudMonth(
+  monthId: string,
+  patch: MonthPatch
 ) {
   const client = requireClient();
-  const payload: Record<string, unknown> = { updated_at: new Date().toISOString() };
+  const payload: Record<string, unknown> = {
+    updated_at: new Date().toISOString()
+  };
   if (patch.status !== undefined) payload.status = patch.status;
-  if (patch.theme !== undefined) payload.theme = patch.theme;
-  if (patch.reflection !== undefined) payload.reflection = patch.reflection;
-  const { error } = await client.from("plan_weeks").update(payload).eq("id", weekId);
-  if (error) throw error;
-}
-
-export async function updateCloudTask(taskId: string, content: string) {
-  const client = requireClient();
+  if (patch.completedAt !== undefined) payload.completed_at = patch.completedAt;
+  if (patch.title !== undefined) payload.title = patch.title;
   const { error } = await client
-    .from("plan_week_tasks")
-    .update({ content })
-    .eq("id", taskId);
+    .from("plan_months")
+    .update(payload)
+    .eq("id", monthId);
   if (error) throw error;
+
+  const arrayMap: Array<[keyof MonthPatch, string]> = [
+    ["learning", "learning"],
+    ["practice", "practice"],
+    ["weeklyFocus", "weekly_focus"],
+    ["acceptance", "acceptance"],
+    ["pitfalls", "pitfalls"],
+    ["resumeEvidence", "resume_evidence"]
+  ];
+  for (const [key, sectionType] of arrayMap) {
+    const values = patch[key] as string[] | undefined;
+    if (!values) continue;
+    const deleteResult = await client
+      .from("plan_month_sections")
+      .delete()
+      .eq("plan_month_id", monthId)
+      .eq("section_type", sectionType);
+    if (deleteResult.error) throw deleteResult.error;
+    if (values.length) {
+      const insertResult = await client.from("plan_month_sections").insert(
+        values.map((content, index) => ({
+          plan_month_id: monthId,
+          section_type: sectionType,
+          content,
+          href: "",
+          sort_order: index + 1
+        }))
+      );
+      if (insertResult.error) throw insertResult.error;
+    }
+  }
+  if (patch.references) {
+    const deleteResult = await client
+      .from("plan_month_sections")
+      .delete()
+      .eq("plan_month_id", monthId)
+      .eq("section_type", "reference");
+    if (deleteResult.error) throw deleteResult.error;
+    if (patch.references.length) {
+      const insertResult = await client.from("plan_month_sections").insert(
+        patch.references.map((reference: PlanReference, index) => ({
+          plan_month_id: monthId,
+          section_type: "reference",
+          content: reference.label,
+          href: reference.href,
+          sort_order: index + 1
+        }))
+      );
+      if (insertResult.error) throw insertResult.error;
+    }
+  }
 }
 
 export async function upsertCloudDailyLog(
   planId: string,
-  weekId: string,
+  monthId: string,
   input: DailyLogInput,
   authorName: string
 ) {
@@ -254,18 +322,19 @@ export async function upsertCloudDailyLog(
     data: { user }
   } = await client.auth.getUser();
   if (!user) throw new Error("请先登录再记录每日进度。");
-
   const { data, error } = await client
     .from("daily_logs")
     .upsert(
       {
         plan_id: planId,
-        week_id: weekId,
+        month_id: monthId,
+        week_id: null,
         user_id: user.id,
         log_date: input.logDate,
         minutes: input.minutes,
         note: input.note,
-        author_name: authorName || user.email?.split("@")[0] || "学习者"
+        author_name: authorName || user.email?.split("@")[0] || "学习者",
+        updated_at: new Date().toISOString()
       },
       { onConflict: "plan_id,user_id,log_date" }
     )
@@ -275,9 +344,41 @@ export async function upsertCloudDailyLog(
   return mapDailyLog(data as CloudRow);
 }
 
+export async function upsertCloudWeeklyReview(
+  planId: string,
+  input: WeeklyReviewInput,
+  authorName: string
+) {
+  const client = requireClient();
+  const {
+    data: { user }
+  } = await client.auth.getUser();
+  if (!user) throw new Error("请先登录再填写周复盘。");
+  const { data, error } = await client
+    .from("weekly_reviews")
+    .upsert(
+      {
+        plan_id: planId,
+        user_id: user.id,
+        week_start: input.weekStart,
+        week_end: input.weekEnd,
+        completed: input.completed,
+        blockers: input.blockers,
+        next_focus: input.nextFocus,
+        author_name: authorName || user.email?.split("@")[0] || "学习者",
+        updated_at: new Date().toISOString()
+      },
+      { onConflict: "plan_id,user_id,week_start" }
+    )
+    .select()
+    .single();
+  if (error) throw error;
+  return mapWeeklyReview(data as CloudRow);
+}
+
 export async function uploadCloudAttachment(
   planId: string,
-  weekId: string,
+  monthId: string,
   file: File
 ) {
   const client = requireClient();
@@ -285,9 +386,8 @@ export async function uploadCloudAttachment(
     data: { user }
   } = await client.auth.getUser();
   if (!user) throw new Error("请先登录再上传附件。");
-
   const id = crypto.randomUUID();
-  const path = `${planId}/${weekId}/${id}-${safeFileName(file.name)}`;
+  const path = `${planId}/${monthId}/${id}-${safeFileName(file.name)}`;
   const { error: uploadError } = await client.storage
     .from("learning-files")
     .upload(path, file, {
@@ -302,7 +402,8 @@ export async function uploadCloudAttachment(
     .insert({
       id,
       plan_id: planId,
-      week_id: weekId,
+      month_id: monthId,
+      week_id: null,
       storage_path: path,
       file_name: file.name,
       mime_type: file.type,
@@ -359,10 +460,7 @@ export async function signInWithEmailPassword(
   password: string
 ) {
   const client = requireClient();
-  const { error } = await client.auth.signInWithPassword({
-    email,
-    password
-  });
+  const { error } = await client.auth.signInWithPassword({ email, password });
   if (error) throw error;
 }
 

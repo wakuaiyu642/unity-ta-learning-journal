@@ -12,6 +12,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "import:plan": "node scripts/import-workbook.mjs",
+    "build:monthly": "node scripts/build-monthly-plan.mjs",
     "seed:supabase": "node scripts/seed-supabase.mjs"
   },
   "dependencies": {

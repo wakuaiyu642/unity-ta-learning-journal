@@ -2953,3 +2953,398 @@ p {
     transition-duration: 0.01ms !important;
   }
 }
+
+.month-focus-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.month-focus-grid article {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface-soft);
+}
+
+.month-focus-grid span {
+  color: var(--ink-faint);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.month-focus-grid strong {
+  display: block;
+  margin: 5px 0 7px;
+  font-size: 12px;
+}
+
+.month-focus-grid p {
+  margin: 0;
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.month-section {
+  padding: 27px;
+}
+
+.month-section-accent {
+  border-color: rgb(88 196 166 / 48%);
+  background: linear-gradient(145deg, var(--surface), #f2fbf7);
+}
+
+.section-icon {
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border-radius: 11px;
+  color: var(--forest-2);
+  background: var(--mint-soft);
+}
+
+.content-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: month-content;
+}
+
+.content-list li {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 9px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: 10px;
+  line-height: 1.65;
+  counter-increment: month-content;
+}
+
+.content-list li::before {
+  color: var(--mint);
+  content: counter(month-content, decimal-leading-zero);
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.content-list li:last-child {
+  border-bottom: 0;
+}
+
+.edit-section-button {
+  min-height: 32px;
+  margin-top: 11px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink-soft);
+  background: var(--surface);
+  font-size: 9px;
+}
+
+.month-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.month-disclosure {
+  padding: 0;
+  overflow: hidden;
+}
+
+.month-disclosure summary {
+  display: flex;
+  min-height: 62px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 16px 20px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.month-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.month-disclosure summary span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.month-disclosure summary small {
+  color: var(--ink-faint);
+  font-size: 8px;
+}
+
+.month-disclosure > :not(summary) {
+  margin: 0 20px 20px;
+}
+
+.reference-list {
+  display: grid;
+  gap: 10px;
+}
+
+.reference-list a,
+.reference-list > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-soft);
+  font-size: 10px;
+}
+
+.reference-list a {
+  color: var(--forest-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.review-preview {
+  margin: 12px 0;
+  padding: 13px;
+  border-radius: 11px;
+  background: var(--surface-soft);
+}
+
+.review-preview strong {
+  font-size: 10px;
+}
+
+.review-preview p {
+  margin: 5px 0 0;
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.weekly-review-list {
+  display: grid;
+  gap: 9px;
+}
+
+.weekly-review-card {
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface-soft);
+}
+
+.weekly-review-card summary {
+  display: flex;
+  min-height: 65px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 16px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.weekly-review-card summary::-webkit-details-marker {
+  display: none;
+}
+
+.weekly-review-card summary > div {
+  display: grid;
+  flex: 0 0 auto;
+  gap: 2px;
+}
+
+.weekly-review-card summary strong {
+  font-size: 11px;
+}
+
+.weekly-review-card summary small,
+.weekly-review-card summary > span {
+  color: var(--ink-faint);
+  font-size: 8px;
+}
+
+.weekly-review-card summary > span {
+  max-width: 360px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.weekly-review-form {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.weekly-review-readonly {
+  display: grid;
+  gap: 7px;
+  padding: 16px;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.weekly-review-readonly p {
+  margin: 0;
+  font-size: 10px;
+}
+
+.monthly-roadmap {
+  display: grid;
+  gap: 28px;
+}
+
+.roadmap-phase {
+  display: grid;
+  gap: 16px;
+}
+
+.roadmap-phase-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 25px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.roadmap-phase-heading h2 {
+  margin: 5px 0 4px;
+  font-size: 24px;
+}
+
+.roadmap-phase-heading p:not(.eyebrow) {
+  max-width: 720px;
+  margin: 0;
+  font-size: 10px;
+}
+
+.roadmap-month-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.roadmap-month-card {
+  display: grid;
+  min-height: 185px;
+  align-content: space-between;
+  gap: 12px;
+  padding: 19px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: var(--surface);
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.roadmap-month-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--mint);
+  box-shadow: var(--shadow-md);
+}
+
+.roadmap-month-card-current {
+  color: #fff;
+  border-color: var(--forest);
+  background: var(--forest);
+}
+
+.roadmap-month-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.roadmap-month-top > span {
+  color: var(--ink-faint);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.roadmap-month-card-current .roadmap-month-top > span {
+  color: var(--lime);
+}
+
+.roadmap-month-card h3 {
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+.roadmap-month-card-current h3 {
+  color: #fff;
+}
+
+.roadmap-month-card > p {
+  margin: 0;
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.roadmap-month-card-current > p {
+  color: rgb(255 255 255 / 60%);
+}
+
+.roadmap-month-meta {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink-faint);
+  font-size: 8px;
+}
+
+.roadmap-month-meta svg {
+  margin-left: auto;
+}
+
+.roadmap-month-card-current .roadmap-month-meta {
+  color: rgb(255 255 255 / 55%);
+}
+
+@media (max-width: 980px) {
+  .roadmap-month-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .month-focus-grid,
+  .month-detail-grid,
+  .roadmap-month-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .month-section {
+    padding: 19px;
+  }
+
+  .weekly-review-card summary {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .weekly-review-card summary > span {
+    max-width: 100%;
+  }
+
+  .roadmap-phase-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

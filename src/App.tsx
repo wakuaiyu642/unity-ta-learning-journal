@@ -5,7 +5,7 @@ import {
   type ReactNode,
   Suspense
 } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import { AppShell } from "./components/AppShell";
 import { ErrorState, FullPageLoading } from "./components/Feedback";
 
@@ -14,9 +14,9 @@ const DashboardPage = lazy(() =>
     default: module.DashboardPage
   }))
 );
-const WeekPage = lazy(() =>
-  import("./pages/WeekPage").then((module) => ({
-    default: module.WeekPage
+const MonthPage = lazy(() =>
+  import("./pages/MonthPage").then((module) => ({
+    default: module.MonthPage
   }))
 );
 const RoadmapPage = lazy(() =>
@@ -61,6 +61,20 @@ class AppErrorBoundary extends Component<
   }
 }
 
+function LegacyWeekRedirect() {
+  const { planSlug = "unity-ta", weekNo = "W01" } = useParams();
+  const number = Number(weekNo.replace(/\D/g, "")) || 1;
+  const date = new Date("2026-11-09T00:00:00Z");
+  date.setUTCDate(date.getUTCDate() + (number - 1) * 7);
+  const monthKey = date.toISOString().slice(0, 7);
+  return (
+    <Navigate
+      to={`/plans/${planSlug}/months/${monthKey}`}
+      replace
+    />
+  );
+}
+
 export function App() {
   return (
     <AppErrorBoundary>
@@ -69,7 +83,8 @@ export function App() {
           <Route path="/" element={<Navigate to="/plans/unity-ta" replace />} />
           <Route path="/plans/:planSlug" element={<AppShell />}>
             <Route index element={<DashboardPage />} />
-            <Route path="weeks/:weekNo?" element={<WeekPage />} />
+            <Route path="months/:monthKey" element={<MonthPage />} />
+            <Route path="weeks/:weekNo?" element={<LegacyWeekRedirect />} />
             <Route path="roadmap" element={<RoadmapPage />} />
             <Route path="portfolio" element={<PortfolioPage />} />
             <Route path="collaborators" element={<CollaboratorsPage />} />

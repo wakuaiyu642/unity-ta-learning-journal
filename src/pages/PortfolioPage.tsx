@@ -11,7 +11,7 @@ import {
   Sparkles
 } from "lucide-react";
 import { useApp } from "../context/AppContext";
-import type { PortfolioItem, WeekStatus } from "../types";
+import type { PortfolioItem, ProgressStatus } from "../types";
 import { cn, statusLabels, statusOptions } from "../lib/utils";
 import {
   Button,
@@ -94,7 +94,7 @@ export function PortfolioPage() {
   const [editing, setEditing] = useState<PortfolioItem | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [statusFilter, setStatusFilter] = useState<WeekStatus | "all">("all");
+  const [statusFilter, setStatusFilter] = useState<ProgressStatus | "all">("all");
   const portfolio = bundle?.portfolio ?? [];
   const filtered = useMemo(
     () =>
@@ -116,7 +116,7 @@ export function PortfolioPage() {
     try {
       await updatePortfolio(editing.id, {
         title: String(form.get("title") ?? "").trim(),
-        status: String(form.get("status")) as WeekStatus,
+        status: String(form.get("status")) as ProgressStatus,
         summary: String(form.get("summary") ?? "").trim(),
         acceptance: String(form.get("acceptance") ?? "").trim(),
         notes: String(form.get("notes") ?? "").trim(),

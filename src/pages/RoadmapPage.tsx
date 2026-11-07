@@ -1,59 +1,58 @@
 import { useMemo, useState } from "react";
 import {
+  ArrowRight,
+  BookOpen,
   CalendarRange,
   CheckCircle2,
-  ChevronRight,
   Search,
   Target
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import { todayInShanghai } from "../lib/date";
-import { cn, getTrackColor } from "../lib/utils";
+import { cn } from "../lib/utils";
 import { PageHeader, StatusBadge } from "../components/UI";
 
 export function RoadmapPage() {
   const { bundle } = useApp();
   const [query, setQuery] = useState("");
-  const [expanded, setExpanded] = useState<string[]>([]);
-  const months = bundle?.months ?? [];
-  const todayMonth = todayInShanghai().slice(0, 7).replace("-", ".");
-  const filteredMonths = useMemo(() => {
+
+  const filteredPhases = useMemo(() => {
+    const months = bundle?.months ?? [];
+    const phases = bundle?.phases ?? [];
     const keyword = query.trim().toLowerCase();
-    if (!keyword) return months;
-    return months.filter((month) =>
-      [
-        month.month,
-        month.phaseGoal,
-        ...month.items.map((item) => item.content)
-      ]
-        .join(" ")
-        .toLowerCase()
-        .includes(keyword)
-    );
-  }, [months, query]);
-  const projectMilestones = months.filter(
-    (month) =>
-      month.phaseGoal.includes("作品") ||
-      month.phaseGoal.includes("投递") ||
-      month.phaseGoal.includes("就业")
-  );
+    return phases.map((phase) => ({
+      ...phase,
+      months: months.filter(
+        (month) =>
+          month.stageId === phase.id &&
+          (!keyword ||
+            [
+              month.month,
+              month.title,
+              ...month.learning,
+              ...month.practice,
+              ...month.acceptance
+            ]
+              .join(" ")
+              .toLowerCase()
+              .includes(keyword))
+      )
+    }));
+  }, [bundle, query]);
 
   if (!bundle) return null;
-
-  const toggleMonth = (monthId: string) => {
-    setExpanded((current) =>
-      current.includes(monthId)
-        ? current.filter((id) => id !== monthId)
-        : [...current, monthId]
-    );
-  };
+  const completed = bundle.months.filter(
+    (month) => month.status === "done"
+  ).length;
+  const currentMonthKey = todayInShanghai().slice(0, 7);
 
   return (
     <div>
       <PageHeader
-        eyebrow="完整学习路线"
-        title="从基础原理到可展示的作品"
-        description={`${bundle.plan.periodLabel} · ${bundle.months.length} 个阶段月 · ${bundle.weeks.length} 个学习周`}
+        eyebrow="完整月度路线"
+        title="20 个月，围绕能力而不是堆积名词"
+        description={`${bundle.plan.periodLabel} · 5 个阶段 · 每月回答“学什么、做什么、达到什么水平”`}
       />
 
       <section className="roadmap-overview">
@@ -61,23 +60,21 @@ export function RoadmapPage() {
           <CalendarRange size={22} />
           <div>
             <strong>{bundle.months.length}</strong>
-            <span>阶段月</span>
+            <span>计划月份</span>
           </div>
         </article>
         <article className="roadmap-stat">
           <Target size={22} />
           <div>
-            <strong>{projectMilestones.length}</strong>
-            <span>关键节点</span>
+            <strong>{bundle.phases.length}</strong>
+            <span>能力阶段</span>
           </div>
         </article>
         <article className="roadmap-stat">
           <CheckCircle2 size={22} />
           <div>
-            <strong>
-              {bundle.portfolio.filter((item) => item.status === "done").length}
-            </strong>
-            <span>已验收能力</span>
+            <strong>{completed}</strong>
+            <span>已验收月份</span>
           </div>
         </article>
       </section>
@@ -88,100 +85,61 @@ export function RoadmapPage() {
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="搜索月份、主题或知识点"
+            placeholder="搜索月份、知识点、实践或验收"
           />
         </label>
-        <div className="track-legend">
-          {bundle.tracks.map((track) => (
-            <span key={track.key}>
-              <i style={{ backgroundColor: track.color }} />
-              {track.shortLabel}
-            </span>
-          ))}
-        </div>
+        <span className="quiet-pill">
+          <BookOpen size={15} />
+          周重点只作节奏建议
+        </span>
       </div>
 
-      <section className="timeline" aria-label="月度学习路线">
-        {filteredMonths.map((month) => {
-          const isCurrent = month.month === todayMonth;
-          const isExpanded = expanded.includes(month.id) || isCurrent;
-          return (
-            <article
-              className={cn(
-                "timeline-item",
-                isCurrent && "timeline-item-current"
-              )}
-              key={month.id}
-            >
-              <div className="timeline-marker">
-                <span>{month.month.split(".")[1]}</span>
-                <small>{month.month.split(".")[0]}</small>
+      <section className="monthly-roadmap">
+        {filteredPhases.map((phase) =>
+          phase.months.length ? (
+            <div className="roadmap-phase" key={phase.id}>
+              <div className="roadmap-phase-heading">
+                <div>
+                  <p className="eyebrow">{phase.range}</p>
+                  <h2>{phase.title}</h2>
+                  <p>{phase.description}</p>
+                </div>
               </div>
-              <div className="timeline-card">
-                <button
-                  type="button"
-                  className="timeline-heading"
-                  onClick={() => toggleMonth(month.id)}
-                  aria-expanded={isExpanded}
-                >
-                  <div>
-                    <span className="month-label">
-                      {month.month}
-                      {isCurrent && <em>当前阶段</em>}
-                    </span>
-                    <h2>{month.phaseGoal}</h2>
-                  </div>
-                  <ChevronRight
-                    size={21}
-                    className={cn(
-                      "timeline-chevron",
-                      isExpanded && "timeline-chevron-open"
-                    )}
-                  />
-                </button>
-                {isExpanded && (
-                  <div className="timeline-details">
-                    {month.items.map((item) => {
-                      const track = bundle.tracks.find(
-                        (candidate) => candidate.key === item.trackKey
-                      );
-                      return (
-                        <div className="timeline-track-row" key={item.trackKey}>
-                          <span
-                            className="track-dot"
-                            style={{
-                              backgroundColor: getTrackColor(
-                                item.trackKey,
-                                bundle.tracks
-                              )
-                            }}
-                          />
-                          <strong>{track?.label ?? item.trackKey}</strong>
-                          <p>{item.content}</p>
-                        </div>
-                      );
-                    })}
-                    <div className="timeline-deliverable">
-                      <span>当月验收</span>
-                      <p>
-                        {
-                          month.items.find(
-                            (item) => item.trackKey === "practice"
-                          )?.content
-                        }
-                      </p>
-                    </div>
-                  </div>
-                )}
+              <div className="roadmap-month-grid">
+                {phase.months.map((month) => {
+                  const isCurrent = month.monthKey === currentMonthKey;
+                  return (
+                    <Link
+                      className={cn(
+                        "roadmap-month-card",
+                        isCurrent && "roadmap-month-card-current"
+                      )}
+                      key={month.id}
+                      to={`/plans/${bundle.plan.slug}/months/${month.monthKey}`}
+                    >
+                      <div className="roadmap-month-top">
+                        <span>{month.month}</span>
+                        <StatusBadge status={month.status} />
+                      </div>
+                      <h3>{month.title}</h3>
+                      <p>{month.learning.slice(0, 3).join(" · ")}</p>
+                      <div className="roadmap-month-meta">
+                        <span>{month.learning.length} 个主题</span>
+                        <span>{month.practice.length} 项实践</span>
+                        <ArrowRight size={16} />
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
-            </article>
-          );
-        })}
+            </div>
+          ) : null
+        )}
       </section>
 
-      {!filteredMonths.length && (
+      {!filteredPhases.some((phase) => phase.months.length) && (
         <div className="empty-state">
-          <h3>没有匹配的阶段</h3>
+          <h3>没有匹配的月份</h3>
           <p>换一个关键词再试一次。</p>
         </div>
       )}
@@ -189,7 +147,7 @@ export function RoadmapPage() {
       <section className="principles-panel panel">
         <div>
           <p className="eyebrow">执行原则</p>
-          <h2>这份路线如何保持可执行</h2>
+          <h2>这份路线如何避免学成半成品</h2>
         </div>
         <div className="principles-grid">
           {bundle.plan.principles.map((principle, index) => (

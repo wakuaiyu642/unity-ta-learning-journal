@@ -18,10 +18,11 @@ import { useApp } from "../context/AppContext";
 import { cn } from "../lib/utils";
 import { AuthDialog } from "./AuthDialog";
 import { ErrorState, FullPageLoading } from "./Feedback";
+import { findRelevantMonth } from "../lib/date";
 
 const navItems = [
   { to: "", label: "概览", icon: Home, end: true },
-  { to: "weeks", label: "本周", icon: CalendarDays },
+  { to: "months", label: "本月", icon: CalendarDays },
   { to: "roadmap", label: "路线", icon: Compass },
   { to: "portfolio", label: "作品集", icon: Shapes },
   { to: "collaborators", label: "协作者", icon: Settings2 }
@@ -60,6 +61,13 @@ export function AppShell() {
   if (!bundle) return null;
 
   const base = `/plans/${planSlug}`;
+  const currentMonthKey = findRelevantMonth(bundle.months).month.monthKey;
+  const routeFor = (path: string) =>
+    path === "months"
+      ? `${base}/months/${currentMonthKey}`
+      : path
+        ? `${base}/${path}`
+        : base;
   const accountLabel = cloudMode
     ? session
       ? role === "owner"
@@ -87,7 +95,7 @@ export function AppShell() {
           {navItems.map((item) => (
             <NavLink
               key={item.to}
-              to={item.to ? `${base}/${item.to}` : base}
+              to={routeFor(item.to)}
               end={item.end}
               className={({ isActive }) =>
                 cn("nav-item", isActive && "nav-item-active")
@@ -188,7 +196,7 @@ export function AppShell() {
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
-                to={item.to ? `${base}/${item.to}` : base}
+                to={routeFor(item.to)}
                 end={item.end}
                 onClick={() => setMobileMenuOpen(false)}
                 className={({ isActive }) =>
@@ -210,7 +218,7 @@ export function AppShell() {
           {navItems.slice(0, 4).map((item) => (
             <NavLink
               key={item.to}
-              to={item.to ? `${base}/${item.to}` : base}
+              to={routeFor(item.to)}
               end={item.end}
               className={({ isActive }) =>
                 cn("bottom-nav-item", isActive && "bottom-nav-item-active")

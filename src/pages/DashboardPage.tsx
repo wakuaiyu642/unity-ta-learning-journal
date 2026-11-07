@@ -9,54 +9,63 @@ import {
   Pencil,
   Sparkles
 } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import {
-  findRelevantWeek,
+  findRelevantMonth,
   formatDuration,
+  getCurrentWeekStart,
+  getMonthDateRange,
+  getMonthLogs,
+  getMonthTone,
+  getMonthWeekSlots,
   getPlanStats,
-  getWeekDateRange,
-  getWeekTone,
-  getWeekProgress,
-  todayInShanghai
+  getReviewForWeek
 } from "../lib/date";
-import {
-  cn,
-  getDuplicateWeekThemes,
-  getTrackColor,
-  statusLabels
-} from "../lib/utils";
+import { cn } from "../lib/utils";
 import { ProgressRing, StatusBadge } from "../components/UI";
 
 export function DashboardPage() {
-  const { bundle, canEdit, cloudMode, demoEditing, setDemoEditing } = useApp();
+  const {
+    bundle,
+    canEdit,
+    cloudMode,
+    demoEditing,
+    session,
+    setDemoEditing
+  } = useApp();
   if (!bundle) return null;
 
   const base = `/plans/${bundle.plan.slug}`;
   const stats = getPlanStats(bundle);
-  const relevant = findRelevantWeek(bundle.weeks);
-  const week = relevant.week;
-  const weekProgress = getWeekProgress(week);
-  const weekLogs = bundle.dailyLogs.filter((log) => log.weekId === week.id);
-  const weekMinutes = weekLogs.reduce((sum, log) => sum + log.minutes, 0);
-  const nextWeeks = bundle.weeks
-    .filter((item) => item.weekIndex >= week.weekIndex)
+  const relevant = findRelevantMonth(bundle.months);
+  const month = relevant.month;
+  const phase = bundle.phases.find((item) => item.id === month.stageId);
+  const monthLogs = getMonthLogs(bundle.dailyLogs, month.id);
+  const monthMinutes = monthLogs.reduce((sum, log) => sum + log.minutes, 0);
+  const nextMonths = bundle.months
+    .filter((item) => item.sortOrder >= month.sortOrder)
     .slice(0, 4);
-  const currentMonth =
-    bundle.months.find((month) => {
-      const today = todayInShanghai().slice(0, 7).replace("-", ".");
-      return month.month === today;
-    }) ??
-    bundle.months.find((month) => month.month >= todayInShanghai().slice(0, 7).replace("-", ".")) ??
-    bundle.months.at(-1)!;
-  const recentLogs = [...bundle.dailyLogs]
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-    .slice(0, 4);
+  const weekSlots = getMonthWeekSlots(
+    month,
+    bundle.plan.startDate,
+    bundle.plan.endDate
+  );
+  const currentWeekStart = getCurrentWeekStart(month);
+  const currentWeek = weekSlots.find(
+    (slot) => slot.weekStart === currentWeekStart
+  );
+  const userId = session?.user.id ?? "local-demo";
+  const currentReview = currentWeek
+    ? getReviewForWeek(bundle.weeklyReviews, currentWeek.weekStart, userId)
+    : null;
   const publishedPortfolio = bundle.portfolio.filter((item) => item.published);
   const portfolioPreview = (
     publishedPortfolio.length ? publishedPortfolio : bundle.portfolio
   ).slice(0, 2);
-  const duplicateThemes = getDuplicateWeekThemes(bundle.weeks);
+  const recentLogs = [...bundle.dailyLogs]
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .slice(0, 4);
 
   return (
     <div className="dashboard">
@@ -82,32 +91,30 @@ export function DashboardPage() {
       <section className="hero-panel">
         <div className="hero-grid-pattern" aria-hidden="true" />
         <div className="hero-copy">
-          <p className="eyebrow">Unity Technical Artist · 2026—2028</p>
+          <p className="eyebrow">Unity Technical Artist · 月度主线</p>
           <h1>
-            把漫长的学习，
+            一个月只做清楚：
             <br />
-            变成一周一周的进展。
+            学什么，做什么，达到什么。
           </h1>
-          <p>
-            {bundle.plan.stageGoal}
-          </p>
+          <p>{bundle.plan.stageGoal}</p>
           <div className="hero-actions">
             <Link
-              to={`${base}/weeks/${week.weekNo}`}
+              to={`${base}/months/${month.monthKey}`}
               className="button button-primary"
             >
-              打开 {week.weekNo}
+              打开 {month.month}
               <ArrowRight size={17} />
             </Link>
             <Link to={`${base}/roadmap`} className="button button-on-dark">
-              查看完整路线
+              查看全部月度
             </Link>
           </div>
         </div>
         <div className="hero-progress">
           <ProgressRing
             value={stats.completionPercent}
-            label={`${stats.completedWeeks}/${stats.totalWeeks} 周`}
+            label={`${stats.completedMonths}/${stats.totalMonths} 月`}
             size={156}
           />
           <span>整体学习进度</span>
@@ -120,9 +127,9 @@ export function DashboardPage() {
             <CheckCircle2 size={20} />
           </span>
           <div>
-            <small>完成周数</small>
-            <strong>{stats.completedWeeks}</strong>
-            <span>共 {stats.totalWeeks} 周</span>
+            <small>完成月份</small>
+            <strong>{stats.completedMonths}</strong>
+            <span>共 {stats.totalMonths} 个月</span>
           </div>
         </article>
         <article className="stat-card">
@@ -130,9 +137,9 @@ export function DashboardPage() {
             <Layers3 size={20} />
           </span>
           <div>
-            <small>进行中</small>
-            <strong>{stats.inProgressWeeks}</strong>
-            <span>保持持续投入</span>
+            <small>周复盘</small>
+            <strong>{stats.reviewCount}</strong>
+            <span>已留下过程记录</span>
           </div>
         </article>
         <article className="stat-card">
@@ -142,7 +149,7 @@ export function DashboardPage() {
           <div>
             <small>累计学习</small>
             <strong>{formatDuration(stats.totalMinutes)}</strong>
-            <span>来自每日记录</span>
+            <span>来自每日打卡</span>
           </div>
         </article>
         <article className="stat-card">
@@ -163,60 +170,59 @@ export function DashboardPage() {
             <div className="panel-heading">
               <div>
                 <p className="eyebrow">
-                  {relevant.state === "upcoming"
-                    ? "下一周"
-                    : relevant.state === "current"
-                      ? "本周进行中"
-                      : "最近一周"}
+                  {phase?.title ?? "当前阶段"} · {month.month}
                 </p>
-                <h2>
-                  {week.weekNo} · {week.theme}
-                </h2>
-                <p>{getWeekDateRange(week).range}</p>
+                <h2>{month.title}</h2>
+                <p>{getMonthDateRange(month).range}</p>
               </div>
-              <StatusBadge status={week.status} />
+              <StatusBadge status={month.status} />
             </div>
 
             <div className="week-progress-line">
               <span>
-                {getWeekTone(week)} · {statusLabels[week.status]}
+                {getMonthTone(month)} · 本月已记录 {monthLogs.length} 天
               </span>
-              <strong>{weekProgress.percent}%</strong>
+              <strong>{formatDuration(monthMinutes)}</strong>
               <div className="mini-progress">
-                <span style={{ width: `${weekProgress.percent}%` }} />
+                <span
+                  style={{
+                    width: `${Math.min(
+                      100,
+                      Math.round((monthLogs.length / 20) * 100)
+                    )}%`
+                  }}
+                />
               </div>
             </div>
 
-            <div className="task-preview-list">
-              {week.tasks.map((task) => (
-                <div className="task-preview" key={task.id}>
-                  <span
-                    className="track-mark"
-                    style={{
-                      backgroundColor: getTrackColor(
-                        task.trackKey,
-                        bundle.tracks
-                      )
-                    }}
-                  />
-                  <div>
-                    <strong>{task.title}</strong>
-                    <p>{task.content}</p>
-                  </div>
-                </div>
-              ))}
+            <div className="month-focus-grid">
+              <article>
+                <span>学什么</span>
+                <strong>{month.learning.length} 个核心主题</strong>
+                <p>{month.learning.slice(0, 3).join("；")}</p>
+              </article>
+              <article>
+                <span>做什么</span>
+                <strong>{month.practice.length} 个实践任务</strong>
+                <p>{month.practice.slice(0, 3).join("；")}</p>
+              </article>
+              <article>
+                <span>达到什么</span>
+                <strong>{month.acceptance.length} 条验收标准</strong>
+                <p>{month.acceptance.slice(0, 2).join("；")}</p>
+              </article>
             </div>
 
             <div className="current-week-footer">
               <span>
                 <Clock3 size={16} />
-                本周累计 {formatDuration(weekMinutes)}
+                本月累计 {formatDuration(monthMinutes)}
               </span>
               <Link
-                to={`${base}/weeks/${week.weekNo}`}
+                to={`${base}/months/${month.monthKey}`}
                 className="text-link"
               >
-                {canEdit ? "继续记录" : "查看本周任务"}
+                {canEdit ? "继续记录" : "查看月度计划"}
                 <ArrowRight size={16} />
               </Link>
             </div>
@@ -225,26 +231,26 @@ export function DashboardPage() {
           <section className="panel">
             <div className="panel-heading compact">
               <div>
-                <p className="eyebrow">接下来</p>
-                <h2>学习节奏</h2>
+                <p className="eyebrow">月度节奏</p>
+                <h2>接下来</h2>
               </div>
-              <Link to={`${base}/weeks`} className="text-link">
-                全部周次 <ArrowRight size={16} />
+              <Link to={`${base}/roadmap`} className="text-link">
+                全部月份 <ArrowRight size={16} />
               </Link>
             </div>
             <div className="week-strip">
-              {nextWeeks.map((item, index) => (
+              {nextMonths.map((item, index) => (
                 <Link
                   className={cn(
                     "week-strip-item",
-                    item.id === week.id && "week-strip-item-active"
+                    item.id === month.id && "week-strip-item-active"
                   )}
                   key={item.id}
-                  to={`${base}/weeks/${item.weekNo}`}
+                  to={`${base}/months/${item.monthKey}`}
                 >
-                  <span>{item.weekNo}</span>
-                  <strong>{item.theme}</strong>
-                  <small>{index === 0 ? "当前节点" : item.dateLabel}</small>
+                  <span>{item.month}</span>
+                  <strong>{item.title}</strong>
+                  <small>{index === 0 ? "当前节点" : "月度目标"}</small>
                 </Link>
               ))}
             </div>
@@ -285,48 +291,53 @@ export function DashboardPage() {
 
         <aside className="dashboard-side-column">
           <section className="panel phase-panel">
-            <p className="eyebrow">当前阶段 · {currentMonth.month}</p>
-            <h2>{currentMonth.phaseGoal}</h2>
+            <p className="eyebrow">{phase?.range ?? "当前阶段"}</p>
+            <h2>{phase?.title ?? bundle.plan.primaryFocus}</h2>
             <div className="phase-track-list">
-              {currentMonth.items.slice(0, 3).map((item) => (
-                <div key={item.trackKey}>
-                  <span
-                    className="track-dot"
-                    style={{
-                      backgroundColor: getTrackColor(
-                        item.trackKey,
-                        bundle.tracks
-                      )
-                    }}
-                  />
-                  <p>{item.content}</p>
-                </div>
-              ))}
+              <div>
+                <span className="track-dot" style={{ backgroundColor: "#58c4a6" }} />
+                <p>{phase?.description}</p>
+              </div>
             </div>
           </section>
 
           <section className="panel">
             <div className="panel-heading compact">
-              <h2>每周投入</h2>
+              <h2>本周复盘</h2>
               <BookOpen size={19} />
             </div>
-            <div className="target-list">
-              {bundle.plan.weeklyTargets.map((target) => (
-                <div key={target.label}>
-                  <span>{target.label}</span>
-                  <strong>{target.value}</strong>
+            {currentWeek ? (
+              <>
+                <p className="quiet-copy">{currentWeek.label}</p>
+                <div className="review-preview">
+                  <strong>
+                    {currentReview ? "本周已有复盘" : "本周还没有复盘"}
+                  </strong>
+                  <p>
+                    {currentReview?.nextFocus ||
+                      "记录本周完成、卡点和下周重点，不用于自动完成月份。"}
+                  </p>
                 </div>
-              ))}
-            </div>
+                <Link
+                  to={`${base}/months/${month.monthKey}?week=${currentWeek.weekStart}#weekly-reviews`}
+                  className="text-link"
+                >
+                  {currentReview ? "继续修改" : "填写周复盘"}
+                  <ArrowRight size={15} />
+                </Link>
+              </>
+            ) : (
+              <p className="quiet-copy">当前月份没有可填写的周复盘。</p>
+            )}
           </section>
 
           <section className="panel">
             <div className="panel-heading compact">
               <h2>最近打卡</h2>
               <Link
-                to={`${base}/weeks/${week.weekNo}`}
+                to={`${base}/months/${month.monthKey}`}
                 className="icon-link"
-                aria-label="打开本周记录"
+                aria-label="打开月度记录"
               >
                 <ArrowRight size={18} />
               </Link>
@@ -352,20 +363,6 @@ export function DashboardPage() {
               </div>
             )}
           </section>
-
-          {duplicateThemes.length > 0 && (
-            <details className="data-note">
-              <summary>数据说明 · {duplicateThemes.length} 组重复主题</summary>
-              <p>
-                原始规划中有部分周主题连续重复，可能与练习缓冲或内容设置有关。网页保留原始数据，没有自动合并：
-              </p>
-              <p>
-                {duplicateThemes
-                  .map((item) => `${item.weeks.join(" / ")} ${item.theme}`)
-                  .join("；")}
-              </p>
-            </details>
-          )}
         </aside>
       </div>
     </div>

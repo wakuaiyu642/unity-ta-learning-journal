@@ -1,12 +1,18 @@
 import {
   addDays,
   differenceInCalendarDays,
+  endOfWeek,
   format,
   parseISO,
   startOfWeek,
   subDays
 } from "date-fns";
-import type { DailyLog, PlanBundle, PlanWeek } from "../types";
+import type {
+  DailyLog,
+  PlanBundle,
+  PlanMonth,
+  WeeklyReview
+} from "../types";
 
 const shanghaiDateFormatter = new Intl.DateTimeFormat("en-CA", {
   timeZone: "Asia/Shanghai",
@@ -16,25 +22,24 @@ const shanghaiDateFormatter = new Intl.DateTimeFormat("en-CA", {
 });
 
 export const todayInShanghai = () => shanghaiDateFormatter.format(new Date());
-
 export const compareIsoDate = (a: string, b: string) => a.localeCompare(b);
 
-export function findRelevantWeek(
-  weeks: PlanWeek[],
+export function findRelevantMonth(
+  months: PlanMonth[],
   reference = todayInShanghai()
-): { week: PlanWeek; state: "upcoming" | "current" | "past" } {
-  const current = weeks.find(
-    (week) => week.startDate <= reference && week.endDate >= reference
+): { month: PlanMonth; state: "upcoming" | "current" | "past" } {
+  const current = months.find(
+    (month) => month.startDate <= reference && month.endDate >= reference
   );
-  if (current) return { week: current, state: "current" };
-  const upcoming = weeks.find((week) => week.startDate > reference);
-  if (upcoming) return { week: upcoming, state: "upcoming" };
-  return { week: weeks.at(-1)!, state: "past" };
+  if (current) return { month: current, state: "current" };
+  const upcoming = months.find((month) => month.startDate > reference);
+  if (upcoming) return { month: upcoming, state: "upcoming" };
+  return { month: months.at(-1)!, state: "past" };
 }
 
-export function getWeekDateRange(week: PlanWeek) {
-  const start = parseISO(week.startDate);
-  const end = parseISO(week.endDate);
+export function getMonthDateRange(month: PlanMonth) {
+  const start = parseISO(month.startDate);
+  const end = parseISO(month.endDate);
   return {
     start,
     end,
@@ -42,51 +47,112 @@ export function getWeekDateRange(week: PlanWeek) {
   };
 }
 
-export function getWeekProgress(week: PlanWeek) {
-  const total = Math.max(1, week.tasks.length);
-  const statusValue =
-    week.status === "done"
-      ? total
-      : week.status === "in_progress"
-        ? Math.min(total - 1, Math.max(1, Math.round(total / 2)))
-        : 0;
-  return {
-    total,
-    completed: statusValue,
-    percent: Math.round((statusValue / total) * 100)
-  };
+export function getMonthTone(
+  month: PlanMonth,
+  reference = todayInShanghai()
+) {
+  const days = differenceInCalendarDays(
+    parseISO(month.startDate),
+    parseISO(reference)
+  );
+  if (month.status === "done") return "本月验收已完成";
+  if (month.status === "deferred") return "本月已顺延";
+  if (days > 0) return `${days} 天后开始`;
+  if (month.endDate < reference) return "月份已结束，等待验收";
+  return "正在推进本月计划";
 }
 
-export function getPlanStats(bundle: PlanBundle) {
-  const totalWeeks = bundle.weeks.length;
-  const completedWeeks = bundle.weeks.filter(
-    (week) => week.status === "done"
-  ).length;
-  const inProgressWeeks = bundle.weeks.filter(
-    (week) => week.status === "in_progress"
-  ).length;
-  const deferredWeeks = bundle.weeks.filter(
-    (week) => week.status === "deferred"
-  ).length;
-  const totalMinutes = bundle.dailyLogs.reduce(
-    (sum, log) => sum + log.minutes,
-    0
-  );
-  const remainingWeeks = totalWeeks - completedWeeks - deferredWeeks;
-  const completionPercent = totalWeeks
-    ? Math.round((completedWeeks / totalWeeks) * 100)
-    : 0;
+export function getMonthWeekSlots(
+  month: PlanMonth,
+  planStart: string,
+  planEnd: string
+) {
+  const slots: Array<{
+    weekStart: string;
+    weekEnd: string;
+    label: string;
+  }> = [];
+  let cursor = startOfWeek(parseISO(month.startDate), { weekStartsOn: 1 });
+  const limit = parseISO(month.endDate);
 
-  return {
-    totalWeeks,
-    completedWeeks,
-    inProgressWeeks,
-    deferredWeeks,
-    remainingWeeks,
-    totalMinutes,
-    completionPercent,
-    streak: getCheckInStreak(bundle.dailyLogs)
-  };
+  while (cursor <= limit) {
+    const weekStart = format(cursor, "yyyy-MM-dd");
+    const weekEnd = format(endOfWeek(cursor, { weekStartsOn: 1 }), "yyyy-MM-dd");
+    if (
+      weekStart.slice(0, 7) === month.monthKey &&
+      weekEnd >= planStart &&
+      weekStart <= planEnd
+    ) {
+      slots.push({
+        weekStart,
+        weekEnd,
+        label: `${format(cursor, "M月d日")} — ${format(
+          parseISO(weekEnd),
+          "M月d日"
+        )}`
+      });
+    }
+    cursor = addDays(cursor, 7);
+  }
+  return slots;
+}
+
+export function getMonthLogs(logs: DailyLog[], monthId: string) {
+  return logs
+    .filter((log) => log.monthId === monthId)
+    .sort((a, b) => b.logDate.localeCompare(a.logDate));
+}
+
+export function getDailyLogForDate(
+  logs: DailyLog[],
+  monthId: string,
+  date: string,
+  userId = "local-demo"
+) {
+  return (
+    logs.find(
+      (log) =>
+        log.monthId === monthId &&
+        log.logDate === date &&
+        log.userId === userId
+    ) ?? null
+  );
+}
+
+export function getReviewForWeek(
+  reviews: WeeklyReview[],
+  weekStart: string,
+  userId = "local-demo"
+) {
+  return (
+    reviews.find(
+      (review) => review.weekStart === weekStart && review.userId === userId
+    ) ?? null
+  );
+}
+
+export function getSuggestedLogDate(month: PlanMonth) {
+  const today = todayInShanghai();
+  if (today < month.startDate) return month.startDate;
+  if (today > month.endDate) return month.endDate;
+  return today;
+}
+
+export function getCurrentWeekStart(month: PlanMonth) {
+  const today = todayInShanghai();
+  if (today < month.startDate) {
+    return format(
+      startOfWeek(parseISO(month.startDate), { weekStartsOn: 1 }),
+      "yyyy-MM-dd"
+    );
+  }
+  if (today > month.endDate) {
+    return format(
+      startOfWeek(parseISO(month.endDate), { weekStartsOn: 1 }),
+      "yyyy-MM-dd"
+    );
+  }
+  return format(startOfWeek(parseISO(today), { weekStartsOn: 1 }), "yyyy-MM-dd");
 }
 
 export function getCheckInStreak(logs: DailyLog[]) {
@@ -100,8 +166,38 @@ export function getCheckInStreak(logs: DailyLog[]) {
     streak += 1;
     cursor = subDays(cursor, 1);
   }
-
   return streak;
+}
+
+export function getPlanStats(bundle: PlanBundle) {
+  const completedMonths = bundle.months.filter(
+    (month) => month.status === "done"
+  ).length;
+  const inProgressMonths = bundle.months.filter(
+    (month) => month.status === "in_progress"
+  ).length;
+  const deferredMonths = bundle.months.filter(
+    (month) => month.status === "deferred"
+  ).length;
+  const totalMinutes = bundle.dailyLogs.reduce(
+    (sum, log) => sum + log.minutes,
+    0
+  );
+
+  return {
+    totalMonths: bundle.months.length,
+    completedMonths,
+    inProgressMonths,
+    deferredMonths,
+    remainingMonths:
+      bundle.months.length - completedMonths - deferredMonths,
+    totalMinutes,
+    reviewCount: bundle.weeklyReviews.length,
+    completionPercent: bundle.months.length
+      ? Math.round((completedMonths / bundle.months.length) * 100)
+      : 0,
+    streak: getCheckInStreak(bundle.dailyLogs)
+  };
 }
 
 export function formatDuration(minutes: number) {
@@ -116,52 +212,6 @@ export function formatLogDate(date: string) {
     day: "numeric",
     weekday: "short"
   }).format(parseISO(date));
-}
-
-export function getLogsForWeek(logs: DailyLog[], weekId: string) {
-  return logs
-    .filter((log) => log.weekId === weekId)
-    .sort((a, b) => b.logDate.localeCompare(a.logDate));
-}
-
-export function getDailyLogForDate(
-  logs: DailyLog[],
-  weekId: string,
-  date: string,
-  userId = "local-demo"
-) {
-  return (
-    logs.find(
-      (log) =>
-        log.weekId === weekId &&
-        log.logDate === date &&
-        log.userId === userId
-    ) ?? null
-  );
-}
-
-export function getWeekTone(
-  week: PlanWeek,
-  reference = todayInShanghai()
-) {
-  const diff = differenceInCalendarDays(parseISO(week.startDate), parseISO(reference));
-  if (week.status === "done") return "已于本周完成验收";
-  if (week.status === "deferred") return "已顺延，按自己的节奏继续";
-  if (diff > 7) return `${diff} 天后开始`;
-  if (diff > 0) return `${diff} 天后开始`;
-  if (week.endDate < reference) return "这一周已经过去";
-  return "正在推进";
-}
-
-export function getSuggestedLogDate(week: PlanWeek) {
-  const today = todayInShanghai();
-  if (today < week.startDate) return week.startDate;
-  if (today > week.endDate) return week.endDate;
-  return today;
-}
-
-export function getMonday(date: string) {
-  return format(startOfWeek(parseISO(date), { weekStartsOn: 1 }), "yyyy-MM-dd");
 }
 
 export function addDaysIso(date: string, days: number) {

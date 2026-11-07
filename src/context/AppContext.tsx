@@ -23,12 +23,12 @@ import {
   revokeCloudCollaborator,
   signInWithEmailPassword,
   signOutCloud,
-  updateCloudPortfolio,
+  updateCloudMonth,
   updateCloudPassword,
-  updateCloudTask,
-  updateCloudWeek,
+  updateCloudPortfolio,
   uploadCloudAttachment,
-  upsertCloudDailyLog
+  upsertCloudDailyLog,
+  upsertCloudWeeklyReview
 } from "../lib/supabase-data";
 import { supabase } from "../lib/supabase";
 import {
@@ -38,21 +38,23 @@ import {
   saveCloudSnapshot,
   saveLocalBundle
 } from "../lib/local-store";
-import {
-  deleteLocalFile,
-  saveLocalFile
-} from "../lib/local-files";
+import { deleteLocalFile, saveLocalFile } from "../lib/local-files";
 import type {
   Attachment,
   DailyLogInput,
+  MonthPatch,
   PlanBundle,
   PlanMember,
   PlanRole,
   PortfolioPatch,
-  TaskPatch,
-  WeekPatch
+  WeeklyReviewInput
 } from "../types";
-import { validateDailyLog, validatePortfolioPatch } from "../lib/validation";
+import {
+  validateDailyLog,
+  validateMonthPatch,
+  validatePortfolioPatch,
+  validateWeeklyReview
+} from "../lib/validation";
 
 interface AppContextValue {
   bundle: PlanBundle | null;
@@ -65,10 +67,10 @@ interface AppContextValue {
   demoEditing: boolean;
   setDemoEditing: (enabled: boolean) => void;
   refresh: () => Promise<void>;
-  updateWeek: (weekId: string, patch: WeekPatch) => Promise<void>;
-  updateTask: (taskId: string, patch: TaskPatch) => Promise<void>;
-  saveDailyLog: (weekId: string, input: DailyLogInput) => Promise<void>;
-  uploadAttachment: (weekId: string, file: File) => Promise<void>;
+  updateMonth: (monthId: string, patch: MonthPatch) => Promise<void>;
+  saveDailyLog: (monthId: string, input: DailyLogInput) => Promise<void>;
+  saveWeeklyReview: (input: WeeklyReviewInput) => Promise<void>;
+  uploadAttachment: (monthId: string, file: File) => Promise<void>;
   deleteAttachment: (attachment: Attachment) => Promise<void>;
   updatePortfolio: (itemId: string, patch: PortfolioPatch) => Promise<void>;
   signInWithPassword: (email: string, password: string) => Promise<void>;
@@ -89,6 +91,14 @@ function errorMessage(error: unknown) {
   return error instanceof Error ? error.message : String(error);
 }
 
+function authorNameFromSession(session: Session | null) {
+  return (
+    session?.user.user_metadata.display_name ??
+    session?.user.email?.split("@")[0] ??
+    "学习者"
+  );
+}
+
 export function AppProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const [session, setSession] = useState<Session | null>(null);
@@ -98,7 +108,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   });
 
   const planQuery = useQuery({
-    queryKey: ["plan", PLAN_SLUG],
+    queryKey: ["plan", PLAN_SLUG, "monthly"],
     queryFn: async () => {
       if (!cloudConfigured) return loadLocalBundle();
       try {
@@ -116,7 +126,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   });
 
   const bundle = planQuery.data ?? null;
-
   const roleQuery = useQuery({
     queryKey: ["plan-role", bundle?.plan.id, session?.user.id],
     queryFn: () => fetchPlanRole(bundle!.plan.id),
@@ -133,7 +142,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const { data } = client.auth.onAuthStateChange((_event, nextSession) => {
       setSession(nextSession);
       void queryClient.invalidateQueries({ queryKey: ["plan-role"] });
-      void queryClient.invalidateQueries({ queryKey: ["plan", PLAN_SLUG] });
+      void queryClient.invalidateQueries({ queryKey: ["plan"] });
     });
     return () => data.subscription.unsubscribe();
   }, [queryClient]);
@@ -141,26 +150,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const client = supabase;
     if (!client || !bundle) return;
+    const invalidate = () => {
+      void queryClient.invalidateQueries({ queryKey: ["plan", PLAN_SLUG] });
+    };
     const channel = client
-      .channel(`plan-changes-${bundle.plan.id}`)
+      .channel(`monthly-plan-changes-${bundle.plan.id}`)
       .on(
         "postgres_changes",
         {
           event: "*",
           schema: "public",
-          table: "plan_weeks",
+          table: "plan_months",
           filter: `plan_id=eq.${bundle.plan.id}`
         },
-        () => {
-          void queryClient.invalidateQueries({ queryKey: ["plan", PLAN_SLUG] });
-        }
+        invalidate
       )
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "plan_week_tasks" },
-        () => {
-          void queryClient.invalidateQueries({ queryKey: ["plan", PLAN_SLUG] });
-        }
+        { event: "*", schema: "public", table: "plan_month_sections" },
+        invalidate
       )
       .on(
         "postgres_changes",
@@ -170,9 +178,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
           table: "daily_logs",
           filter: `plan_id=eq.${bundle.plan.id}`
         },
-        () => {
-          void queryClient.invalidateQueries({ queryKey: ["plan", PLAN_SLUG] });
-        }
+        invalidate
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "weekly_reviews",
+          filter: `plan_id=eq.${bundle.plan.id}`
+        },
+        invalidate
       )
       .on(
         "postgres_changes",
@@ -182,9 +198,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           table: "attachments",
           filter: `plan_id=eq.${bundle.plan.id}`
         },
-        () => {
-          void queryClient.invalidateQueries({ queryKey: ["plan", PLAN_SLUG] });
-        }
+        invalidate
       )
       .on(
         "postgres_changes",
@@ -194,9 +208,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           table: "portfolio_items",
           filter: `plan_id=eq.${bundle.plan.id}`
         },
-        () => {
-          void queryClient.invalidateQueries({ queryKey: ["plan", PLAN_SLUG] });
-        }
+        invalidate
       )
       .subscribe();
 
@@ -211,12 +223,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const mutateLocal = useCallback(
     (updater: (current: PlanBundle) => PlanBundle) => {
-      queryClient.setQueryData<PlanBundle>(["plan", PLAN_SLUG], (current) => {
-        if (!current) return current;
-        const next = updater(current);
-        saveLocalBundle(next);
-        return next;
-      });
+      queryClient.setQueryData<PlanBundle>(
+        ["plan", PLAN_SLUG, "monthly"],
+        (current) => {
+          if (!current) return current;
+          const next = updater(current);
+          saveLocalBundle(next);
+          return next;
+        }
+      );
     },
     [queryClient]
   );
@@ -228,80 +243,48 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const updateWeek = useCallback(
-    async (weekId: string, patch: WeekPatch) => {
+  const updateMonth = useCallback(
+    async (monthId: string, patch: MonthPatch) => {
+      const validPatch = validateMonthPatch(patch);
       if (cloudConfigured) {
-        await updateCloudWeek(weekId, patch);
+        await updateCloudMonth(monthId, validPatch);
         await refresh();
         return;
       }
       mutateLocal((current) => ({
         ...current,
-        weeks: current.weeks.map((week) =>
-          week.id === weekId
-            ? {
-                ...week,
-                ...patch,
-                updatedAt: new Date().toISOString()
-              }
-            : week
+        months: current.months.map((month) =>
+          month.id === monthId ? { ...month, ...validPatch } : month
         )
       }));
     },
     [mutateLocal, refresh]
   );
 
-  const updateTask = useCallback(
-    async (taskId: string, patch: TaskPatch) => {
-      if (cloudConfigured) {
-        await updateCloudTask(taskId, patch.content);
-        await refresh();
-        return;
-      }
-      mutateLocal((current) => ({
-        ...current,
-        weeks: current.weeks.map((week) => ({
-          ...week,
-          tasks: week.tasks.map((task) =>
-            task.id === taskId
-              ? { ...task, content: patch.content }
-              : task
-          )
-        }))
-      }));
-    },
-    [mutateLocal, refresh]
-  );
-
   const saveDailyLog = useCallback(
-    async (weekId: string, input: DailyLogInput) => {
+    async (monthId: string, input: DailyLogInput) => {
       const validInput = validateDailyLog(input);
       if (cloudConfigured) {
-        const authorName =
-          session?.user.user_metadata.display_name ??
-          session?.user.email?.split("@")[0] ??
-          "学习者";
         await upsertCloudDailyLog(
           bundle!.plan.id,
-          weekId,
+          monthId,
           validInput,
-          authorName
+          authorNameFromSession(session)
         );
         await refresh();
         return;
       }
-
       mutateLocal((current) => {
         const existing = current.dailyLogs.find(
           (log) =>
-            log.weekId === weekId &&
+            log.monthId === monthId &&
             log.logDate === validInput.logDate &&
             log.userId === "local-demo"
         );
-        const nextLog = {
+        const next = {
           id: existing?.id ?? crypto.randomUUID(),
           planId: current.plan.id,
-          weekId,
+          monthId,
           userId: "local-demo",
           logDate: validInput.logDate,
           minutes: validInput.minutes,
@@ -312,20 +295,59 @@ export function AppProvider({ children }: { children: ReactNode }) {
         return {
           ...current,
           dailyLogs: existing
-            ? current.dailyLogs.map((log) =>
-                log.id === existing.id ? nextLog : log
-              )
-            : [...current.dailyLogs, nextLog]
+            ? current.dailyLogs.map((log) => (log.id === existing.id ? next : log))
+            : [...current.dailyLogs, next]
         };
       });
     },
-    [bundle?.plan.id, mutateLocal, refresh, session?.user]
+    [bundle?.plan.id, mutateLocal, refresh, session]
+  );
+
+  const saveWeeklyReview = useCallback(
+    async (input: WeeklyReviewInput) => {
+      const validInput = validateWeeklyReview(input);
+      if (cloudConfigured) {
+        await upsertCloudWeeklyReview(
+          bundle!.plan.id,
+          validInput,
+          authorNameFromSession(session)
+        );
+        await refresh();
+        return;
+      }
+      mutateLocal((current) => {
+        const existing = current.weeklyReviews.find(
+          (review) =>
+            review.weekStart === validInput.weekStart &&
+            review.userId === "local-demo"
+        );
+        const now = new Date().toISOString();
+        const next = {
+          id: existing?.id ?? crypto.randomUUID(),
+          planId: current.plan.id,
+          userId: "local-demo",
+          ...validInput,
+          authorName: "本地访客",
+          createdAt: existing?.createdAt ?? now,
+          updatedAt: now
+        };
+        return {
+          ...current,
+          weeklyReviews: existing
+            ? current.weeklyReviews.map((review) =>
+                review.id === existing.id ? next : review
+              )
+            : [...current.weeklyReviews, next]
+        };
+      });
+    },
+    [bundle?.plan.id, mutateLocal, refresh, session]
   );
 
   const uploadAttachment = useCallback(
-    async (weekId: string, file: File) => {
+    async (monthId: string, file: File) => {
       if (cloudConfigured) {
-        await uploadCloudAttachment(bundle!.plan.id, weekId, file);
+        await uploadCloudAttachment(bundle!.plan.id, monthId, file);
         await refresh();
         return;
       }
@@ -338,7 +360,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           {
             id,
             planId: current.plan.id,
-            weekId,
+            monthId,
             storagePath,
             fileName: file.name,
             mimeType: file.type,
@@ -394,7 +416,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     async (email: string, password: string) => {
       await signInWithEmailPassword(email, password);
       await queryClient.invalidateQueries({ queryKey: ["plan-role"] });
-      await queryClient.invalidateQueries({ queryKey: ["plan", PLAN_SLUG] });
+      await queryClient.invalidateQueries({ queryKey: ["plan"] });
     },
     [queryClient]
   );
@@ -429,7 +451,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const resetDemo = useCallback(() => {
     const next = resetLocalBundle();
-    queryClient.setQueryData(["plan", PLAN_SLUG], next);
+    queryClient.setQueryData(["plan", PLAN_SLUG, "monthly"], next);
   }, [queryClient]);
 
   const role = cloudConfigured ? roleQuery.data ?? null : null;
@@ -450,9 +472,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       demoEditing,
       setDemoEditing,
       refresh,
-      updateWeek,
-      updateTask,
+      updateMonth,
       saveDailyLog,
+      saveWeeklyReview,
       uploadAttachment,
       deleteAttachment,
       updatePortfolio,
@@ -467,6 +489,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [
       bundle,
       canEdit,
+      changePassword,
+      deleteAttachment,
       demoEditing,
       inviteCollaborator,
       listCollaborators,
@@ -477,16 +501,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
       revokeCollaborator,
       role,
       saveDailyLog,
+      saveWeeklyReview,
       session,
       setDemoEditing,
       signInWithPassword,
       signOut,
+      updateMonth,
       updatePortfolio,
-      updateTask,
-      updateWeek,
-      uploadAttachment,
-      deleteAttachment,
-      changePassword
+      uploadAttachment
     ]
   );
 

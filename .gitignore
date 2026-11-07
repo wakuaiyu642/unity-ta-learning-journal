@@ -1,6 +1,7 @@
 node_modules/
 dist/
 coverage/
+backups/
 playwright-report/
 test-results/
 .env

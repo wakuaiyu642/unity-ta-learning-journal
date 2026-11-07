@@ -5,7 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 try {
   process.loadEnvFile?.(".env.local");
 } catch {
-  // .env.local is optional when variables are provided by the shell.
+  // Environment variables may be supplied directly by the shell.
 }
 
 const url = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL;
@@ -27,33 +27,30 @@ const client = createClient(url, serviceRoleKey, {
   auth: { persistSession: false, autoRefreshToken: false }
 });
 const seed = JSON.parse(
-  await readFile(resolve("src/data/unity-ta.json"), "utf8")
+  await readFile(resolve("src/data/unity-ta-monthly.json"), "utf8")
 );
+
+function assertResult(result, label) {
+  if (result.error) throw new Error(`${label}: ${result.error.message}`);
+  return result.data;
+}
 
 async function findUserByEmail(email) {
   if (!email) return null;
   let page = 1;
-  const perPage = 1000;
   while (true) {
     const { data, error } = await client.auth.admin.listUsers({
       page,
-      perPage
+      perPage: 1000
     });
     if (error) throw error;
     const match = data.users.find(
       (user) => user.email?.toLowerCase() === email.toLowerCase()
     );
     if (match) return match;
-    if (data.users.length < perPage || data.nextPage === null) return null;
+    if (data.users.length < 1000 || data.nextPage === null) return null;
     page = data.nextPage ?? page + 1;
   }
-}
-
-function assertResult(result, label) {
-  if (result.error) {
-    throw new Error(`${label}: ${result.error.message}`);
-  }
-  return result.data;
 }
 
 const owner = await findUserByEmail(ownerEmail);
@@ -67,7 +64,8 @@ const planPayload = {
   stage_goal: seed.plan.stageGoal,
   principle: seed.plan.principle,
   principles: seed.plan.principles,
-  weekly_targets: seed.plan.weeklyTargets,
+  weekly_targets: [],
+  phases: seed.phases,
   starts_on: seed.plan.startDate,
   ends_on: seed.plan.endDate,
   is_public: true,
@@ -78,109 +76,92 @@ if (owner) planPayload.owner_id = owner.id;
 const plan = assertResult(
   await client
     .from("plans")
-    .upsert(
-      planPayload,
-      { onConflict: "slug" }
-    )
+    .upsert(planPayload, { onConflict: "slug" })
     .select()
     .single(),
   "写入计划"
 );
-
 const planId = plan.id;
-assertResult(
-  await client.from("plan_tracks").upsert(
-    seed.tracks.map((track) => ({
-      plan_id: planId,
-      track_key: track.key,
-      label: track.label,
-      short_label: track.shortLabel,
-      color: track.color,
-      icon: track.icon,
-      sort_order: track.sortOrder
-    })),
-    { onConflict: "plan_id,track_key" }
-  ),
-  "写入学习主线"
-);
 
-const insertedMonths = assertResult(
+const months = assertResult(
   await client
     .from("plan_months")
     .upsert(
       seed.months.map((month) => ({
         plan_id: planId,
         month_label: month.month,
-        phase_goal: month.phaseGoal,
-        sort_order: month.sortOrder
+        month_key: month.monthKey,
+        stage_key: month.stageId,
+        title: month.title,
+        phase_goal: month.title,
+        starts_on: month.startDate,
+        ends_on: month.endDate,
+        sort_order: month.sortOrder,
+        updated_at: new Date().toISOString()
       })),
       { onConflict: "plan_id,month_label" }
     )
     .select(),
-  "写入月份"
-);
-const monthByLabel = new Map(insertedMonths.map((month) => [month.month_label, month.id]));
-assertResult(
-  await client
-    .from("plan_month_items")
-    .delete()
-    .in("plan_month_id", [...monthByLabel.values()]),
-  "刷新月度任务"
-);
-assertResult(
-  await client.from("plan_month_items").insert(
-    seed.months.flatMap((month) =>
-      month.items.map((item, index) => ({
-        plan_month_id: monthByLabel.get(month.month),
-        track_key: item.trackKey,
-        content: item.content,
-        sort_order: index + 1
-      }))
-    )
-  ),
-  "写入月度任务"
+  "写入月度计划"
 );
 
-const insertedWeeks = assertResult(
-  await client
-    .from("plan_weeks")
-    .upsert(
-      seed.weeks.map((week) => ({
-        plan_id: planId,
-        week_no: week.weekNo,
-        week_index: week.weekIndex,
-        start_date: week.startDate,
-        end_date: week.endDate,
-        date_label: week.dateLabel,
-        theme: week.theme
-      })),
-      { onConflict: "plan_id,week_no" }
-    )
-    .select(),
-  "写入周任务"
-);
-const weekByNo = new Map(insertedWeeks.map((week) => [week.week_no, week.id]));
+const monthByKey = new Map(months.map((month) => [month.month_key, month.id]));
 assertResult(
   await client
-    .from("plan_week_tasks")
+    .from("plan_month_sections")
     .delete()
-    .in("week_id", [...weekByNo.values()]),
-  "刷新每周任务"
+    .in("plan_month_id", [...monthByKey.values()]),
+  "刷新月度正文"
 );
+
+const sectionRows = [];
+const sectionMap = [
+  ["learning", "learning"],
+  ["practice", "practice"],
+  ["weeklyFocus", "weekly_focus"],
+  ["acceptance", "acceptance"],
+  ["pitfalls", "pitfalls"],
+  ["resumeEvidence", "resume_evidence"]
+];
+for (const month of seed.months) {
+  const planMonthId = monthByKey.get(month.monthKey);
+  for (const [key, sectionType] of sectionMap) {
+    month[key].forEach((content, index) => {
+      sectionRows.push({
+        plan_month_id: planMonthId,
+        section_type: sectionType,
+        content,
+        href: "",
+        sort_order: index + 1
+      });
+    });
+  }
+  month.references.forEach((reference, index) => {
+    sectionRows.push({
+      plan_month_id: planMonthId,
+      section_type: "reference",
+      content: reference.label,
+      href: reference.href,
+      sort_order: index + 1
+    });
+  });
+}
 assertResult(
-  await client.from("plan_week_tasks").insert(
-    seed.weeks.flatMap((week) =>
-      week.tasks.map((task) => ({
-        week_id: weekByNo.get(week.weekNo),
-        track_key: task.trackKey,
-        title: task.title,
-        content: task.content,
-        sort_order: task.sortOrder
-      }))
-    )
-  ),
-  "写入每周任务"
+  await client.from("plan_month_sections").insert(sectionRows),
+  "写入月度正文"
 );
+
+for (const month of months) {
+  assertResult(
+    await client
+      .from("daily_logs")
+      .update({ month_id: month.id })
+      .eq("plan_id", planId)
+      .gte("log_date", month.starts_on)
+      .lte("log_date", month.ends_on),
+    `回填 ${month.month_label} 每日记录`
+  );
+}
 
 const existingPortfolio = assertResult(
   await client
@@ -217,11 +198,7 @@ if (!existingPortfolio.length) {
 if (owner) {
   assertResult(
     await client.from("plan_members").upsert(
-      {
-        plan_id: planId,
-        user_id: owner.id,
-        role: "owner"
-      },
+      { plan_id: planId, user_id: owner.id, role: "owner" },
       { onConflict: "plan_id,user_id" }
     ),
     "绑定所有者"
@@ -229,16 +206,12 @@ if (owner) {
 }
 
 console.log(
-  `Seeded plan ${seed.plan.slug}: ${seed.months.length} months, ${seed.weeks.length} weeks, ${seed.portfolio.length} portfolio items.`
+  `Seeded ${seed.months.length} months and ${sectionRows.length} monthly content items.`
 );
-if (!ownerEmail) {
+if (ownerEmail && !owner) {
   console.log(
-    "No --owner-email was provided. Sign in once, then rerun with --owner-email=you@example.com to grant owner access."
+    `No account exists for ${ownerEmail}. Create the account before binding owner access.`
   );
-} else if (!owner) {
-  console.log(
-    `No Supabase user exists for ${ownerEmail}. Sign in with email OTP once, then rerun this command.`
-  );
-} else {
+} else if (owner) {
   console.log(`Owner access linked to ${ownerEmail}.`);
 }
