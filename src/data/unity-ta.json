@@ -1,0 +1,4326 @@
+{
+  "schemaVersion": 1,
+  "importedAt": "2026-11-07T13:18:50.803Z",
+  "sourceFile": "Unity_TA_%E6%9C%88%E5%BA%A6%E4%B8%8E%E6%AF%8F%E5%91%A8%E6%89%93%E5%8D%A1%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92-1.xlsx",
+  "plan": {
+    "id": "local-unity-ta",
+    "slug": "unity-ta",
+    "title": "Unity 技术美术 TA",
+    "subtitle": "Shader / HLSL / URP 实时渲染学习与求职计划",
+    "periodLabel": "2026.11 — 2028.06",
+    "primaryFocus": "Unity 技术美术：Shader / HLSL / URP 实时渲染",
+    "supportingFocus": "C#、Unity Editor 工具、渲染调试与性能优化",
+    "stageGoal": "2027 年下半年开始投递相关实习；2028 年毕业前争取达到初级岗位能力要求",
+    "principle": "不设置单独的“复习月”。跟随新内容推进，遇到旧知识漏洞时即时补充，再回到主线。",
+    "principles": [
+      "每周结束后打开「每周打卡」，在“完成状态”列选择：未开始 / 进行中 / ✓ 已完成 / 顺延。",
+      "完成实践验收后再打 ✓。看完视频、读完章节但还不能自己做，不算完成。",
+      "在“本周复盘 / 卡点”写下没弄懂的概念、报错和需要补的知识。下周继续时顺手补，不另开大段复习。",
+      "学习时长填真实投入，不必为了完成计划而凑时数。学校任务忙时可把周任务顺延。",
+      "《Unity Shader入门精要》从你目前学到的第 9.3 章附近继续，不从头重读。具体后续章节以书本目录和实际掌握情况为准。",
+      "书中 Built-in 管线代码重点学习原理；实际项目以 Unity 6 + URP 为目标，不能直接照搬时就做 URP 版本实验。",
+      "AI 可以用于解释和检查，但每个核心效果都要留一次不看教程、自己完成的验收。"
+    ],
+    "weeklyTargets": [
+      {
+        "label": "Shader / HLSL / 教材",
+        "value": "8 小时"
+      },
+      {
+        "label": "C# / Unity",
+        "value": "5 小时"
+      },
+      {
+        "label": "数学 / 图形学",
+        "value": "4 小时"
+      },
+      {
+        "label": "作品制作 + Git / 总结",
+        "value": "11 小时"
+      }
+    ],
+    "startDate": "2026-11-09",
+    "endDate": "2028-06-30",
+    "isPublic": true
+  },
+  "tracks": [
+    {
+      "id": "track-shader",
+      "key": "shader",
+      "label": "Shader / 教材",
+      "shortLabel": "Shader",
+      "color": "#1f776d",
+      "icon": "sparkles",
+      "sortOrder": 1
+    },
+    {
+      "id": "track-unity",
+      "key": "unity",
+      "label": "C# / Unity",
+      "shortLabel": "C#",
+      "color": "#426d9b",
+      "icon": "braces",
+      "sortOrder": 2
+    },
+    {
+      "id": "track-math",
+      "key": "math",
+      "label": "数学 / 图形学",
+      "shortLabel": "数学",
+      "color": "#9b6b38",
+      "icon": "sigma",
+      "sortOrder": 3
+    },
+    {
+      "id": "track-practice",
+      "key": "practice",
+      "label": "本周实践与验收",
+      "shortLabel": "实践",
+      "color": "#9a4f5f",
+      "icon": "flask",
+      "sortOrder": 4
+    }
+  ],
+  "months": [
+    {
+      "id": "month-2026-11",
+      "month": "2026.11",
+      "phaseGoal": "从当前进度继续，边学边补",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "从《Unity Shader入门精要》第 9.3 章附近继续；按后续章节学习光照、纹理和 Shader 结构；旧知识漏洞在遇到时即时补"
+        },
+        {
+          "trackKey": "unity",
+          "content": "组件引用、生命周期、类与方法；用小脚本配合 Shader 实验"
+        },
+        {
+          "trackKey": "math",
+          "content": "按章节需要补向量、点乘、叉乘、坐标空间"
+        },
+        {
+          "trackKey": "practice",
+          "content": "完成 UV 渐变、纹理采样、Lambert 小实验；能解释 appdata / v2f / vert / frag"
+        }
+      ],
+      "sortOrder": 1
+    },
+    {
+      "id": "month-2026-12",
+      "month": "2026.12",
+      "phaseGoal": "掌握基础光照与常用函数",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "继续教材相关章节；掌握 step、smoothstep、lerp、clip、纹理采样和法线贴图"
+        },
+        {
+          "trackKey": "unity",
+          "content": "材质参数控制；脚本驱动简单 Shader 属性"
+        },
+        {
+          "trackKey": "math",
+          "content": "向量运算、矩阵基础、法线方向"
+        },
+        {
+          "trackKey": "practice",
+          "content": "独立完成溶解 Shader（含边缘颜色）和卡通光照"
+        }
+      ],
+      "sortOrder": 2
+    },
+    {
+      "id": "month-2027-01",
+      "month": "2027.01",
+      "phaseGoal": "理解渲染数据流与 GPU 基础流程",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "继续教材中的顶点/片元、光照、纹理相关内容；将原理迁移到 URP"
+        },
+        {
+          "trackKey": "unity",
+          "content": "C# 组件组织、Material 参数控制"
+        },
+        {
+          "trackKey": "math",
+          "content": "MVP、齐次坐标、模型/世界/观察/裁剪空间"
+        },
+        {
+          "trackKey": "practice",
+          "content": "完成坐标空间、法线可视化和透明混合实验；画出渲染流程"
+        }
+      ],
+      "sortOrder": 3
+    },
+    {
+      "id": "month-2027-02",
+      "month": "2027.02",
+      "phaseGoal": "掌握动态 Shader 技术",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "时间变量、UV 动态偏移、噪声、Fresnel、顶点动画"
+        },
+        {
+          "trackKey": "unity",
+          "content": "脚本驱动 Shader 参数；简单动画控制"
+        },
+        {
+          "trackKey": "math",
+          "content": "向量插值、周期函数、方向向量"
+        },
+        {
+          "trackKey": "practice",
+          "content": "完成流动纹理、Fresnel、顶点波动、能量护盾等至少两个效果"
+        }
+      ],
+      "sortOrder": 4
+    },
+    {
+      "id": "month-2027-03",
+      "month": "2027.03",
+      "phaseGoal": "完成第一个核心作品：动态水面",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "双层法线、UV 滚动、波动、Fresnel、深度交界"
+        },
+        {
+          "trackKey": "unity",
+          "content": "水面参数面板与简单控制脚本"
+        },
+        {
+          "trackKey": "math",
+          "content": "法线方向、视线方向、深度差"
+        },
+        {
+          "trackKey": "practice",
+          "content": "完成 Unity URP 动态水面场景、源代码、参数说明和演示视频"
+        }
+      ],
+      "sortOrder": 5
+    },
+    {
+      "id": "month-2027-04",
+      "month": "2027.04",
+      "phaseGoal": "启动环境材质系统",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "世界坐标、法线判断、顶点色、多纹理/高度混合"
+        },
+        {
+          "trackKey": "unity",
+          "content": "材质参数组织与控制"
+        },
+        {
+          "trackKey": "math",
+          "content": "点乘判断方向、空间变换"
+        },
+        {
+          "trackKey": "practice",
+          "content": "完成积雪、湿润地面、纹理混合原型"
+        }
+      ],
+      "sortOrder": 6
+    },
+    {
+      "id": "month-2027-05",
+      "month": "2027.05",
+      "phaseGoal": "URP 渲染流程与性能分析",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "URP Pass、Depth / Opaque Texture、Shader 变体基础"
+        },
+        {
+          "trackKey": "unity",
+          "content": "Profiler、Frame Debugger 的使用"
+        },
+        {
+          "trackKey": "math",
+          "content": "渲染阶段、CPU/GPU、Overdraw 概念"
+        },
+        {
+          "trackKey": "practice",
+          "content": "分析一个场景的绘制过程；优化此前作品并写性能记录"
+        }
+      ],
+      "sortOrder": 7
+    },
+    {
+      "id": "month-2027-06",
+      "month": "2027.06",
+      "phaseGoal": "C# 与 Unity Editor 工具开发",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "理解 Shader 参数、材质引用与工具的关系"
+        },
+        {
+          "trackKey": "unity",
+          "content": "Custom Inspector、EditorWindow、SerializedObject、AssetDatabase、集合与事件"
+        },
+        {
+          "trackKey": "math",
+          "content": "按工具需求补数据结构与逻辑"
+        },
+        {
+          "trackKey": "practice",
+          "content": "制作材质批量管理 / 资源检查工具，能在 Editor 中真实运行"
+        }
+      ],
+      "sortOrder": 8
+    },
+    {
+      "id": "month-2027-07",
+      "month": "2027.07",
+      "phaseGoal": "完成第二个核心作品：动态环境材质系统",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "整合积雪、湿润、纹理混合等效果"
+        },
+        {
+          "trackKey": "unity",
+          "content": "脚本控制参数；工具辅助材质管理"
+        },
+        {
+          "trackKey": "math",
+          "content": "按实际问题补空间和光照数学"
+        },
+        {
+          "trackKey": "practice",
+          "content": "完成可演示的环境材质系统，附说明和性能检查"
+        }
+      ],
+      "sortOrder": 9
+    },
+    {
+      "id": "month-2027-08",
+      "month": "2027.08",
+      "phaseGoal": "作品集整理",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "整理 Shader 效果合集与技术说明"
+        },
+        {
+          "trackKey": "unity",
+          "content": "整理工具项目、代码结构和 Git 仓库"
+        },
+        {
+          "trackKey": "math",
+          "content": "补齐作品中解释不清的数学原理"
+        },
+        {
+          "trackKey": "practice",
+          "content": "至少两个完整作品 + 一个工具项目；每个有视频、说明和可运行工程"
+        }
+      ],
+      "sortOrder": 10
+    },
+    {
+      "id": "month-2027-09",
+      "month": "2027.09",
+      "phaseGoal": "简历、面试与开始投递",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "基础 HLSL 手写与效果原理问答"
+        },
+        {
+          "trackKey": "unity",
+          "content": "C#、Unity 生命周期、组件、Editor API 面试题"
+        },
+        {
+          "trackKey": "math",
+          "content": "矩阵、向量、光照和渲染流程口述"
+        },
+        {
+          "trackKey": "practice",
+          "content": "完成简历、作品集链接；开始投递实习并记录反馈"
+        }
+      ],
+      "sortOrder": 11
+    },
+    {
+      "id": "month-2027-10",
+      "month": "2027.10",
+      "phaseGoal": "投递与面试反馈迭代",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "根据岗位和面试反馈补 Shader 短板"
+        },
+        {
+          "trackKey": "unity",
+          "content": "根据岗位补 Unity / 工具开发短板"
+        },
+        {
+          "trackKey": "math",
+          "content": "针对面试薄弱点补数学与渲染"
+        },
+        {
+          "trackKey": "practice",
+          "content": "持续投递；每次面试后整理问题并修订作品集"
+        }
+      ],
+      "sortOrder": 12
+    },
+    {
+      "id": "month-2027-11",
+      "month": "2027.11",
+      "phaseGoal": "进阶渲染调试",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "Shader 变体、关键字、渲染调试"
+        },
+        {
+          "trackKey": "unity",
+          "content": "整理项目代码、参数组织与调试流程"
+        },
+        {
+          "trackKey": "math",
+          "content": "GPU 性能基础"
+        },
+        {
+          "trackKey": "practice",
+          "content": "做一次较完整的 Shader 调试与优化案例"
+        }
+      ],
+      "sortOrder": 13
+    },
+    {
+      "id": "month-2027-12",
+      "month": "2027.12",
+      "phaseGoal": "深入 URP",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "Renderer、Render Pass、Renderer Feature 深入实践"
+        },
+        {
+          "trackKey": "unity",
+          "content": "脚本与渲染功能衔接"
+        },
+        {
+          "trackKey": "math",
+          "content": "渲染管线阶段理解"
+        },
+        {
+          "trackKey": "practice",
+          "content": "完成一个 URP 自定义渲染实验"
+        }
+      ],
+      "sortOrder": 14
+    },
+    {
+      "id": "month-2028-01",
+      "month": "2028.01",
+      "phaseGoal": "工具开发强化",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "将 Shader 工作流接入工具"
+        },
+        {
+          "trackKey": "unity",
+          "content": "Editor 工具完善、异常处理、用户体验"
+        },
+        {
+          "trackKey": "math",
+          "content": "数据结构按需补充"
+        },
+        {
+          "trackKey": "practice",
+          "content": "把工具做成可复用、可演示的小项目"
+        }
+      ],
+      "sortOrder": 15
+    },
+    {
+      "id": "month-2028-02",
+      "month": "2028.02",
+      "phaseGoal": "GPU 计算拓展（非求职前置）",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "Compute Shader 入门概念与简单实验"
+        },
+        {
+          "trackKey": "unity",
+          "content": "C# Dispatch 与数据传递"
+        },
+        {
+          "trackKey": "math",
+          "content": "线程组、缓冲区基础"
+        },
+        {
+          "trackKey": "practice",
+          "content": "完成一个小型 Compute Shader 实验；基础不牢可顺延"
+        }
+      ],
+      "sortOrder": 16
+    },
+    {
+      "id": "month-2028-03",
+      "month": "2028.03",
+      "phaseGoal": "PBR 与综合场景",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "PBR、环境光照、反射与材质表现"
+        },
+        {
+          "trackKey": "unity",
+          "content": "场景参数与工具控制"
+        },
+        {
+          "trackKey": "math",
+          "content": "BRDF 基础概念"
+        },
+        {
+          "trackKey": "practice",
+          "content": "完善一个综合实时渲染场景"
+        }
+      ],
+      "sortOrder": 17
+    },
+    {
+      "id": "month-2028-04",
+      "month": "2028.04",
+      "phaseGoal": "面试与项目复盘",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "整理核心 Shader 原理题"
+        },
+        {
+          "trackKey": "unity",
+          "content": "整理 C# / Unity 常见题"
+        },
+        {
+          "trackKey": "math",
+          "content": "图形学高频问题"
+        },
+        {
+          "trackKey": "practice",
+          "content": "进行模拟面试，修补项目讲解漏洞"
+        }
+      ],
+      "sortOrder": 18
+    },
+    {
+      "id": "month-2028-05",
+      "month": "2028.05",
+      "phaseGoal": "根据岗位查漏补缺",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "按目标岗位补专项技术"
+        },
+        {
+          "trackKey": "unity",
+          "content": "按目标岗位补工具或引擎能力"
+        },
+        {
+          "trackKey": "math",
+          "content": "按面试反馈补充"
+        },
+        {
+          "trackKey": "practice",
+          "content": "持续投递，维护作品集"
+        }
+      ],
+      "sortOrder": 19
+    },
+    {
+      "id": "month-2028-06",
+      "month": "2028.06",
+      "phaseGoal": "毕业与就业准备",
+      "items": [
+        {
+          "trackKey": "shader",
+          "content": "保持 Shader 手写与调试能力"
+        },
+        {
+          "trackKey": "unity",
+          "content": "保持 Unity 工程能力"
+        },
+        {
+          "trackKey": "math",
+          "content": "复盘核心图形学知识"
+        },
+        {
+          "trackKey": "practice",
+          "content": "争取实习转正 / 正式岗位机会，准备毕业求职"
+        }
+      ],
+      "sortOrder": 20
+    }
+  ],
+  "weeks": [
+    {
+      "id": "week-w01",
+      "weekNo": "W01",
+      "weekIndex": 1,
+      "startDate": "2026-11-09",
+      "endDate": "2026-11-15",
+      "dateLabel": "2026-11-09 — 2026-11-15",
+      "theme": "顶点与片元数据",
+      "tasks": [
+        {
+          "id": "task-w01-shader",
+          "trackKey": "shader",
+          "content": "学习教材对应的顶点输入、输出结构和语义；把书中示例拆成数据流",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w01-unity",
+          "trackKey": "unity",
+          "content": "写一个组件获取 Rigidbody2D 并做空引用检查；复习组件引用时即时补",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w01-math",
+          "trackKey": "math",
+          "content": "点乘的几何意义与光照联系",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w01-practice",
+          "trackKey": "practice",
+          "content": "完成 UV 可视化 Shader，并解释 UV 如何传递到片元阶段",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w02",
+      "weekNo": "W02",
+      "weekIndex": 2,
+      "startDate": "2026-11-16",
+      "endDate": "2026-11-22",
+      "dateLabel": "2026-11-16 — 2026-11-22",
+      "theme": "纹理采样",
+      "tasks": [
+        {
+          "id": "task-w02-shader",
+          "trackKey": "shader",
+          "content": "学习纹理属性、采样函数和过滤基础；在 URP 中复现一个纹理采样示例",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w02-unity",
+          "trackKey": "unity",
+          "content": "用脚本控制材质颜色或浮点参数",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w02-math",
+          "trackKey": "math",
+          "content": "坐标空间：模型空间与世界空间",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w02-practice",
+          "trackKey": "practice",
+          "content": "完成纹理采样 Shader；改变 UV 观察采样位置变化",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w03",
+      "weekNo": "W03",
+      "weekIndex": 3,
+      "startDate": "2026-11-23",
+      "endDate": "2026-11-29",
+      "dateLabel": "2026-11-23 — 2026-11-29",
+      "theme": "基础光照",
+      "tasks": [
+        {
+          "id": "task-w03-shader",
+          "trackKey": "shader",
+          "content": "学习教材中的 Lambert / 漫反射相关内容，理解公式并做 URP 版本",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w03-unity",
+          "trackKey": "unity",
+          "content": "整理一个简单可复用的材质控制脚本",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w03-math",
+          "trackKey": "math",
+          "content": "法线、光照方向、点乘与 max(0,N·L)",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w03-practice",
+          "trackKey": "practice",
+          "content": "完成 Lambert 小场景；写一页原理记录并独立重现核心代码",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w04",
+      "weekNo": "W04",
+      "weekIndex": 4,
+      "startDate": "2026-11-30",
+      "endDate": "2026-12-06",
+      "dateLabel": "2026-11-30 — 2026-12-06",
+      "theme": "基础光照",
+      "tasks": [
+        {
+          "id": "task-w04-shader",
+          "trackKey": "shader",
+          "content": "学习教材中的 Lambert / 漫反射相关内容，理解公式并做 URP 版本",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w04-unity",
+          "trackKey": "unity",
+          "content": "整理一个简单可复用的材质控制脚本",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w04-math",
+          "trackKey": "math",
+          "content": "法线、光照方向、点乘与 max(0,N·L)",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w04-practice",
+          "trackKey": "practice",
+          "content": "完成 Lambert 小场景；写一页原理记录并独立重现核心代码",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w05",
+      "weekNo": "W05",
+      "weekIndex": 5,
+      "startDate": "2026-12-07",
+      "endDate": "2026-12-13",
+      "dateLabel": "2026-12-07 — 2026-12-13",
+      "theme": "HLSL 运算与函数",
+      "tasks": [
+        {
+          "id": "task-w05-shader",
+          "trackKey": "shader",
+          "content": "学习当前章节涉及的 HLSL 类型、函数、条件表达式和常用函数",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w05-unity",
+          "trackKey": "unity",
+          "content": "写脚本控制 Shader 参数",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w05-math",
+          "trackKey": "math",
+          "content": "按本周函数补值域、插值和向量运算",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w05-practice",
+          "trackKey": "practice",
+          "content": "完成 step / lerp 小实验",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w06",
+      "weekNo": "W06",
+      "weekIndex": 6,
+      "startDate": "2026-12-14",
+      "endDate": "2026-12-20",
+      "dateLabel": "2026-12-14 — 2026-12-20",
+      "theme": "阈值与平滑过渡",
+      "tasks": [
+        {
+          "id": "task-w06-shader",
+          "trackKey": "shader",
+          "content": "掌握 step、smoothstep、saturate 的行为和参数范围",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w06-unity",
+          "trackKey": "unity",
+          "content": "制作一个简单进度控制脚本",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w06-math",
+          "trackKey": "math",
+          "content": "理解区间映射和插值",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w06-practice",
+          "trackKey": "practice",
+          "content": "制作黑白渐变阈值效果，并画出阈值变化",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w07",
+      "weekNo": "W07",
+      "weekIndex": 7,
+      "startDate": "2026-12-21",
+      "endDate": "2026-12-27",
+      "dateLabel": "2026-12-21 — 2026-12-27",
+      "theme": "溶解效果",
+      "tasks": [
+        {
+          "id": "task-w07-shader",
+          "trackKey": "shader",
+          "content": "学习噪声纹理、clip 与阈值逻辑；对照教材原理在 URP 中实现",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w07-unity",
+          "trackKey": "unity",
+          "content": "用 C# 驱动溶解进度",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w07-math",
+          "trackKey": "math",
+          "content": "理解 UV 与噪声采样关系",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w07-practice",
+          "trackKey": "practice",
+          "content": "独立完成基础溶解 Shader",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w08",
+      "weekNo": "W08",
+      "weekIndex": 8,
+      "startDate": "2026-12-28",
+      "endDate": "2027-01-03",
+      "dateLabel": "2026-12-28 — 2027-01-03",
+      "theme": "溶解边缘与验收",
+      "tasks": [
+        {
+          "id": "task-w08-shader",
+          "trackKey": "shader",
+          "content": "实现边缘区间判断和颜色输出；整理本章关键原理",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w08-unity",
+          "trackKey": "unity",
+          "content": "做材质参数面板",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w08-math",
+          "trackKey": "math",
+          "content": "按效果需要补 smoothstep 的区间数学",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w08-practice",
+          "trackKey": "practice",
+          "content": "完成带边缘颜色的溶解效果；不看教程重写核心逻辑",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w09",
+      "weekNo": "W09",
+      "weekIndex": 9,
+      "startDate": "2027-01-04",
+      "endDate": "2027-01-10",
+      "dateLabel": "2027-01-04 — 2027-01-10",
+      "theme": "齐次坐标与矩阵",
+      "tasks": [
+        {
+          "id": "task-w09-shader",
+          "trackKey": "shader",
+          "content": "学习教材/课程中变换矩阵相关内容",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w09-unity",
+          "trackKey": "unity",
+          "content": "写脚本控制物体位置、旋转、缩放并观察结果",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w09-math",
+          "trackKey": "math",
+          "content": "齐次坐标、平移矩阵",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w09-practice",
+          "trackKey": "practice",
+          "content": "制作模型空间 / 世界空间坐标可视化",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w10",
+      "weekNo": "W10",
+      "weekIndex": 10,
+      "startDate": "2027-01-11",
+      "endDate": "2027-01-17",
+      "dateLabel": "2027-01-11 — 2027-01-17",
+      "theme": "MVP 与裁剪空间",
+      "tasks": [
+        {
+          "id": "task-w10-shader",
+          "trackKey": "shader",
+          "content": "理解模型、观察、投影变换关系",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w10-unity",
+          "trackKey": "unity",
+          "content": "在 Unity 中观察相机与物体关系",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w10-math",
+          "trackKey": "math",
+          "content": "矩阵乘法顺序与坐标变换",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w10-practice",
+          "trackKey": "practice",
+          "content": "画出顶点从模型空间到裁剪空间的流程",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w11",
+      "weekNo": "W11",
+      "weekIndex": 11,
+      "startDate": "2027-01-18",
+      "endDate": "2027-01-24",
+      "dateLabel": "2027-01-18 — 2027-01-24",
+      "theme": "光栅化与插值",
+      "tasks": [
+        {
+          "id": "task-w11-shader",
+          "trackKey": "shader",
+          "content": "学习顶点输出如何插值到片元；比较 UV 和顶点颜色",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w11-unity",
+          "trackKey": "unity",
+          "content": "用不同顶点颜色观察插值",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w11-math",
+          "trackKey": "math",
+          "content": "理解插值与重心坐标的直观含义",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w11-practice",
+          "trackKey": "practice",
+          "content": "制作顶点色渐变效果",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w12",
+      "weekNo": "W12",
+      "weekIndex": 12,
+      "startDate": "2027-01-25",
+      "endDate": "2027-01-31",
+      "dateLabel": "2027-01-25 — 2027-01-31",
+      "theme": "深度与混合",
+      "tasks": [
+        {
+          "id": "task-w12-shader",
+          "trackKey": "shader",
+          "content": "学习深度测试、透明混合基础；在 URP 做小实验",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w12-unity",
+          "trackKey": "unity",
+          "content": "检查透明物体排序现象",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w12-math",
+          "trackKey": "math",
+          "content": "理解深度值与屏幕空间",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w12-practice",
+          "trackKey": "practice",
+          "content": "完成透明混合实验并写处理流程图",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w13",
+      "weekNo": "W13",
+      "weekIndex": 13,
+      "startDate": "2027-02-01",
+      "endDate": "2027-02-07",
+      "dateLabel": "2027-02-01 — 2027-02-07",
+      "theme": "时间与 UV 动画",
+      "tasks": [
+        {
+          "id": "task-w13-shader",
+          "trackKey": "shader",
+          "content": "学习时间变量、sin/cos 与 UV 偏移",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w13-unity",
+          "trackKey": "unity",
+          "content": "用 C# 控制流速参数",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w13-math",
+          "trackKey": "math",
+          "content": "周期函数和插值",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w13-practice",
+          "trackKey": "practice",
+          "content": "完成滚动纹理效果",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w14",
+      "weekNo": "W14",
+      "weekIndex": 14,
+      "startDate": "2027-02-08",
+      "endDate": "2027-02-14",
+      "dateLabel": "2027-02-08 — 2027-02-14",
+      "theme": "噪声与扰动",
+      "tasks": [
+        {
+          "id": "task-w14-shader",
+          "trackKey": "shader",
+          "content": "学习噪声纹理采样和 UV 扰动",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w14-unity",
+          "trackKey": "unity",
+          "content": "暴露噪声强度参数",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w14-math",
+          "trackKey": "math",
+          "content": "理解噪声值域与范围映射",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w14-practice",
+          "trackKey": "practice",
+          "content": "完成扭曲 / 扰动效果",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w15",
+      "weekNo": "W15",
+      "weekIndex": 15,
+      "startDate": "2027-02-15",
+      "endDate": "2027-02-21",
+      "dateLabel": "2027-02-15 — 2027-02-21",
+      "theme": "Fresnel 与视角",
+      "tasks": [
+        {
+          "id": "task-w15-shader",
+          "trackKey": "shader",
+          "content": "学习视线方向、法线点乘相关公式",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w15-unity",
+          "trackKey": "unity",
+          "content": "用脚本调节边缘强度",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w15-math",
+          "trackKey": "math",
+          "content": "补视线方向与点乘",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w15-practice",
+          "trackKey": "practice",
+          "content": "完成菲涅尔边缘效果",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w16",
+      "weekNo": "W16",
+      "weekIndex": 16,
+      "startDate": "2027-02-22",
+      "endDate": "2027-02-28",
+      "dateLabel": "2027-02-22 — 2027-02-28",
+      "theme": "顶点动画与小合集",
+      "tasks": [
+        {
+          "id": "task-w16-shader",
+          "trackKey": "shader",
+          "content": "学习顶点位移与时间驱动",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w16-unity",
+          "trackKey": "unity",
+          "content": "整理效果控制脚本",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w16-math",
+          "trackKey": "math",
+          "content": "补位移方向与振幅",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w16-practice",
+          "trackKey": "practice",
+          "content": "完成至少两个动态效果并录屏",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w17",
+      "weekNo": "W17",
+      "weekIndex": 17,
+      "startDate": "2027-03-01",
+      "endDate": "2027-03-07",
+      "dateLabel": "2027-03-01 — 2027-03-07",
+      "theme": "水面工程搭建",
+      "tasks": [
+        {
+          "id": "task-w17-shader",
+          "trackKey": "shader",
+          "content": "设计水面 Shader 结构与参数；以 URP 为目标",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w17-unity",
+          "trackKey": "unity",
+          "content": "创建场景、材质和控制脚本",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w17-math",
+          "trackKey": "math",
+          "content": "复习法线与切线空间（遇到不懂的地方即时补）",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w17-practice",
+          "trackKey": "practice",
+          "content": "完成水面基础材质和展示场景",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w18",
+      "weekNo": "W18",
+      "weekIndex": 18,
+      "startDate": "2027-03-08",
+      "endDate": "2027-03-14",
+      "dateLabel": "2027-03-08 — 2027-03-14",
+      "theme": "双层法线与流动",
+      "tasks": [
+        {
+          "id": "task-w18-shader",
+          "trackKey": "shader",
+          "content": "实现两层法线采样与不同滚动方向",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w18-unity",
+          "trackKey": "unity",
+          "content": "增加流速、方向参数",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w18-math",
+          "trackKey": "math",
+          "content": "理解法线贴图与切线空间",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w18-practice",
+          "trackKey": "practice",
+          "content": "完成动态水面细节",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w19",
+      "weekNo": "W19",
+      "weekIndex": 19,
+      "startDate": "2027-03-15",
+      "endDate": "2027-03-21",
+      "dateLabel": "2027-03-15 — 2027-03-21",
+      "theme": "波动与 Fresnel",
+      "tasks": [
+        {
+          "id": "task-w19-shader",
+          "trackKey": "shader",
+          "content": "实现顶点波动或法线扰动、边缘反射感",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w19-unity",
+          "trackKey": "unity",
+          "content": "整理参数控制",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w19-math",
+          "trackKey": "math",
+          "content": "视线方向、法线与 Fresnel",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w19-practice",
+          "trackKey": "practice",
+          "content": "完成主要视觉效果",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w20",
+      "weekNo": "W20",
+      "weekIndex": 20,
+      "startDate": "2027-03-22",
+      "endDate": "2027-03-28",
+      "dateLabel": "2027-03-22 — 2027-03-28",
+      "theme": "深度交界与项目整理",
+      "tasks": [
+        {
+          "id": "task-w20-shader",
+          "trackKey": "shader",
+          "content": "研究深度纹理交界处理；按能力做简化版本",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w20-unity",
+          "trackKey": "unity",
+          "content": "完善材质参数与场景控制",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w20-math",
+          "trackKey": "math",
+          "content": "理解深度差的意义",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w20-practice",
+          "trackKey": "practice",
+          "content": "录制视频、写技术说明、独立复写核心代码",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w21",
+      "weekNo": "W21",
+      "weekIndex": 21,
+      "startDate": "2027-03-29",
+      "endDate": "2027-04-04",
+      "dateLabel": "2027-03-29 — 2027-04-04",
+      "theme": "深度交界与项目整理",
+      "tasks": [
+        {
+          "id": "task-w21-shader",
+          "trackKey": "shader",
+          "content": "研究深度纹理交界处理；按能力做简化版本",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w21-unity",
+          "trackKey": "unity",
+          "content": "完善材质参数与场景控制",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w21-math",
+          "trackKey": "math",
+          "content": "理解深度差的意义",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w21-practice",
+          "trackKey": "practice",
+          "content": "录制视频、写技术说明、独立复写核心代码",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w22",
+      "weekNo": "W22",
+      "weekIndex": 22,
+      "startDate": "2027-04-05",
+      "endDate": "2027-04-11",
+      "dateLabel": "2027-04-05 — 2027-04-11",
+      "theme": "世界坐标与积雪",
+      "tasks": [
+        {
+          "id": "task-w22-shader",
+          "trackKey": "shader",
+          "content": "学习世界空间高度 / 法线判断",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w22-unity",
+          "trackKey": "unity",
+          "content": "做积雪强度参数控制",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w22-math",
+          "trackKey": "math",
+          "content": "法线与世界方向点乘",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w22-practice",
+          "trackKey": "practice",
+          "content": "完成积雪原型",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w23",
+      "weekNo": "W23",
+      "weekIndex": 23,
+      "startDate": "2027-04-12",
+      "endDate": "2027-04-18",
+      "dateLabel": "2027-04-12 — 2027-04-18",
+      "theme": "湿润地面",
+      "tasks": [
+        {
+          "id": "task-w23-shader",
+          "trackKey": "shader",
+          "content": "学习湿润时颜色、光滑度等变化",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w23-unity",
+          "trackKey": "unity",
+          "content": "控制湿润程度参数",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w23-math",
+          "trackKey": "math",
+          "content": "理解粗糙度与高光变化",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w23-practice",
+          "trackKey": "practice",
+          "content": "完成湿润地面效果",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w24",
+      "weekNo": "W24",
+      "weekIndex": 24,
+      "startDate": "2027-04-19",
+      "endDate": "2027-04-25",
+      "dateLabel": "2027-04-19 — 2027-04-25",
+      "theme": "多纹理混合",
+      "tasks": [
+        {
+          "id": "task-w24-shader",
+          "trackKey": "shader",
+          "content": "学习顶点色 / 遮罩混合",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w24-unity",
+          "trackKey": "unity",
+          "content": "制作材质参数控制",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w24-math",
+          "trackKey": "math",
+          "content": "理解 lerp 与遮罩",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w24-practice",
+          "trackKey": "practice",
+          "content": "完成两种地表混合",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w25",
+      "weekNo": "W25",
+      "weekIndex": 25,
+      "startDate": "2027-04-26",
+      "endDate": "2027-05-02",
+      "dateLabel": "2027-04-26 — 2027-05-02",
+      "theme": "环境材质整合",
+      "tasks": [
+        {
+          "id": "task-w25-shader",
+          "trackKey": "shader",
+          "content": "整合积雪、湿润、混合原型",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w25-unity",
+          "trackKey": "unity",
+          "content": "整理参数命名与脚本",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w25-math",
+          "trackKey": "math",
+          "content": "按实现问题补坐标空间",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w25-practice",
+          "trackKey": "practice",
+          "content": "完成可调节的环境材质原型",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w26",
+      "weekNo": "W26",
+      "weekIndex": 26,
+      "startDate": "2027-05-03",
+      "endDate": "2027-05-09",
+      "dateLabel": "2027-05-03 — 2027-05-09",
+      "theme": "URP 结构认识",
+      "tasks": [
+        {
+          "id": "task-w26-shader",
+          "trackKey": "shader",
+          "content": "阅读 URP 官方文档，理解 Renderer 与 Pass 的关系",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w26-unity",
+          "trackKey": "unity",
+          "content": "建立 Frame Debugger 测试场景",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w26-math",
+          "trackKey": "math",
+          "content": "梳理渲染阶段",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w26-practice",
+          "trackKey": "practice",
+          "content": "记录一次场景的渲染顺序",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w27",
+      "weekNo": "W27",
+      "weekIndex": 27,
+      "startDate": "2027-05-10",
+      "endDate": "2027-05-16",
+      "dateLabel": "2027-05-10 — 2027-05-16",
+      "theme": "深度与不透明纹理",
+      "tasks": [
+        {
+          "id": "task-w27-shader",
+          "trackKey": "shader",
+          "content": "理解 Depth Texture / Opaque Texture 用途",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w27-unity",
+          "trackKey": "unity",
+          "content": "配置 URP Asset 并验证",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w27-math",
+          "trackKey": "math",
+          "content": "理解深度与屏幕颜色",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w27-practice",
+          "trackKey": "practice",
+          "content": "完成一个深度 / 屏幕颜色小实验",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w28",
+      "weekNo": "W28",
+      "weekIndex": 28,
+      "startDate": "2027-05-17",
+      "endDate": "2027-05-23",
+      "dateLabel": "2027-05-17 — 2027-05-23",
+      "theme": "Frame Debugger 与 Profiler",
+      "tasks": [
+        {
+          "id": "task-w28-shader",
+          "trackKey": "shader",
+          "content": "查看 Draw Call、Pass、材质和批次",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w28-unity",
+          "trackKey": "unity",
+          "content": "使用 Profiler 记录数据",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w28-math",
+          "trackKey": "math",
+          "content": "理解 CPU / GPU 时间基本含义",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w28-practice",
+          "trackKey": "practice",
+          "content": "对一个简单场景做性能记录",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w29",
+      "weekNo": "W29",
+      "weekIndex": 29,
+      "startDate": "2027-05-24",
+      "endDate": "2027-05-30",
+      "dateLabel": "2027-05-24 — 2027-05-30",
+      "theme": "Overdraw 与优化",
+      "tasks": [
+        {
+          "id": "task-w29-shader",
+          "trackKey": "shader",
+          "content": "分析透明效果和 Overdraw",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w29-unity",
+          "trackKey": "unity",
+          "content": "优化水面或粒子场景",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w29-math",
+          "trackKey": "math",
+          "content": "理解带宽与片元成本的直观概念",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w29-practice",
+          "trackKey": "practice",
+          "content": "提交优化前后对比记录",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w30",
+      "weekNo": "W30",
+      "weekIndex": 30,
+      "startDate": "2027-05-31",
+      "endDate": "2027-06-06",
+      "dateLabel": "2027-05-31 — 2027-06-06",
+      "theme": "Overdraw 与优化",
+      "tasks": [
+        {
+          "id": "task-w30-shader",
+          "trackKey": "shader",
+          "content": "分析透明效果和 Overdraw",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w30-unity",
+          "trackKey": "unity",
+          "content": "优化水面或粒子场景",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w30-math",
+          "trackKey": "math",
+          "content": "理解带宽与片元成本的直观概念",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w30-practice",
+          "trackKey": "practice",
+          "content": "提交优化前后对比记录",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w31",
+      "weekNo": "W31",
+      "weekIndex": 31,
+      "startDate": "2027-06-07",
+      "endDate": "2027-06-13",
+      "dateLabel": "2027-06-07 — 2027-06-13",
+      "theme": "C# 集合与工具结构",
+      "tasks": [
+        {
+          "id": "task-w31-shader",
+          "trackKey": "shader",
+          "content": "梳理材质工具需要的功能和数据结构",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w31-unity",
+          "trackKey": "unity",
+          "content": "练习 List、Dictionary；创建 EditorWindow 基础窗口",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w31-math",
+          "trackKey": "math",
+          "content": "按工具需求补数据组织",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w31-practice",
+          "trackKey": "practice",
+          "content": "完成工具窗口骨架",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w32",
+      "weekNo": "W32",
+      "weekIndex": 32,
+      "startDate": "2027-06-14",
+      "endDate": "2027-06-20",
+      "dateLabel": "2027-06-14 — 2027-06-20",
+      "theme": "Custom Inspector",
+      "tasks": [
+        {
+          "id": "task-w32-shader",
+          "trackKey": "shader",
+          "content": "学习 SerializedObject / SerializedProperty",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w32-unity",
+          "trackKey": "unity",
+          "content": "为自定义组件制作 Inspector",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w32-math",
+          "trackKey": "math",
+          "content": "理解序列化字段",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w32-practice",
+          "trackKey": "practice",
+          "content": "完成一个自定义 Inspector",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w33",
+      "weekNo": "W33",
+      "weekIndex": 33,
+      "startDate": "2027-06-21",
+      "endDate": "2027-06-27",
+      "dateLabel": "2027-06-21 — 2027-06-27",
+      "theme": "AssetDatabase 与扫描",
+      "tasks": [
+        {
+          "id": "task-w33-shader",
+          "trackKey": "shader",
+          "content": "学习资源查找、路径与引用",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w33-unity",
+          "trackKey": "unity",
+          "content": "扫描项目材质并列出结果",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w33-math",
+          "trackKey": "math",
+          "content": "理解文件路径与资源引用",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w33-practice",
+          "trackKey": "practice",
+          "content": "完成材质扫描功能",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w34",
+      "weekNo": "W34",
+      "weekIndex": 34,
+      "startDate": "2027-06-28",
+      "endDate": "2027-07-04",
+      "dateLabel": "2027-06-28 — 2027-07-04",
+      "theme": "批量修改与异常处理",
+      "tasks": [
+        {
+          "id": "task-w34-shader",
+          "trackKey": "shader",
+          "content": "实现批量参数修改和缺失贴图检查",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w34-unity",
+          "trackKey": "unity",
+          "content": "完善工具交互、提示与错误处理",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w34-math",
+          "trackKey": "math",
+          "content": "按需补集合和异常处理",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w34-practice",
+          "trackKey": "practice",
+          "content": "完成可用的材质管理工具",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w35",
+      "weekNo": "W35",
+      "weekIndex": 35,
+      "startDate": "2027-07-05",
+      "endDate": "2027-07-11",
+      "dateLabel": "2027-07-05 — 2027-07-11",
+      "theme": "系统结构设计",
+      "tasks": [
+        {
+          "id": "task-w35-shader",
+          "trackKey": "shader",
+          "content": "确定积雪 / 湿润 / 混合的参数组织",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w35-unity",
+          "trackKey": "unity",
+          "content": "用脚本统一控制环境参数",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w35-math",
+          "trackKey": "math",
+          "content": "复查本周使用的坐标与法线计算",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w35-practice",
+          "trackKey": "practice",
+          "content": "确定系统功能清单",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w36",
+      "weekNo": "W36",
+      "weekIndex": 36,
+      "startDate": "2027-07-12",
+      "endDate": "2027-07-18",
+      "dateLabel": "2027-07-12 — 2027-07-18",
+      "theme": "效果整合",
+      "tasks": [
+        {
+          "id": "task-w36-shader",
+          "trackKey": "shader",
+          "content": "整合积雪与湿润效果",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w36-unity",
+          "trackKey": "unity",
+          "content": "让脚本驱动全局参数",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w36-math",
+          "trackKey": "math",
+          "content": "针对实现问题补数学",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w36-practice",
+          "trackKey": "practice",
+          "content": "完成主要材质效果",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w37",
+      "weekNo": "W37",
+      "weekIndex": 37,
+      "startDate": "2027-07-19",
+      "endDate": "2027-07-25",
+      "dateLabel": "2027-07-19 — 2027-07-25",
+      "theme": "工具接入与优化",
+      "tasks": [
+        {
+          "id": "task-w37-shader",
+          "trackKey": "shader",
+          "content": "统一 Shader 属性与材质工作流",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w37-unity",
+          "trackKey": "unity",
+          "content": "用 Editor 工具管理材质",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w37-math",
+          "trackKey": "math",
+          "content": "检查 Shader 复杂度",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w37-practice",
+          "trackKey": "practice",
+          "content": "完成工具与材质系统联动",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w38",
+      "weekNo": "W38",
+      "weekIndex": 38,
+      "startDate": "2027-07-26",
+      "endDate": "2027-08-01",
+      "dateLabel": "2027-07-26 — 2027-08-01",
+      "theme": "作品验收",
+      "tasks": [
+        {
+          "id": "task-w38-shader",
+          "trackKey": "shader",
+          "content": "整理工程、参数、说明",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w38-unity",
+          "trackKey": "unity",
+          "content": "录制演示视频",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w38-math",
+          "trackKey": "math",
+          "content": "解释关键公式与数据流",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w38-practice",
+          "trackKey": "practice",
+          "content": "完成第二个核心作品",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w39",
+      "weekNo": "W39",
+      "weekIndex": 39,
+      "startDate": "2027-08-02",
+      "endDate": "2027-08-08",
+      "dateLabel": "2027-08-02 — 2027-08-08",
+      "theme": "Shader 效果合集整理",
+      "tasks": [
+        {
+          "id": "task-w39-shader",
+          "trackKey": "shader",
+          "content": "挑选最能证明能力的效果并整理源码",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w39-unity",
+          "trackKey": "unity",
+          "content": "整理脚本和材质资源",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w39-math",
+          "trackKey": "math",
+          "content": "复核作品原理说明",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w39-practice",
+          "trackKey": "practice",
+          "content": "制作作品一展示视频",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w40",
+      "weekNo": "W40",
+      "weekIndex": 40,
+      "startDate": "2027-08-09",
+      "endDate": "2027-08-15",
+      "dateLabel": "2027-08-09 — 2027-08-15",
+      "theme": "环境材质项目整理",
+      "tasks": [
+        {
+          "id": "task-w40-shader",
+          "trackKey": "shader",
+          "content": "整理系统结构、参数和效果",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w40-unity",
+          "trackKey": "unity",
+          "content": "清理工程与依赖",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w40-math",
+          "trackKey": "math",
+          "content": "说明坐标与混合原理",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w40-practice",
+          "trackKey": "practice",
+          "content": "制作作品二展示视频",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w41",
+      "weekNo": "W41",
+      "weekIndex": 41,
+      "startDate": "2027-08-16",
+      "endDate": "2027-08-22",
+      "dateLabel": "2027-08-16 — 2027-08-22",
+      "theme": "Editor 工具整理",
+      "tasks": [
+        {
+          "id": "task-w41-shader",
+          "trackKey": "shader",
+          "content": "完善工具功能和界面",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w41-unity",
+          "trackKey": "unity",
+          "content": "清理代码、加注释和错误提示",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w41-math",
+          "trackKey": "math",
+          "content": "理解工具数据流",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w41-practice",
+          "trackKey": "practice",
+          "content": "制作工具演示视频",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w42",
+      "weekNo": "W42",
+      "weekIndex": 42,
+      "startDate": "2027-08-23",
+      "endDate": "2027-08-29",
+      "dateLabel": "2027-08-23 — 2027-08-29",
+      "theme": "作品集打包",
+      "tasks": [
+        {
+          "id": "task-w42-shader",
+          "trackKey": "shader",
+          "content": "编写 README、技术说明和使用方式",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w42-unity",
+          "trackKey": "unity",
+          "content": "整理 Git 仓库与版本",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w42-math",
+          "trackKey": "math",
+          "content": "准备技术讲解提纲",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w42-practice",
+          "trackKey": "practice",
+          "content": "检查工程可运行性并形成作品集入口",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w43",
+      "weekNo": "W43",
+      "weekIndex": 43,
+      "startDate": "2027-08-30",
+      "endDate": "2027-09-05",
+      "dateLabel": "2027-08-30 — 2027-09-05",
+      "theme": "作品集打包",
+      "tasks": [
+        {
+          "id": "task-w43-shader",
+          "trackKey": "shader",
+          "content": "编写 README、技术说明和使用方式",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w43-unity",
+          "trackKey": "unity",
+          "content": "整理 Git 仓库与版本",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w43-math",
+          "trackKey": "math",
+          "content": "准备技术讲解提纲",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w43-practice",
+          "trackKey": "practice",
+          "content": "检查工程可运行性并形成作品集入口",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w44",
+      "weekNo": "W44",
+      "weekIndex": 44,
+      "startDate": "2027-09-06",
+      "endDate": "2027-09-12",
+      "dateLabel": "2027-09-06 — 2027-09-12",
+      "theme": "简历与岗位研究",
+      "tasks": [
+        {
+          "id": "task-w44-shader",
+          "trackKey": "shader",
+          "content": "分析目标岗位要求，区分必需项与加分项",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w44-unity",
+          "trackKey": "unity",
+          "content": "整理项目技术栈与个人职责",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w44-math",
+          "trackKey": "math",
+          "content": "复习岗位常问的图形学基础",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w44-practice",
+          "trackKey": "practice",
+          "content": "完成简历初稿",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w45",
+      "weekNo": "W45",
+      "weekIndex": 45,
+      "startDate": "2027-09-13",
+      "endDate": "2027-09-19",
+      "dateLabel": "2027-09-13 — 2027-09-19",
+      "theme": "Shader 面试准备",
+      "tasks": [
+        {
+          "id": "task-w45-shader",
+          "trackKey": "shader",
+          "content": "手写基础 Shader；讲解溶解 / 水面",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w45-unity",
+          "trackKey": "unity",
+          "content": "练习代码结构表达",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w45-math",
+          "trackKey": "math",
+          "content": "复习向量、矩阵、光照",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w45-practice",
+          "trackKey": "practice",
+          "content": "完成一轮模拟技术问答",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w46",
+      "weekNo": "W46",
+      "weekIndex": 46,
+      "startDate": "2027-09-20",
+      "endDate": "2027-09-26",
+      "dateLabel": "2027-09-20 — 2027-09-26",
+      "theme": "Unity 与 C# 面试准备",
+      "tasks": [
+        {
+          "id": "task-w46-shader",
+          "trackKey": "shader",
+          "content": "准备渲染流程问题",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w46-unity",
+          "trackKey": "unity",
+          "content": "准备生命周期、组件、Editor API 面试题",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w46-math",
+          "trackKey": "math",
+          "content": "复习深度、混合、Draw Call",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w46-practice",
+          "trackKey": "practice",
+          "content": "完成项目讲解稿",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w47",
+      "weekNo": "W47",
+      "weekIndex": 47,
+      "startDate": "2027-09-27",
+      "endDate": "2027-10-03",
+      "dateLabel": "2027-09-27 — 2027-10-03",
+      "theme": "开始投递",
+      "tasks": [
+        {
+          "id": "task-w47-shader",
+          "trackKey": "shader",
+          "content": "按岗位调整作品集重点",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w47-unity",
+          "trackKey": "unity",
+          "content": "整理投递记录",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w47-math",
+          "trackKey": "math",
+          "content": "针对薄弱问题即时补学",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w47-practice",
+          "trackKey": "practice",
+          "content": "投递第一批岗位并记录反馈",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w48",
+      "weekNo": "W48",
+      "weekIndex": 48,
+      "startDate": "2027-10-04",
+      "endDate": "2027-10-10",
+      "dateLabel": "2027-10-04 — 2027-10-10",
+      "theme": "投递迭代",
+      "tasks": [
+        {
+          "id": "task-w48-shader",
+          "trackKey": "shader",
+          "content": "根据岗位反馈补充 Shader 技能",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w48-unity",
+          "trackKey": "unity",
+          "content": "完善简历和项目表达",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w48-math",
+          "trackKey": "math",
+          "content": "补面试暴露的数学问题",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w48-practice",
+          "trackKey": "practice",
+          "content": "持续投递并记录结果",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w49",
+      "weekNo": "W49",
+      "weekIndex": 49,
+      "startDate": "2027-10-11",
+      "endDate": "2027-10-17",
+      "dateLabel": "2027-10-11 — 2027-10-17",
+      "theme": "技术面试训练",
+      "tasks": [
+        {
+          "id": "task-w49-shader",
+          "trackKey": "shader",
+          "content": "独立实现一个指定 Shader 小题",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w49-unity",
+          "trackKey": "unity",
+          "content": "现场写 C# 小功能",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w49-math",
+          "trackKey": "math",
+          "content": "口述渲染原理",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w49-practice",
+          "trackKey": "practice",
+          "content": "完成一次模拟面试",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w50",
+      "weekNo": "W50",
+      "weekIndex": 50,
+      "startDate": "2027-10-18",
+      "endDate": "2027-10-24",
+      "dateLabel": "2027-10-18 — 2027-10-24",
+      "theme": "作品集改进",
+      "tasks": [
+        {
+          "id": "task-w50-shader",
+          "trackKey": "shader",
+          "content": "补充作品中的技术深度",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w50-unity",
+          "trackKey": "unity",
+          "content": "优化工程结构",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w50-math",
+          "trackKey": "math",
+          "content": "整理性能数据",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w50-practice",
+          "trackKey": "practice",
+          "content": "更新作品集版本",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w51",
+      "weekNo": "W51",
+      "weekIndex": 51,
+      "startDate": "2027-10-25",
+      "endDate": "2027-10-31",
+      "dateLabel": "2027-10-25 — 2027-10-31",
+      "theme": "阶段复盘",
+      "tasks": [
+        {
+          "id": "task-w51-shader",
+          "trackKey": "shader",
+          "content": "选择岗位方向与短板",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w51-unity",
+          "trackKey": "unity",
+          "content": "更新后续学习安排",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w51-math",
+          "trackKey": "math",
+          "content": "针对最薄弱的一项补充",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w51-practice",
+          "trackKey": "practice",
+          "content": "形成下一阶段行动清单",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w52",
+      "weekNo": "W52",
+      "weekIndex": 52,
+      "startDate": "2027-11-01",
+      "endDate": "2027-11-07",
+      "dateLabel": "2027-11-01 — 2027-11-07",
+      "theme": "Shader 调试与变体",
+      "tasks": [
+        {
+          "id": "task-w52-shader",
+          "trackKey": "shader",
+          "content": "检查 Shader 变体、关键字与调试方法；针对实际问题阅读 URP 文档",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w52-unity",
+          "trackKey": "unity",
+          "content": "整理项目代码、参数组织与调试流程",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w52-math",
+          "trackKey": "math",
+          "content": "按调试问题补 GPU 性能基础",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w52-practice",
+          "trackKey": "practice",
+          "content": "完成一次 Shader 调试记录",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w53",
+      "weekNo": "W53",
+      "weekIndex": 53,
+      "startDate": "2027-11-08",
+      "endDate": "2027-11-14",
+      "dateLabel": "2027-11-08 — 2027-11-14",
+      "theme": "渲染性能案例",
+      "tasks": [
+        {
+          "id": "task-w53-shader",
+          "trackKey": "shader",
+          "content": "分析 Shader 复杂度、透明与 Overdraw",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w53-unity",
+          "trackKey": "unity",
+          "content": "Profiler / Frame Debugger 对比",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w53-math",
+          "trackKey": "math",
+          "content": "理解片元成本与带宽",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w53-practice",
+          "trackKey": "practice",
+          "content": "完成一个优化前后案例",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w54",
+      "weekNo": "W54",
+      "weekIndex": 54,
+      "startDate": "2027-11-15",
+      "endDate": "2027-11-21",
+      "dateLabel": "2027-11-15 — 2027-11-21",
+      "theme": "项目工程化",
+      "tasks": [
+        {
+          "id": "task-w54-shader",
+          "trackKey": "shader",
+          "content": "整理 Shader 文件结构、命名和复用",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w54-unity",
+          "trackKey": "unity",
+          "content": "清理工程依赖、版本管理",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w54-math",
+          "trackKey": "math",
+          "content": "按需要补数据流知识",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w54-practice",
+          "trackKey": "practice",
+          "content": "项目能稳定打开、演示",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w55",
+      "weekNo": "W55",
+      "weekIndex": 55,
+      "startDate": "2027-11-22",
+      "endDate": "2027-11-28",
+      "dateLabel": "2027-11-22 — 2027-11-28",
+      "theme": "月度复盘",
+      "tasks": [
+        {
+          "id": "task-w55-shader",
+          "trackKey": "shader",
+          "content": "选一项薄弱 Shader 能力做定向练习",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w55-unity",
+          "trackKey": "unity",
+          "content": "整理代码规范",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w55-math",
+          "trackKey": "math",
+          "content": "补面试中暴露的问题",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w55-practice",
+          "trackKey": "practice",
+          "content": "记录下月要提升的能力",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w56",
+      "weekNo": "W56",
+      "weekIndex": 56,
+      "startDate": "2027-11-29",
+      "endDate": "2027-12-05",
+      "dateLabel": "2027-11-29 — 2027-12-05",
+      "theme": "月度复盘",
+      "tasks": [
+        {
+          "id": "task-w56-shader",
+          "trackKey": "shader",
+          "content": "选一项薄弱 Shader 能力做定向练习",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w56-unity",
+          "trackKey": "unity",
+          "content": "整理代码规范",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w56-math",
+          "trackKey": "math",
+          "content": "补面试中暴露的问题",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w56-practice",
+          "trackKey": "practice",
+          "content": "记录下月要提升的能力",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w57",
+      "weekNo": "W57",
+      "weekIndex": 57,
+      "startDate": "2027-12-06",
+      "endDate": "2027-12-12",
+      "dateLabel": "2027-12-06 — 2027-12-12",
+      "theme": "URP Renderer 结构",
+      "tasks": [
+        {
+          "id": "task-w57-shader",
+          "trackKey": "shader",
+          "content": "学习 Renderer、Pass 的职责和关系",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w57-unity",
+          "trackKey": "unity",
+          "content": "创建 URP 实验场景",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w57-math",
+          "trackKey": "math",
+          "content": "渲染管线阶段理解",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w57-practice",
+          "trackKey": "practice",
+          "content": "画出 URP 基本执行结构",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w58",
+      "weekNo": "W58",
+      "weekIndex": 58,
+      "startDate": "2027-12-13",
+      "endDate": "2027-12-19",
+      "dateLabel": "2027-12-13 — 2027-12-19",
+      "theme": "Render Pass 基础",
+      "tasks": [
+        {
+          "id": "task-w58-shader",
+          "trackKey": "shader",
+          "content": "学习 ScriptableRenderPass 的基本概念",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w58-unity",
+          "trackKey": "unity",
+          "content": "搭建简单 Pass 实验",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w58-math",
+          "trackKey": "math",
+          "content": "按案例补渲染时序",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w58-practice",
+          "trackKey": "practice",
+          "content": "完成一个简单 Pass 原型",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w59",
+      "weekNo": "W59",
+      "weekIndex": 59,
+      "startDate": "2027-12-20",
+      "endDate": "2027-12-26",
+      "dateLabel": "2027-12-20 — 2027-12-26",
+      "theme": "Renderer Feature 实验",
+      "tasks": [
+        {
+          "id": "task-w59-shader",
+          "trackKey": "shader",
+          "content": "学习 Renderer Feature 的用途和接入",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w59-unity",
+          "trackKey": "unity",
+          "content": "将实验接入 Renderer",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w59-math",
+          "trackKey": "math",
+          "content": "理解资源输入输出",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w59-practice",
+          "trackKey": "practice",
+          "content": "实现一个基础自定义渲染功能",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w60",
+      "weekNo": "W60",
+      "weekIndex": 60,
+      "startDate": "2027-12-27",
+      "endDate": "2028-01-02",
+      "dateLabel": "2027-12-27 — 2028-01-02",
+      "theme": "URP 项目验收",
+      "tasks": [
+        {
+          "id": "task-w60-shader",
+          "trackKey": "shader",
+          "content": "整理代码和使用说明",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w60-unity",
+          "trackKey": "unity",
+          "content": "验证不同场景下运行",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w60-math",
+          "trackKey": "math",
+          "content": "梳理技术限制",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w60-practice",
+          "trackKey": "practice",
+          "content": "完成 URP 小型渲染实验",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w61",
+      "weekNo": "W61",
+      "weekIndex": 61,
+      "startDate": "2028-01-03",
+      "endDate": "2028-01-09",
+      "dateLabel": "2028-01-03 — 2028-01-09",
+      "theme": "Editor 工具结构",
+      "tasks": [
+        {
+          "id": "task-w61-shader",
+          "trackKey": "shader",
+          "content": "梳理工具功能模块和类职责",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w61-unity",
+          "trackKey": "unity",
+          "content": "拆分工具代码、界面与数据层",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w61-math",
+          "trackKey": "math",
+          "content": "按工具逻辑补数据结构",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w61-practice",
+          "trackKey": "practice",
+          "content": "完成架构图",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w62",
+      "weekNo": "W62",
+      "weekIndex": 62,
+      "startDate": "2028-01-10",
+      "endDate": "2028-01-16",
+      "dateLabel": "2028-01-10 — 2028-01-16",
+      "theme": "工具异常处理",
+      "tasks": [
+        {
+          "id": "task-w62-shader",
+          "trackKey": "shader",
+          "content": "补充空引用、无效资源和错误提示",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w62-unity",
+          "trackKey": "unity",
+          "content": "实现异常处理与输入校验",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w62-math",
+          "trackKey": "math",
+          "content": "理解常见边界情况",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w62-practice",
+          "trackKey": "practice",
+          "content": "工具对异常输入能给出提示",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w63",
+      "weekNo": "W63",
+      "weekIndex": 63,
+      "startDate": "2028-01-17",
+      "endDate": "2028-01-23",
+      "dateLabel": "2028-01-17 — 2028-01-23",
+      "theme": "工具易用性",
+      "tasks": [
+        {
+          "id": "task-w63-shader",
+          "trackKey": "shader",
+          "content": "整理工具交互、说明和默认值",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w63-unity",
+          "trackKey": "unity",
+          "content": "优化 Inspector / EditorWindow",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w63-math",
+          "trackKey": "math",
+          "content": "按需求补脚本知识",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w63-practice",
+          "trackKey": "practice",
+          "content": "找一个实际使用流程试用",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w64",
+      "weekNo": "W64",
+      "weekIndex": 64,
+      "startDate": "2028-01-24",
+      "endDate": "2028-01-30",
+      "dateLabel": "2028-01-24 — 2028-01-30",
+      "theme": "工具发布验收",
+      "tasks": [
+        {
+          "id": "task-w64-shader",
+          "trackKey": "shader",
+          "content": "补文档、截图与演示",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w64-unity",
+          "trackKey": "unity",
+          "content": "整理可复用版本",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w64-math",
+          "trackKey": "math",
+          "content": "准备技术讲解",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w64-practice",
+          "trackKey": "practice",
+          "content": "完成可复用工具项目",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w65",
+      "weekNo": "W65",
+      "weekIndex": 65,
+      "startDate": "2028-01-31",
+      "endDate": "2028-02-06",
+      "dateLabel": "2028-01-31 — 2028-02-06",
+      "theme": "工具发布验收",
+      "tasks": [
+        {
+          "id": "task-w65-shader",
+          "trackKey": "shader",
+          "content": "补文档、截图与演示",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w65-unity",
+          "trackKey": "unity",
+          "content": "整理可复用版本",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w65-math",
+          "trackKey": "math",
+          "content": "准备技术讲解",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w65-practice",
+          "trackKey": "practice",
+          "content": "完成可复用工具项目",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w66",
+      "weekNo": "W66",
+      "weekIndex": 66,
+      "startDate": "2028-02-07",
+      "endDate": "2028-02-13",
+      "dateLabel": "2028-02-07 — 2028-02-13",
+      "theme": "Compute Shader 概念",
+      "tasks": [
+        {
+          "id": "task-w66-shader",
+          "trackKey": "shader",
+          "content": "了解 Compute Shader 适用场景和基本结构",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w66-unity",
+          "trackKey": "unity",
+          "content": "创建最小 Dispatch 实验",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w66-math",
+          "trackKey": "math",
+          "content": "线程组、线程 ID 概念",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w66-practice",
+          "trackKey": "practice",
+          "content": "能解释 CPU 与 GPU 之间的数据关系",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w67",
+      "weekNo": "W67",
+      "weekIndex": 67,
+      "startDate": "2028-02-14",
+      "endDate": "2028-02-20",
+      "dateLabel": "2028-02-14 — 2028-02-20",
+      "theme": "线程组与 Dispatch",
+      "tasks": [
+        {
+          "id": "task-w67-shader",
+          "trackKey": "shader",
+          "content": "完成简单并行计算例子",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w67-unity",
+          "trackKey": "unity",
+          "content": "用 C# 设置线程组和参数",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w67-math",
+          "trackKey": "math",
+          "content": "补线程索引与边界判断",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w67-practice",
+          "trackKey": "practice",
+          "content": "完成简单计算输出",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w68",
+      "weekNo": "W68",
+      "weekIndex": 68,
+      "startDate": "2028-02-21",
+      "endDate": "2028-02-27",
+      "dateLabel": "2028-02-21 — 2028-02-27",
+      "theme": "数据缓冲区",
+      "tasks": [
+        {
+          "id": "task-w68-shader",
+          "trackKey": "shader",
+          "content": "了解 Buffer 的基础用法",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w68-unity",
+          "trackKey": "unity",
+          "content": "尝试数据上传与读取",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w68-math",
+          "trackKey": "math",
+          "content": "理解数据布局",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w68-practice",
+          "trackKey": "practice",
+          "content": "完成最小缓冲区实验",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w69",
+      "weekNo": "W69",
+      "weekIndex": 69,
+      "startDate": "2028-02-28",
+      "endDate": "2028-03-05",
+      "dateLabel": "2028-02-28 — 2028-03-05",
+      "theme": "小型实验与取舍",
+      "tasks": [
+        {
+          "id": "task-w69-shader",
+          "trackKey": "shader",
+          "content": "根据时间做简单效果；基础不足可延后",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w69-unity",
+          "trackKey": "unity",
+          "content": "整理代码",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w69-math",
+          "trackKey": "math",
+          "content": "补边界条件",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w69-practice",
+          "trackKey": "practice",
+          "content": "记录实验用途与局限",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w70",
+      "weekNo": "W70",
+      "weekIndex": 70,
+      "startDate": "2028-03-06",
+      "endDate": "2028-03-12",
+      "dateLabel": "2028-03-06 — 2028-03-12",
+      "theme": "PBR 基础",
+      "tasks": [
+        {
+          "id": "task-w70-shader",
+          "trackKey": "shader",
+          "content": "理解 Metallic / Roughness 与基础 PBR 概念",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w70-unity",
+          "trackKey": "unity",
+          "content": "建立材质对比场景",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w70-math",
+          "trackKey": "math",
+          "content": "BRDF 直观概念",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w70-practice",
+          "trackKey": "practice",
+          "content": "做不同粗糙度和金属度对比",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w71",
+      "weekNo": "W71",
+      "weekIndex": 71,
+      "startDate": "2028-03-13",
+      "endDate": "2028-03-19",
+      "dateLabel": "2028-03-13 — 2028-03-19",
+      "theme": "环境光照",
+      "tasks": [
+        {
+          "id": "task-w71-shader",
+          "trackKey": "shader",
+          "content": "学习环境反射、IBL 的基础概念",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w71-unity",
+          "trackKey": "unity",
+          "content": "在 Unity 场景中配置环境",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w71-math",
+          "trackKey": "math",
+          "content": "理解环境光对材质的影响",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w71-practice",
+          "trackKey": "practice",
+          "content": "完成材质表现对比",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w72",
+      "weekNo": "W72",
+      "weekIndex": 72,
+      "startDate": "2028-03-20",
+      "endDate": "2028-03-26",
+      "dateLabel": "2028-03-20 — 2028-03-26",
+      "theme": "综合场景搭建",
+      "tasks": [
+        {
+          "id": "task-w72-shader",
+          "trackKey": "shader",
+          "content": "整合模型、贴图、材质与灯光",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w72-unity",
+          "trackKey": "unity",
+          "content": "用脚本管理参数",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w72-math",
+          "trackKey": "math",
+          "content": "按效果补光照数学",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w72-practice",
+          "trackKey": "practice",
+          "content": "搭建完整实时渲染场景",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w73",
+      "weekNo": "W73",
+      "weekIndex": 73,
+      "startDate": "2028-03-27",
+      "endDate": "2028-04-02",
+      "dateLabel": "2028-03-27 — 2028-04-02",
+      "theme": "场景优化与展示",
+      "tasks": [
+        {
+          "id": "task-w73-shader",
+          "trackKey": "shader",
+          "content": "优化材质和效果",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w73-unity",
+          "trackKey": "unity",
+          "content": "整理场景控制",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w73-math",
+          "trackKey": "math",
+          "content": "解释材质参数",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w73-practice",
+          "trackKey": "practice",
+          "content": "录制场景演示与技术说明",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w74",
+      "weekNo": "W74",
+      "weekIndex": 74,
+      "startDate": "2028-04-03",
+      "endDate": "2028-04-09",
+      "dateLabel": "2028-04-03 — 2028-04-09",
+      "theme": "Shader 面试复盘",
+      "tasks": [
+        {
+          "id": "task-w74-shader",
+          "trackKey": "shader",
+          "content": "整理 HLSL、纹理采样、光照和效果题",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w74-unity",
+          "trackKey": "unity",
+          "content": "练习独立手写核心逻辑",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w74-math",
+          "trackKey": "math",
+          "content": "补公式解释",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w74-practice",
+          "trackKey": "practice",
+          "content": "完成一套 Shader 问答",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w75",
+      "weekNo": "W75",
+      "weekIndex": 75,
+      "startDate": "2028-04-10",
+      "endDate": "2028-04-16",
+      "dateLabel": "2028-04-10 — 2028-04-16",
+      "theme": "Unity / C# 面试复盘",
+      "tasks": [
+        {
+          "id": "task-w75-shader",
+          "trackKey": "shader",
+          "content": "整理生命周期、组件、材质和 Editor 题",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w75-unity",
+          "trackKey": "unity",
+          "content": "练习现场写小工具逻辑",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w75-math",
+          "trackKey": "math",
+          "content": "按题目补数据流",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w75-practice",
+          "trackKey": "practice",
+          "content": "完成一套 Unity/C# 问答",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w76",
+      "weekNo": "W76",
+      "weekIndex": 76,
+      "startDate": "2028-04-17",
+      "endDate": "2028-04-23",
+      "dateLabel": "2028-04-17 — 2028-04-23",
+      "theme": "图形学面试复盘",
+      "tasks": [
+        {
+          "id": "task-w76-shader",
+          "trackKey": "shader",
+          "content": "整理坐标、矩阵、深度和渲染流程",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w76-unity",
+          "trackKey": "unity",
+          "content": "用小实验验证薄弱概念",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w76-math",
+          "trackKey": "math",
+          "content": "补关键数学推导",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w76-practice",
+          "trackKey": "practice",
+          "content": "完成图形学口述测试",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w77",
+      "weekNo": "W77",
+      "weekIndex": 77,
+      "startDate": "2028-04-24",
+      "endDate": "2028-04-30",
+      "dateLabel": "2028-04-24 — 2028-04-30",
+      "theme": "模拟面试",
+      "tasks": [
+        {
+          "id": "task-w77-shader",
+          "trackKey": "shader",
+          "content": "讲解三个作品的设计与技术决策",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w77-unity",
+          "trackKey": "unity",
+          "content": "模拟代码题",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w77-math",
+          "trackKey": "math",
+          "content": "补回答不清楚的原理",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w77-practice",
+          "trackKey": "practice",
+          "content": "完成一次完整模拟面试",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w78",
+      "weekNo": "W78",
+      "weekIndex": 78,
+      "startDate": "2028-05-01",
+      "endDate": "2028-05-07",
+      "dateLabel": "2028-05-01 — 2028-05-07",
+      "theme": "岗位专项补强",
+      "tasks": [
+        {
+          "id": "task-w78-shader",
+          "trackKey": "shader",
+          "content": "根据目标岗位的具体要求补一个专项",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w78-unity",
+          "trackKey": "unity",
+          "content": "按岗位补 Unity 工具或工程能力",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w78-math",
+          "trackKey": "math",
+          "content": "按面试反馈补数学",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w78-practice",
+          "trackKey": "practice",
+          "content": "更新岗位能力对照表",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w79",
+      "weekNo": "W79",
+      "weekIndex": 79,
+      "startDate": "2028-05-08",
+      "endDate": "2028-05-14",
+      "dateLabel": "2028-05-08 — 2028-05-14",
+      "theme": "作品集定向优化",
+      "tasks": [
+        {
+          "id": "task-w79-shader",
+          "trackKey": "shader",
+          "content": "调整作品展示顺序与技术重点",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w79-unity",
+          "trackKey": "unity",
+          "content": "修复工程问题",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w79-math",
+          "trackKey": "math",
+          "content": "补齐原理说明",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w79-practice",
+          "trackKey": "practice",
+          "content": "按目标岗位优化作品集",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w80",
+      "weekNo": "W80",
+      "weekIndex": 80,
+      "startDate": "2028-05-15",
+      "endDate": "2028-05-21",
+      "dateLabel": "2028-05-15 — 2028-05-21",
+      "theme": "持续投递与面试",
+      "tasks": [
+        {
+          "id": "task-w80-shader",
+          "trackKey": "shader",
+          "content": "针对面试题练习 Shader",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w80-unity",
+          "trackKey": "unity",
+          "content": "准备 C# / Unity 环节",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w80-math",
+          "trackKey": "math",
+          "content": "即时补面试漏洞",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w80-practice",
+          "trackKey": "practice",
+          "content": "记录投递和面试反馈",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w81",
+      "weekNo": "W81",
+      "weekIndex": 81,
+      "startDate": "2028-05-22",
+      "endDate": "2028-05-28",
+      "dateLabel": "2028-05-22 — 2028-05-28",
+      "theme": "月度评估",
+      "tasks": [
+        {
+          "id": "task-w81-shader",
+          "trackKey": "shader",
+          "content": "评估目前距离岗位要求的差距",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w81-unity",
+          "trackKey": "unity",
+          "content": "制定下一阶段任务",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w81-math",
+          "trackKey": "math",
+          "content": "补最重要的短板",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w81-practice",
+          "trackKey": "practice",
+          "content": "形成个人能力评估",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w82",
+      "weekNo": "W82",
+      "weekIndex": 82,
+      "startDate": "2028-05-29",
+      "endDate": "2028-06-04",
+      "dateLabel": "2028-05-29 — 2028-06-04",
+      "theme": "月度评估",
+      "tasks": [
+        {
+          "id": "task-w82-shader",
+          "trackKey": "shader",
+          "content": "评估目前距离岗位要求的差距",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w82-unity",
+          "trackKey": "unity",
+          "content": "制定下一阶段任务",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w82-math",
+          "trackKey": "math",
+          "content": "补最重要的短板",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w82-practice",
+          "trackKey": "practice",
+          "content": "形成个人能力评估",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w83",
+      "weekNo": "W83",
+      "weekIndex": 83,
+      "startDate": "2028-06-05",
+      "endDate": "2028-06-11",
+      "dateLabel": "2028-06-05 — 2028-06-11",
+      "theme": "核心技能保持",
+      "tasks": [
+        {
+          "id": "task-w83-shader",
+          "trackKey": "shader",
+          "content": "保持独立实现与调试 Shader",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w83-unity",
+          "trackKey": "unity",
+          "content": "保持 Unity 工程练习",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w83-math",
+          "trackKey": "math",
+          "content": "口述核心数学与渲染知识",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w83-practice",
+          "trackKey": "practice",
+          "content": "完成一次综合能力验收",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w84",
+      "weekNo": "W84",
+      "weekIndex": 84,
+      "startDate": "2028-06-12",
+      "endDate": "2028-06-18",
+      "dateLabel": "2028-06-12 — 2028-06-18",
+      "theme": "项目总结与整理",
+      "tasks": [
+        {
+          "id": "task-w84-shader",
+          "trackKey": "shader",
+          "content": "整理核心 Shader 源码",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w84-unity",
+          "trackKey": "unity",
+          "content": "整理工具与工程文件",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w84-math",
+          "trackKey": "math",
+          "content": "准备项目技术讲解",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w84-practice",
+          "trackKey": "practice",
+          "content": "完成最终作品集备份",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w85",
+      "weekNo": "W85",
+      "weekIndex": 85,
+      "startDate": "2028-06-19",
+      "endDate": "2028-06-25",
+      "dateLabel": "2028-06-19 — 2028-06-25",
+      "theme": "毕业求职材料",
+      "tasks": [
+        {
+          "id": "task-w85-shader",
+          "trackKey": "shader",
+          "content": "按岗位修改简历与作品集",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w85-unity",
+          "trackKey": "unity",
+          "content": "整理项目职责和贡献",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w85-math",
+          "trackKey": "math",
+          "content": "准备技术问答",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w85-practice",
+          "trackKey": "practice",
+          "content": "完成求职材料",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    },
+    {
+      "id": "week-w86",
+      "weekNo": "W86",
+      "weekIndex": 86,
+      "startDate": "2028-06-26",
+      "endDate": "2028-06-30",
+      "dateLabel": "2028-06-26 — 2028-06-30",
+      "theme": "就业准备",
+      "tasks": [
+        {
+          "id": "task-w86-shader",
+          "trackKey": "shader",
+          "content": "根据实际机会安排实习或正式岗位投递",
+          "title": "Shader",
+          "sortOrder": 1
+        },
+        {
+          "id": "task-w86-unity",
+          "trackKey": "unity",
+          "content": "保持代码与项目能力",
+          "title": "C#",
+          "sortOrder": 2
+        },
+        {
+          "id": "task-w86-math",
+          "trackKey": "math",
+          "content": "按反馈补短板",
+          "title": "数学",
+          "sortOrder": 3
+        },
+        {
+          "id": "task-w86-practice",
+          "trackKey": "practice",
+          "content": "完成毕业就业阶段计划",
+          "title": "实践",
+          "sortOrder": 4
+        }
+      ],
+      "status": "not_started",
+      "reflection": "",
+      "updatedAt": null
+    }
+  ],
+  "portfolio": [
+    {
+      "id": "portfolio-01",
+      "code": "作品 01",
+      "title": "Shader 效果合集",
+      "summary": "溶解、UV 流动、Fresnel、卡通光照、基础水面等",
+      "acceptance": "至少 4 个效果；至少 1 个能从空白工程独立实现；有视频、源码和原理说明",
+      "status": "not_started",
+      "completedOn": null,
+      "notes": "",
+      "demoUrl": "",
+      "repoUrl": "",
+      "coverUrl": "",
+      "techStack": [],
+      "published": false,
+      "sortOrder": 1
+    },
+    {
+      "id": "portfolio-02",
+      "code": "作品 02",
+      "title": "动态水面",
+      "summary": "双层法线、流动、波动、Fresnel、深度交界",
+      "acceptance": "Unity 6 + URP 可运行；参数可调；有展示场景、视频、技术文档",
+      "status": "not_started",
+      "completedOn": null,
+      "notes": "",
+      "demoUrl": "",
+      "repoUrl": "",
+      "coverUrl": "",
+      "techStack": [],
+      "published": false,
+      "sortOrder": 2
+    },
+    {
+      "id": "portfolio-03",
+      "code": "作品 03",
+      "title": "动态环境材质系统",
+      "summary": "积雪、湿润、纹理混合、统一参数控制",
+      "acceptance": "多个效果能协同使用；有场景展示、代码说明和基础性能记录",
+      "status": "not_started",
+      "completedOn": null,
+      "notes": "",
+      "demoUrl": "",
+      "repoUrl": "",
+      "coverUrl": "",
+      "techStack": [],
+      "published": false,
+      "sortOrder": 3
+    },
+    {
+      "id": "portfolio-04",
+      "code": "作品 04",
+      "title": "Unity Editor 工具",
+      "summary": "材质扫描、批量修改、缺失贴图检查",
+      "acceptance": "Editor 中实际可运行；有错误处理、使用说明和演示",
+      "status": "not_started",
+      "completedOn": null,
+      "notes": "",
+      "demoUrl": "",
+      "repoUrl": "",
+      "coverUrl": "",
+      "techStack": [],
+      "published": false,
+      "sortOrder": 4
+    },
+    {
+      "id": "portfolio-05",
+      "code": "",
+      "title": "C# / Unity",
+      "summary": "独立脚本、组件引用、材质控制、基础 Editor API",
+      "acceptance": "能够不依赖 AI 写出常见脚本，并解释代码结构",
+      "status": "not_started",
+      "completedOn": null,
+      "notes": "",
+      "demoUrl": "",
+      "repoUrl": "",
+      "coverUrl": "",
+      "techStack": [],
+      "published": false,
+      "sortOrder": 5
+    },
+    {
+      "id": "portfolio-06",
+      "code": "",
+      "title": "HLSL / Shader",
+      "summary": "常见纹理、光照、溶解、动态效果",
+      "acceptance": "能够独立实现常见效果并定位基础问题",
+      "status": "not_started",
+      "completedOn": null,
+      "notes": "",
+      "demoUrl": "",
+      "repoUrl": "",
+      "coverUrl": "",
+      "techStack": [],
+      "published": false,
+      "sortOrder": 6
+    },
+    {
+      "id": "portfolio-07",
+      "code": "",
+      "title": "图形学 / 数学",
+      "summary": "向量、矩阵、坐标空间、光照、深度与混合",
+      "acceptance": "能解释常用公式和数据流，并在实际 Shader 中应用",
+      "status": "not_started",
+      "completedOn": null,
+      "notes": "",
+      "demoUrl": "",
+      "repoUrl": "",
+      "coverUrl": "",
+      "techStack": [],
+      "published": false,
+      "sortOrder": 7
+    },
+    {
+      "id": "portfolio-08",
+      "code": "",
+      "title": "渲染调试与优化",
+      "summary": "Frame Debugger、Profiler、RenderDoc 基础",
+      "acceptance": "至少完成一个分析案例，能说明发现的问题和优化过程",
+      "status": "not_started",
+      "completedOn": null,
+      "notes": "",
+      "demoUrl": "",
+      "repoUrl": "",
+      "coverUrl": "",
+      "techStack": [],
+      "published": false,
+      "sortOrder": 8
+    },
+    {
+      "id": "portfolio-09",
+      "code": "",
+      "title": "工程协作",
+      "summary": "Git、README、项目结构和技术表达",
+      "acceptance": "项目能独立打开运行，代码有版本记录和说明",
+      "status": "not_started",
+      "completedOn": null,
+      "notes": "",
+      "demoUrl": "",
+      "repoUrl": "",
+      "coverUrl": "",
+      "techStack": [],
+      "published": false,
+      "sortOrder": 9
+    }
+  ]
+}
