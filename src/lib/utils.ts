@@ -84,6 +84,15 @@ export function safeFileName(name: string) {
     .slice(0, 120);
 }
 
+/**
+ * Supabase Storage 的对象 key 不接受中文/空格等字符（会报 Invalid key）。
+ * 上传路径只保留安全扩展名，原始文件名继续存 DB 用于展示。
+ */
+export function storageFileExtension(name: string) {
+  const extension = (name.split(".").pop() || "").trim().toLowerCase();
+  return /^[a-z0-9]{1,10}$/.test(extension) ? extension : "bin";
+}
+
 export function getInitials(value: string) {
   return value
     .split(/\s+|@/)

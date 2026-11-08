@@ -19,7 +19,7 @@ import type {
   WeeklyReviewInput
 } from "../types";
 import { createSeedBundle } from "./seed";
-import { safeFileName } from "./utils";
+import { storageFileExtension } from "./utils";
 import { supabase } from "./supabase";
 
 type CloudRow = Record<string, unknown>;
@@ -470,7 +470,7 @@ export async function uploadCloudAttachment(
   } = await client.auth.getUser();
   if (!user) throw new Error("请先登录再上传附件。");
   const id = crypto.randomUUID();
-  const path = `${planId}/${monthId}/${id}-${safeFileName(file.name)}`;
+  const path = `${planId}/${monthId}/${id}.${storageFileExtension(file.name)}`;
   const { error: uploadError } = await client.storage
     .from("learning-files")
     .upload(path, file, {
@@ -592,7 +592,7 @@ export async function uploadPlanAsset(
 ): Promise<string> {
   const client = requireClient();
   const id = crypto.randomUUID();
-  const extension = (file.name.split(".").pop() || "bin").toLowerCase();
+  const extension = storageFileExtension(file.name);
   const prefix =
     kind === "cover"
       ? `portfolio/${itemId ?? "item"}-cover`
