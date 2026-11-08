@@ -279,7 +279,7 @@ export function PortfolioPage() {
         {canEdit && (
           <div className="portfolio-summary-note">
             <Eye size={18} />
-            编辑项目卡片后，可单独打开“公开到首页”。
+            编辑项目卡片后，可单独标记为已公开。
           </div>
         )}
       </section>
@@ -497,8 +497,8 @@ export function PortfolioPage() {
                 defaultChecked={editing.published}
               />
               <span>
-                <strong>公开到首页</strong>
-                <small>公开页面仍可查看完整验收看板。</small>
+                <strong>标记为已公开</strong>
+                <small>作品集卡片会显示「已公开」，并优先出现在学习记录页的作品预览。</small>
               </span>
               {editing.published ? <Eye size={17} /> : <EyeOff size={17} />}
             </label>

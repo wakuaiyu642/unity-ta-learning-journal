@@ -1,15 +1,15 @@
 # 成长管线 / Growth Pipeline
 
 Unity 技术美术（TA）成长站点：**个人主页 + 20 个月成长档案 + 作品集**，用一条可验证的成长管线记录"学什么、做什么、达到什么水平"。
-内容以 `src/data/unity-ta-monthly.json` 为唯一月度内容源；配置 Supabase 后，个人资料、月度状态、每日打卡、周复盘、附件与作品集都保存在云端。
+内容以 `src/data/unity-ta-monthly.json` 为唯一月度内容源；配置 Supabase 后，个人资料、月度状态、每日打卡（含照片）、周复盘、附件与作品集都保存在云端。
 
 在线地址：<https://wakuaiyu642.github.io/unity-ta-learning-journal/>
 
 ## 站点结构
 
-- **个人主页**（`/`）：头像、标题、个人简介、背景与求职方向、能力自评（按"能否独立复现"标注）、精选作品、成长路线入口。公开浏览时只读，不出现编辑入口。
+- **个人主页**（`/`）：头像、标题、个人简介、背景与求职方向、**今日打卡与打卡日历**（开营前显示倒计时，打卡可附照片）、能力自评（按"能否独立复现"标注）、成长路线入口。首页不再展示精选作品，作品集统一在 `/portfolio`；公开浏览时打卡区只读，不出现编辑入口。
 - **成长档案**（`/journal` 与 `/months/...`）：20 个月、5 个阶段；每月回答"学什么 / 做什么 / 达到什么水平"，并附交付物、独立完成门槛与预计小时；每日打卡、每周复盘、月度附件只记录过程，不自动完成月份。
-- **作品集**（`/portfolio`）：5 个可演示作品 + 5 个能力模块；每项标注完成度（学习中 / 能跟做 / 能独立 / 可复用）、是否 AI 辅助、性能记录，并可单独"公开到首页"。
+- **作品集**（`/portfolio`）：5 个可演示作品 + 5 个能力模块；每项标注完成度（学习中 / 能跟做 / 能独立 / 可复用）、是否 AI 辅助、性能记录，并可单独标记为已公开。
 - **成长路线**（`/roadmap`）：20 个月卡片按 5 个阶段分组，可搜索。
 - **编辑资料**（`/profile/edit`）：所有者、受邀编辑者或本地演示编辑可修改个人资料。
 
@@ -45,7 +45,7 @@ Unity 技术美术（TA）成长站点：**个人主页 + 20 个月成长档案 
 | `plan_months` | 月度状态与日期；**新增** `deliverable`、`evidence_gate`、`estimated_hours` |
 | `plan_month_sections` | 月度正文分类：学习 / 实践 / 周重点 / 验收 / 常见错误 / 参考资料 / 简历映射 |
 | `portfolio_items` | 作品集；**新增** `evidence_level`（learning / guided / independent / reusable，含 check 约束）、`ai_assisted`、`perf_notes` |
-| `daily_logs` / `weekly_reviews` / `attachments` | 每日打卡、周复盘、月度附件（附件/打卡带可空 `month_id`） |
+| `daily_logs` / `weekly_reviews` / `attachments` | 每日打卡、周复盘、月度附件（附件/打卡带可空 `month_id`；`attachments.daily_log_id` 把照片关联到具体某天打卡） |
 | `plan_members` | 所有者与编辑者角色 |
 
 旧 `plan_weeks` / `plan_week_tasks` 表保留用于回滚，新页面不再读取；旧 `/weeks/W01` 链接按日期跳转到月份。
@@ -57,15 +57,16 @@ npm install
 npm run dev
 ```
 
-打开 `http://127.0.0.1:5173`。未配置 Supabase 时自动进入本地演示模式：右上角可切换"公开浏览 / 演示编辑"。本地编辑的 bundle 保存在 `localStorage`（`ta-journey-local-monthly-v1`），附件保存在 IndexedDB，演示编辑开关保存在 `ta-journey-demo-editor`。
+打开 `http://127.0.0.1:5173`。未配置 Supabase 时自动进入本地演示模式：右上角可切换"公开浏览 / 演示编辑"。本地编辑的 bundle 保存在 `localStorage`（`ta-journey-local-monthly-v1`），附件与每日打卡照片保存在 IndexedDB，演示编辑开关保存在 `ta-journey-demo-editor`。
 
 ## 接入 Supabase
 
 1. 新建 Supabase 项目。
-2. 在 SQL Editor 中**按日期顺序**执行三份迁移：
+2. 在 SQL Editor 中**按日期顺序**执行四份迁移：
    - `supabase/migrations/202611070001_learning_journal.sql`（基础表、RLS、存储桶与跨表权限函数）
    - `supabase/migrations/202611080001_monthly_learning_plan.sql`（`plans.phases`、月度字段、月度正文表、周复盘表、打卡/附件的月度关联与回填）
    - `supabase/migrations/202611080002_profile_and_evidence.sql`（`plan_profiles` 新表、作品集完成度/AI 辅助/性能记录字段、月度交付物字段与实时订阅）
+   - `supabase/migrations/202611080003_daily_checkin_photos.sql`（`attachments.daily_log_id`：把上传的照片关联到具体某天打卡，并收紧插入策略；**打卡照片需要这一迁移**）
 3. 在 Authentication → Users 中创建所有者邮箱账号并设置登录密码。
 4. 把前端配置写入 `.env.local`（**保存为无 BOM 的 UTF-8**，否则首行变量可能不生效）：
 
@@ -106,6 +107,7 @@ npx supabase functions deploy manage-collaborators
 - 邮箱：只有勾选「在首页公开邮箱」时才会随个人资料保存并显示；不勾选时提交会清空邮箱，不会出现在公开数据里。
 - 每日记录按"计划 + 用户 + 日期"唯一；周复盘按"计划 + 用户 + 周一日期"唯一；月度状态只由人工设置，打卡时长和复盘不会自动改变它。
 - 单附件上限 10MB，每月最多 20 个；支持 PNG、JPG、WebP、HEIC、PDF、Markdown 和文本；头像 ≤2MB（PNG/JPG/WebP），简历 PDF ≤10MB。
+- 每日打卡照片：每次打卡最多 3 张、单张 ≤10MB（PNG/JPG/WebP/HEIC），上传前在浏览器压缩；保存在公开的 `learning-files` 桶，会随打卡记录公开显示、可随时删除。未执行 `202611080003` 迁移时只有照片上传会提示报错，文字打卡、日历和月页面不受影响。
 
 ## GitHub Pages 部署
 
@@ -114,6 +116,7 @@ npx supabase functions deploy manage-collaborators
 3. 推送到 `main`。`.github/workflows/deploy.yml` 会依次运行类型检查、单元测试、端到端测试、构建和部署。
 4. 发布地址为 `https://<用户名>.github.io/<仓库名>/`。
 5. 发布后如手机仍显示旧版，关闭标签页后重新打开，或刷新两次让 PWA 更新。
+6. 打卡照片需要线上 Supabase 已执行 `202611080003_daily_checkin_photos.sql`（SQL Editor 粘贴运行）；未执行时照片上传会提示迁移缺失，文字打卡与打卡日历正常。
 
 构建会生成 `dist/404.html`，因此直接打开月度、路线或作品集子路径不会因 GitHub Pages 静态路由而丢失页面。PWA manifest 已随站点改名为「成长管线 / Growth Pipeline」，首次加载更新版本后需要刷新一次才会生效。
 
@@ -127,8 +130,8 @@ npm run build
 ```
 
 - 单元测试（`src/lib/*.test.ts`）：校验 seed 数据的 20 个月 / 5 阶段 / 10 个作品集条目、个人资料完整性、每月交付物与条目数量区间、阶段映射，以及周槽日期与完成度推导。
-- 端到端测试（`e2e/learning-journal.spec.ts`，4 个用例）：首页公开浏览、本地演示编辑个人资料并持久化、月度计划公开可读 + 打卡/周复盘/月度验收、作品集编辑与附件上传 + 路线 20 张卡片 + 手机视口无横向溢出。
-- Windows 本地端到端测试默认使用已安装的 Microsoft Edge；CI 使用 Playwright Chromium。
+- 端到端测试（`e2e/learning-journal.spec.ts`，5 个用例）：首页公开浏览、首页打卡保存文字+照片并跳转月页、本地演示编辑个人资料并持久化、月度计划公开可读 + 打卡/周复盘/月度验收、作品集编辑与附件上传 + 路线 20 张卡片 + 手机视口无横向溢出。
+- Windows 本地端到端测试默认使用已安装的 Microsoft Edge；CI 使用 Playwright Chromium。首页打卡用例用 `page.clock.setFixedTime` 固定到 2026-11-12，避免受真实日期影响；本地跑 e2e 前仍需临时移走 `.env.local`。
 
 > 本地 `.env.local` 存在 `VITE_SUPABASE_*` 时，`npm run test:e2e` 会以云端模式启动，端到端用例假设本地演示模式；**本地跑 e2e 前请临时移走 `.env.local`**（CI 不注入这两个变量，因此不受影响）。
 
@@ -138,7 +141,7 @@ npm run build
 
 ## 托管后如何编辑
 
-- **个人资料、月度正文、月度状态、每日打卡、周复盘、附件和作品集**：配置 Supabase 后用所有者邮箱登录网页直接编辑，保存后立即生效，不需要重新提交 GitHub。
+- **个人资料、月度正文、月度状态、每日打卡（首页即可，支持照片）、周复盘、附件和作品集**：配置 Supabase 后用所有者邮箱登录网页直接编辑，保存后立即生效，不需要重新提交 GitHub。
 - **页面样式、功能或月度内容模板**：在本地修改代码，提交并推送到 `main`，GitHub Actions 会自动测试、构建并重新发布。
 - **未配置 Supabase 时**：仍可使用本地演示编辑，但内容只保存在浏览器中，其他设备或公开访问者看不到这些修改。
 

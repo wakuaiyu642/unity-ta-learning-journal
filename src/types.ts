@@ -140,6 +140,8 @@ export interface Attachment {
   id: string;
   planId: string;
   monthId: string;
+  /** 关联的每日打卡记录；月份级附件为 null。 */
+  dailyLogId: string | null;
   storagePath: string;
   fileName: string;
   mimeType: string;

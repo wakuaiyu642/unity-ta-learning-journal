@@ -30,23 +30,25 @@ import {
 } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import { getLogPhotos } from "../lib/checkin";
 import { useDocumentMeta } from "../lib/meta";
 import {
   findRelevantMonth,
   formatDuration,
   formatLogDate,
-  getDailyLogForDate,
   getMonthDateRange,
   getMonthLogs,
   getMonthTone,
   getMonthWeekSlots,
   getReviewForWeek,
   getSuggestedLogDate,
+  isDateInMonth,
   todayInShanghai
 } from "../lib/date";
 import { downloadLocalFile } from "../lib/local-files";
 import {
   MAX_ATTACHMENTS_PER_MONTH,
+  cn,
   statusOptions,
   validateAttachment
 } from "../lib/utils";
@@ -61,10 +63,10 @@ import {
   PageHeader,
   ProgressRing,
   Select,
-  StatusBadge,
-  TextArea,
-  TextInput
+  TextArea
 } from "../components/UI";
+import { DailyCheckInCard } from "../components/DailyCheckInCard";
+import { PhotoStrip } from "../components/PhotoStrip";
 
 function SectionShell({
   eyebrow,
@@ -392,7 +394,6 @@ function MonthPageContent({
     session,
     setDemoEditing,
     updateMonth,
-    saveDailyLog,
     saveWeeklyReview,
     uploadAttachment,
     deleteAttachment
@@ -423,44 +424,39 @@ function MonthPageContent({
     bundle.plan.endDate
   );
   const selectedWeek = searchParams.get("week");
+  const requestedDate = searchParams.get("date");
   const suggestedDate = getSuggestedLogDate(month);
+  // 只有合法的 YYYY-MM-DD 且落在当前月份内时才采用 ?date=；
+  // ?week= 等其它链接不传 date，继续保持默认日期。
+  const validDateParam =
+    requestedDate &&
+    /^\d{4}-\d{2}-\d{2}$/.test(requestedDate) &&
+    isDateInMonth(month, requestedDate)
+      ? requestedDate
+      : null;
   const [statusBusy, setStatusBusy] = useState(false);
-  const [dailyDate, setDailyDate] = useState(suggestedDate);
-  const [minutes, setMinutes] = useState("");
-  const [note, setNote] = useState("");
-  const [dailyBusy, setDailyBusy] = useState(false);
+  const [dailyDate, setDailyDate] = useState(
+    () => validDateParam ?? suggestedDate
+  );
   const [uploadBusy, setUploadBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const existingDailyLog = getDailyLogForDate(
-    bundle.dailyLogs,
-    month.id,
-    dailyDate,
-    userId
-  );
 
   useEffect(() => {
-    setDailyDate(suggestedDate);
+    setDailyDate(validDateParam ?? suggestedDate);
     setMessage("");
     setError("");
-  }, [month.id, suggestedDate]);
+    // 只在切换月份或 ?date= 深链变化时重置，不覆盖用户手动选择的日期。
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [month.id, suggestedDate, validDateParam]);
 
+  // 从打卡日历「在月度记录中查看」带 ?date= 进入时，滚动到每日记录区。
   useEffect(() => {
-    const ownLog = getDailyLogForDate(
-      bundle.dailyLogs,
-      month.id,
-      dailyDate,
-      userId
-    );
-    setMinutes(ownLog ? String(ownLog.minutes) : "");
-    setNote(
-      ownLog?.note ??
-        window.localStorage.getItem(
-          `ta-monthly-draft-${month.id}-${dailyDate}`
-        ) ??
-        ""
-    );
-  }, [bundle.dailyLogs, dailyDate, month.id, userId]);
+    if (!validDateParam) return;
+    document
+      .getElementById("daily-record")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [month.id, validDateParam]);
 
   const flash = (text: string) => {
     setMessage(text);
@@ -481,30 +477,6 @@ function MonthPageContent({
       setError(nextError instanceof Error ? nextError.message : "更新失败");
     } finally {
       setStatusBusy(false);
-    }
-  };
-
-  const submitDaily = async (event: FormEvent) => {
-    event.preventDefault();
-    const numericMinutes = Number(minutes || 0);
-    if (!Number.isFinite(numericMinutes) || numericMinutes < 0) {
-      setError("学习时长需要是大于等于 0 的数字。");
-      return;
-    }
-    setDailyBusy(true);
-    setError("");
-    try {
-      await saveDailyLog(month.id, {
-        logDate: dailyDate,
-        minutes: Math.round(numericMinutes),
-        note: note.trim()
-      });
-      window.localStorage.removeItem(`ta-monthly-draft-${month.id}-${dailyDate}`);
-      flash(existingDailyLog ? "今日记录已更新" : "今日打卡已写入");
-    } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : "打卡失败");
-    } finally {
-      setDailyBusy(false);
     }
   };
 
@@ -848,7 +820,7 @@ function MonthPageContent({
             </div>
           </section>
 
-          <section className="panel">
+          <section className="panel" id="daily-record">
             <div className="panel-heading">
               <div>
                 <p className="eyebrow">每日记录</p>
@@ -859,74 +831,25 @@ function MonthPageContent({
                 本月 {formatDuration(monthMinutes)}
               </span>
             </div>
-            {canEdit ? (
-              <form className="daily-form" onSubmit={submitDaily}>
-                <div className="form-grid">
-                  <label className="field">
-                    <FieldLabel>日期</FieldLabel>
-                    <TextInput
-                      type="date"
-                      value={dailyDate}
-                      min={month.startDate}
-                      max={month.endDate}
-                      onChange={(event) => setDailyDate(event.target.value)}
-                      required
-                    />
-                  </label>
-                  <label className="field">
-                    <FieldLabel hint="分钟">学习时长</FieldLabel>
-                    <TextInput
-                      type="number"
-                      min="0"
-                      max="1440"
-                      inputMode="numeric"
-                      value={minutes}
-                      onChange={(event) => setMinutes(event.target.value)}
-                      placeholder="60"
-                    />
-                  </label>
-                </div>
-                <label className="field">
-                  <FieldLabel hint="会显示在公开记录中">今天做了什么 / 卡在哪里</FieldLabel>
-                  <TextArea
-                    rows={3}
-                    value={note}
-                    onChange={(event) => {
-                      setNote(event.target.value);
-                      window.localStorage.setItem(
-                        `ta-monthly-draft-${month.id}-${dailyDate}`,
-                        event.target.value
-                      );
-                    }}
-                    placeholder="例如：完成了纹理采样实验，但切线空间还需要补一补。"
-                  />
-                </label>
-                <div className="form-actions">
-                  <span className="form-hint">
-                    {existingDailyLog
-                      ? "同一天再次保存会更新你的原记录。"
-                      : "打卡和周复盘不会自动完成本月。"}
-                  </span>
-                  <Button disabled={dailyBusy}>
-                    {dailyBusy ? (
-                      <LoaderCircle className="spin" size={17} />
-                    ) : (
-                      <Check size={17} />
-                    )}
-                    {existingDailyLog ? "更新今日记录" : "今日打卡"}
-                  </Button>
-                </div>
-              </form>
-            ) : (
-              <p className="read-only-copy">
-                登录为所有者或编辑者后，可以记录每日投入。
-              </p>
-            )}
+            <DailyCheckInCard
+              month={month}
+              date={dailyDate}
+              showDateField
+              onDateChange={setDailyDate}
+              onMessage={flash}
+              onError={setError}
+            />
 
             {monthLogs.length > 0 && (
               <div className="daily-log-list">
                 {monthLogs.map((log) => (
-                  <article key={log.id} className="daily-log-item">
+                  <article
+                    key={log.id}
+                    className={cn(
+                      "daily-log-item",
+                      log.logDate === dailyDate && "daily-log-item-active"
+                    )}
+                  >
                     <div className="log-date-block">
                       <strong>{formatLogDate(log.logDate)}</strong>
                       <span>{formatDuration(log.minutes)}</span>
@@ -934,6 +857,11 @@ function MonthPageContent({
                     <div>
                       <p>{log.note || "完成今日学习记录"}</p>
                       <small>由 {log.authorName} 记录</small>
+                      <PhotoStrip
+                        attachments={getLogPhotos(bundle.attachments, log.id)}
+                        size="sm"
+                        altPrefix={`${log.logDate} 打卡照片`}
+                      />
                     </div>
                   </article>
                 ))}

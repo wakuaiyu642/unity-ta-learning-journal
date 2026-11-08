@@ -119,6 +119,30 @@ export function getDailyLogForDate(
   );
 }
 
+/**
+ * 该月该日任意成员的第一条打卡；传 userId 时只看这名成员。
+ * 用于公开只读视图（没有当前用户过滤条件时展示当天已有的打卡）。
+ */
+export function getAnyLogForDate(
+  logs: DailyLog[],
+  monthId: string,
+  date: string,
+  userId?: string
+) {
+  return (
+    logs.find(
+      (log) =>
+        log.monthId === monthId &&
+        log.logDate === date &&
+        (userId === undefined || log.userId === userId)
+    ) ?? null
+  );
+}
+
+export function isDateInMonth(month: PlanMonth, date: string) {
+  return date >= month.startDate && date <= month.endDate;
+}
+
 export function getReviewForWeek(
   reviews: WeeklyReview[],
   weekStart: string,

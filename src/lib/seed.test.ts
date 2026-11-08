@@ -168,6 +168,52 @@ describe("growth pipeline seed data", () => {
     expect(merged.portfolio[0].aiAssisted).toBe(true);
   });
 
+  it("normalizes legacy attachments saved before daily check-in photos", () => {
+    const fresh = createSeedBundle();
+    const legacyAttachment = {
+      id: "legacy-attachment",
+      planId: fresh.plan.id,
+      monthId: fresh.months[0].id,
+      storagePath: "local/legacy",
+      fileName: "legacy.png",
+      mimeType: "image/png",
+      sizeBytes: 1024,
+      uploadedBy: "local-demo",
+      url: null,
+      createdAt: "2026-11-08T00:00:00.000Z"
+    };
+    const stale = {
+      ...fresh,
+      attachments: [legacyAttachment]
+    } as unknown as typeof fresh;
+    const merged = mergeSeedFallback(stale);
+    expect(merged.attachments).toHaveLength(1);
+    expect(merged.attachments[0].dailyLogId).toBeNull();
+  });
+
+  it("keeps the daily log link of check-in photos", () => {
+    const fresh = createSeedBundle();
+    const merged = mergeSeedFallback({
+      ...fresh,
+      attachments: [
+        {
+          id: "checkin-photo",
+          planId: fresh.plan.id,
+          monthId: fresh.months[0].id,
+          dailyLogId: "log-1",
+          storagePath: "local/checkin",
+          fileName: "checkin.jpg",
+          mimeType: "image/jpeg",
+          sizeBytes: 2048,
+          uploadedBy: "local-demo",
+          url: null,
+          createdAt: "2026-11-12T00:00:00.000Z"
+        }
+      ]
+    });
+    expect(merged.attachments[0].dailyLogId).toBe("log-1");
+  });
+
   it("finds the first month before the plan starts", () => {
     const relevant = findRelevantMonth(bundle.months, "2026-11-01");
     expect(relevant.state).toBe("upcoming");

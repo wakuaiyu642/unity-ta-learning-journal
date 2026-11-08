@@ -56,6 +56,13 @@ export function mergeSeedFallback(parsed: PlanBundle): PlanBundle {
             perfNotes: item.perfNotes || source.perfNotes
           };
         })
-      : fallback.portfolio
+      : fallback.portfolio,
+    // dailyLogId 是打卡照片迁移新增字段，旧缓存里的附件没有它。
+    attachments: Array.isArray(parsed.attachments)
+      ? parsed.attachments.map((attachment) => ({
+          ...attachment,
+          dailyLogId: attachment.dailyLogId ?? null
+        }))
+      : fallback.attachments
   };
 }

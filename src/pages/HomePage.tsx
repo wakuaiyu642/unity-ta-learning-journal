@@ -1,5 +1,6 @@
 import {
   ArrowRight,
+  CalendarCheck,
   CalendarDays,
   Compass,
   ExternalLink,
@@ -13,19 +14,24 @@ import {
   Pencil,
   Target
 } from "lucide-react";
+import { differenceInCalendarDays, format, parseISO } from "date-fns";
 import { Link } from "react-router-dom";
-import { WorkVisual } from "../components/WorkVisual";
+import { CheckInCalendar } from "../components/CheckInCalendar";
+import { DailyCheckInCard } from "../components/DailyCheckInCard";
 import { useApp } from "../context/AppContext";
+import { getCheckInState } from "../lib/checkin";
 import { SITE } from "../lib/config";
-import { findRelevantMonth, getPlanStats } from "../lib/date";
-import { useDocumentMeta } from "../lib/meta";
 import {
-  cn,
-  evidenceLabels,
-  getInitials,
-  skillLevelLabels
-} from "../lib/utils";
-import type { EvidenceLevel, PlanBundle, ProfileSkillLevel } from "../types";
+  findRelevantMonth,
+  formatDuration,
+  getCheckInStreak,
+  getMonthLogs,
+  getPlanStats,
+  todayInShanghai
+} from "../lib/date";
+import { useDocumentMeta } from "../lib/meta";
+import { cn, getInitials, skillLevelLabels } from "../lib/utils";
+import type { PlanBundle, ProfileSkillLevel } from "../types";
 
 function SkillBadge({ level }: { level: ProfileSkillLevel }) {
   return (
@@ -33,18 +39,6 @@ function SkillBadge({ level }: { level: ProfileSkillLevel }) {
       {skillLevelLabels[level]}
     </span>
   );
-}
-
-function EvidenceBadge({ level }: { level: EvidenceLevel }) {
-  return (
-    <span className={cn("evidence-badge", `evidence-${level}`)}>
-      完成度：{evidenceLabels[level]}
-    </span>
-  );
-}
-
-function isWorkItem(code: string) {
-  return /^作品\s*\d+/.test(code || "");
 }
 
 export function HomePage() {
@@ -66,9 +60,27 @@ function HomePageContent({ bundle }: { bundle: PlanBundle }) {
   const month = relevant.month;
   const phase = bundle.phases.find((item) => item.id === month.stageId);
   const stats = getPlanStats(bundle);
-  const works = bundle.portfolio.filter((item) => isWorkItem(item.code));
-  const publishedWorks = works.filter((item) => item.published);
-  const featured = (publishedWorks.length ? publishedWorks : works).slice(0, 4);
+  const today = todayInShanghai();
+  const checkInState = getCheckInState(bundle.plan);
+  const streak = getCheckInStreak(bundle.dailyLogs);
+  const todayMinutes = bundle.dailyLogs
+    .filter((log) => log.logDate === today)
+    .reduce((sum, log) => sum + log.minutes, 0);
+  const monthLogs = getMonthLogs(bundle.dailyLogs, month.id);
+  const monthCheckInDays = new Set(monthLogs.map((log) => log.logDate)).size;
+  const monthMinutes = monthLogs.reduce((sum, log) => sum + log.minutes, 0);
+  const daysUntilStart = Math.max(
+    0,
+    differenceInCalendarDays(parseISO(bundle.plan.startDate), parseISO(today))
+  );
+  const heroCheckInLine =
+    checkInState === "before_start"
+      ? `打卡从 ${format(parseISO(bundle.plan.startDate), "M月d日")} 开始 · 还有 ${daysUntilStart} 天`
+      : checkInState === "ended"
+        ? `计划已结束 · 累计投入 ${formatDuration(stats.totalMinutes)}`
+        : todayMinutes > 0
+          ? `今天已打卡 ${todayMinutes} 分钟${streak > 0 ? ` · 连续 ${streak} 天` : ""}`
+          : `今天还没打卡${streak > 0 ? ` · 连续 ${streak} 天` : ""}`;
   const contactEmail = profile.links.showEmail ? profile.links.email : "";
   const initials =
     profile.displayName.length > 0 && profile.displayName.length <= 2
@@ -134,6 +146,9 @@ function HomePageContent({ bundle }: { bundle: PlanBundle }) {
             <Link to={`${base}/portfolio`} className="button button-primary">
               查看作品集 <ArrowRight size={17} />
             </Link>
+            <a className="button button-on-dark" href="#daily-checkin">
+              <CalendarCheck size={16} /> 去打卡
+            </a>
             {profile.links.resumeUrl && (
               <a
                 className="button button-on-dark"
@@ -192,6 +207,10 @@ function HomePageContent({ bundle }: { bundle: PlanBundle }) {
               <span>{phase?.title ?? "成长计划"}</span>
               <strong>{stats.completionPercent}%</strong>
             </div>
+            <a className="home-focus-checkin" href="#daily-checkin">
+              <CalendarDays size={16} />
+              <span>{heroCheckInLine}</span>
+            </a>
             <div className="form-actions">
               <Link to={`${base}/portfolio`} className="text-link">
                 作品集 <ArrowRight size={15} />
@@ -201,6 +220,82 @@ function HomePageContent({ bundle }: { bundle: PlanBundle }) {
               </Link>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="panel home-checkin" id="daily-checkin">
+        <div className="home-checkin-heading">
+          <div>
+            <p className="eyebrow">每日打卡</p>
+            <h2>今天学了多少，留下证据</h2>
+            <p className="home-checkin-lede">
+              每天记录学习时长、卡点和打卡照片。打卡只记录过程，不会自动完成本月。
+            </p>
+          </div>
+          <div className="home-checkin-stats">
+            <span>
+              <strong>{streak}</strong> 连续天数
+            </span>
+            <span>
+              <strong>{monthCheckInDays}</strong> 本月打卡
+            </span>
+            <span>
+              <strong>{formatDuration(monthMinutes)}</strong> 本月时长
+            </span>
+          </div>
+        </div>
+        <div className="home-checkin-grid">
+          {checkInState === "active" ? (
+            <DailyCheckInCard month={month} date={today} />
+          ) : (
+            <div
+              className={cn(
+                "checkin-locked",
+                checkInState === "ended" && "checkin-locked-ended"
+              )}
+            >
+              {checkInState === "before_start" ? (
+                <>
+                  <span className="checkin-locked-icon">
+                    <CalendarDays size={22} />
+                  </span>
+                  <p className="eyebrow">开营倒计时</p>
+                  <h3>
+                    计划 {format(parseISO(bundle.plan.startDate), "M月d日")} 开始
+                  </h3>
+                  <div className="checkin-locked-count">
+                    <strong>{daysUntilStart}</strong>
+                    <span>天后开营</span>
+                  </div>
+                  <p>开营前可以先回顾计划，打卡表单会在开营后出现。</p>
+                  <p className="quiet-copy">
+                    日历已经可以查看：开营后每天都能在这里留下记录。
+                  </p>
+                </>
+              ) : (
+                <>
+                  <span className="checkin-locked-icon">
+                    <LockKeyhole size={22} />
+                  </span>
+                  <p className="eyebrow">只读</p>
+                  <h3>计划已结束</h3>
+                  <p>
+                    计划周期已走完，打卡记录和照片保留为只读，不再接受新的打卡。
+                  </p>
+                  <p className="quiet-copy">
+                    累计投入 {formatDuration(stats.totalMinutes)}，完成{" "}
+                    {stats.completedMonths} / {stats.totalMonths} 个月验收。
+                  </p>
+                </>
+              )}
+            </div>
+          )}
+          <CheckInCalendar
+            months={bundle.months}
+            logs={bundle.dailyLogs}
+            attachments={bundle.attachments}
+            initialMonthId={month.id}
+          />
         </div>
       </section>
 
@@ -247,80 +342,6 @@ function HomePageContent({ bundle }: { bundle: PlanBundle }) {
             {profile.selfPositioning}
           </p>
         </div>
-      </section>
-
-      <section className="panel home-works">
-        <div className="panel-heading compact">
-          <div>
-            <p className="eyebrow">精选作品</p>
-            <h2>能展示的学习成果</h2>
-          </div>
-          <Link to={`${base}/portfolio`} className="text-link">
-            查看全部 <ArrowRight size={16} />
-          </Link>
-        </div>
-        {featured.length ? (
-          <div className="home-work-grid">
-            {featured.map((item, index) => (
-              <article className="home-work-card" key={item.id}>
-                <div className="home-work-cover">
-                  {item.coverUrl ? (
-                    <img src={item.coverUrl} alt={item.title} />
-                  ) : (
-                    <WorkVisual
-                      code={item.code}
-                      index={index}
-                      title={item.title}
-                      className="home-work-cover-img"
-                    />
-                  )}
-                  <EvidenceBadge level={item.evidenceLevel} />
-                  {item.aiAssisted && (
-                    <span className="ai-badge">AI 辅助</span>
-                  )}
-                </div>
-                <div className="home-work-body">
-                  <h3>{item.title}</h3>
-                  <p>{item.summary}</p>
-                  {item.techStack.length > 0 && (
-                    <div className="tech-stack">
-                      {item.techStack.slice(0, 5).map((tech) => (
-                        <span key={tech}>{tech}</span>
-                      ))}
-                    </div>
-                  )}
-                  {(item.demoUrl || item.repoUrl) && (
-                    <div className="portfolio-links">
-                      {item.demoUrl && (
-                        <a href={item.demoUrl} target="_blank" rel="noreferrer">
-                          <ExternalLink size={15} /> 演示
-                        </a>
-                      )}
-                      {item.repoUrl && (
-                        <a href={item.repoUrl} target="_blank" rel="noreferrer">
-                          <GitBranch size={15} /> 源码
-                        </a>
-                      )}
-                    </div>
-                  )}
-                  <Link to={`${base}/portfolio`} className="text-link">
-                    作品集详情 <ArrowRight size={14} />
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <div className="empty-state">
-            <h3>作品整理中</h3>
-            <p>作品集正在准备中，稍后会在作品页公开。</p>
-          </div>
-        )}
-        {!publishedWorks.length && works.length > 0 && (
-          <p className="home-works-note">
-            以上为学习中项目，完成度与 AI 辅助情况已如实标注。
-          </p>
-        )}
       </section>
 
       <section className="panel home-skills">

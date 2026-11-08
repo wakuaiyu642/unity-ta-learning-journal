@@ -42,8 +42,10 @@ import {
   saveLocalBundle
 } from "../lib/local-store";
 import { deleteLocalFile, saveLocalFile } from "../lib/local-files";
+import { compressImageFile } from "../lib/images";
 import type {
   Attachment,
+  DailyLog,
   DailyLogInput,
   MonthPatch,
   PlanBundle,
@@ -73,9 +75,14 @@ interface AppContextValue {
   setDemoEditing: (enabled: boolean) => void;
   refresh: () => Promise<void>;
   updateMonth: (monthId: string, patch: MonthPatch) => Promise<void>;
-  saveDailyLog: (monthId: string, input: DailyLogInput) => Promise<void>;
+  saveDailyLog: (monthId: string, input: DailyLogInput) => Promise<DailyLog>;
   saveWeeklyReview: (input: WeeklyReviewInput) => Promise<void>;
   uploadAttachment: (monthId: string, file: File) => Promise<void>;
+  uploadDailyPhoto: (
+    monthId: string,
+    dailyLogId: string,
+    file: File
+  ) => Promise<Attachment>;
   deleteAttachment: (attachment: Attachment) => Promise<void>;
   updatePortfolio: (itemId: string, patch: PortfolioPatch) => Promise<void>;
   saveProfile: (patch: ProfilePatch) => Promise<void>;
@@ -306,45 +313,44 @@ export function AppProvider({ children }: { children: ReactNode }) {
   );
 
   const saveDailyLog = useCallback(
-    async (monthId: string, input: DailyLogInput) => {
+    async (monthId: string, input: DailyLogInput): Promise<DailyLog> => {
       const validInput = validateDailyLog(input);
       if (cloudConfigured) {
-        await upsertCloudDailyLog(
+        const saved = await upsertCloudDailyLog(
           bundle!.plan.id,
           monthId,
           validInput,
           authorNameFromSession(session)
         );
         await refresh();
-        return;
+        return saved;
       }
-      mutateLocal((current) => {
-        const existing = current.dailyLogs.find(
-          (log) =>
-            log.monthId === monthId &&
-            log.logDate === validInput.logDate &&
-            log.userId === "local-demo"
-        );
-        const next = {
-          id: existing?.id ?? crypto.randomUUID(),
-          planId: current.plan.id,
-          monthId,
-          userId: "local-demo",
-          logDate: validInput.logDate,
-          minutes: validInput.minutes,
-          note: validInput.note,
-          authorName: "本地访客",
-          createdAt: existing?.createdAt ?? new Date().toISOString()
-        };
-        return {
-          ...current,
-          dailyLogs: existing
-            ? current.dailyLogs.map((log) => (log.id === existing.id ? next : log))
-            : [...current.dailyLogs, next]
-        };
-      });
+      const existing = bundle?.dailyLogs.find(
+        (log) =>
+          log.monthId === monthId &&
+          log.logDate === validInput.logDate &&
+          log.userId === "local-demo"
+      );
+      const saved: DailyLog = {
+        id: existing?.id ?? crypto.randomUUID(),
+        planId: bundle!.plan.id,
+        monthId,
+        userId: "local-demo",
+        logDate: validInput.logDate,
+        minutes: validInput.minutes,
+        note: validInput.note,
+        authorName: "本地访客",
+        createdAt: existing?.createdAt ?? new Date().toISOString()
+      };
+      mutateLocal((current) => ({
+        ...current,
+        dailyLogs: existing
+          ? current.dailyLogs.map((log) => (log.id === saved.id ? saved : log))
+          : [...current.dailyLogs, saved]
+      }));
+      return saved;
     },
-    [bundle?.plan.id, mutateLocal, refresh, session]
+    [bundle?.dailyLogs, bundle?.plan.id, mutateLocal, refresh, session]
   );
 
   const saveWeeklyReview = useCallback(
@@ -405,6 +411,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
             id,
             planId: current.plan.id,
             monthId,
+            dailyLogId: null,
             storagePath,
             fileName: file.name,
             mimeType: file.type,
@@ -416,6 +423,44 @@ export function AppProvider({ children }: { children: ReactNode }) {
           ...current.attachments
         ]
       }));
+    },
+    [bundle?.plan.id, mutateLocal, refresh]
+  );
+
+  const uploadDailyPhoto = useCallback(
+    async (monthId: string, dailyLogId: string, file: File) => {
+      const compressed = await compressImageFile(file);
+      if (cloudConfigured) {
+        const attachment = await uploadCloudAttachment(
+          bundle!.plan.id,
+          monthId,
+          compressed,
+          dailyLogId
+        );
+        await refresh();
+        return attachment;
+      }
+      const id = crypto.randomUUID();
+      const storagePath = `local/${id}`;
+      await saveLocalFile(storagePath, compressed);
+      const attachment: Attachment = {
+        id,
+        planId: bundle!.plan.id,
+        monthId,
+        dailyLogId,
+        storagePath,
+        fileName: compressed.name,
+        mimeType: compressed.type,
+        sizeBytes: compressed.size,
+        uploadedBy: "local-demo",
+        url: null,
+        createdAt: new Date().toISOString()
+      };
+      mutateLocal((current) => ({
+        ...current,
+        attachments: [attachment, ...current.attachments]
+      }));
+      return attachment;
     },
     [bundle?.plan.id, mutateLocal, refresh]
   );
@@ -555,6 +600,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       saveDailyLog,
       saveWeeklyReview,
       uploadAttachment,
+      uploadDailyPhoto,
       deleteAttachment,
       updatePortfolio,
       saveProfile,
@@ -591,6 +637,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       updateMonth,
       updatePortfolio,
       uploadAttachment,
+      uploadDailyPhoto,
       uploadProfileAsset
     ]
   );

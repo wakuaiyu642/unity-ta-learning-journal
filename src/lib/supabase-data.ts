@@ -29,6 +29,31 @@ function requireClient() {
   return supabase;
 }
 
+const DAILY_LOG_COLUMN_HINT =
+  "照片功能需要先在 Supabase 执行 202611080003 迁移（daily_log_id 字段）。";
+
+function describeCloudError(error: unknown) {
+  if (!error) return "";
+  if (typeof error === "string") return error;
+  const record = error as Record<string, unknown>;
+  return [record.code, record.message, record.details, record.hint]
+    .filter((value): value is string => typeof value === "string")
+    .join(" ");
+}
+
+/** 未执行 202611080003 迁移时，PostgREST 会报 PGRST204 / 找不到 daily_log_id 列。 */
+function isDailyLogColumnError(error: unknown) {
+  const text = describeCloudError(error);
+  return text.includes("PGRST204") || text.includes("daily_log_id");
+}
+
+function rethrowDailyLogColumnError(error: unknown) {
+  if (isDailyLogColumnError(error)) {
+    throw new Error(DAILY_LOG_COLUMN_HINT, { cause: error });
+  }
+  throw error;
+}
+
 function mapPlan(row: CloudRow, phases: PlanPhase[]): Plan {
   return {
     id: String(row.id),
@@ -178,6 +203,7 @@ function mapAttachment(row: CloudRow): Attachment {
     id: String(row.id),
     planId: String(row.plan_id),
     monthId: String(row.month_id),
+    dailyLogId: row.daily_log_id ? String(row.daily_log_id) : null,
     storagePath,
     fileName: String(row.file_name),
     mimeType: String(row.mime_type),
@@ -435,7 +461,8 @@ export async function upsertCloudWeeklyReview(
 export async function uploadCloudAttachment(
   planId: string,
   monthId: string,
-  file: File
+  file: File,
+  dailyLogId?: string | null
 ) {
   const client = requireClient();
   const {
@@ -451,24 +478,29 @@ export async function uploadCloudAttachment(
       upsert: false,
       cacheControl: "3600"
     });
-  if (uploadError) throw uploadError;
+  if (uploadError) rethrowDailyLogColumnError(uploadError);
+
+  const payload: Record<string, unknown> = {
+    id,
+    plan_id: planId,
+    month_id: monthId,
+    week_id: null,
+    storage_path: path,
+    file_name: file.name,
+    mime_type: file.type,
+    size_bytes: file.size,
+    uploaded_by: user.id
+  };
+  // 只有打卡照片（显式传入 dailyLogId）才写 daily_log_id 字段：
+  // 未执行 202611080003 迁移时，旧的月度附件上传不应因此失败。
+  if (dailyLogId !== undefined) payload.daily_log_id = dailyLogId;
 
   const { data, error } = await client
     .from("attachments")
-    .insert({
-      id,
-      plan_id: planId,
-      month_id: monthId,
-      week_id: null,
-      storage_path: path,
-      file_name: file.name,
-      mime_type: file.type,
-      size_bytes: file.size,
-      uploaded_by: user.id
-    })
+    .insert(payload)
     .select()
     .single();
-  if (error) throw error;
+  if (error) rethrowDailyLogColumnError(error);
   return mapAttachment(data as CloudRow);
 }
 
