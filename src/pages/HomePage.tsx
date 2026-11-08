@@ -14,16 +14,18 @@ import {
   Pencil,
   Target
 } from "lucide-react";
-import { differenceInCalendarDays, format, parseISO } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { Link } from "react-router-dom";
 import { CheckInCalendar } from "../components/CheckInCalendar";
 import { DailyCheckInCard } from "../components/DailyCheckInCard";
+import { PhotoStrip } from "../components/PhotoStrip";
 import { useApp } from "../context/AppContext";
-import { getCheckInState } from "../lib/checkin";
+import { getCheckInState, getLogPhotos } from "../lib/checkin";
 import { SITE } from "../lib/config";
 import {
   findRelevantMonth,
   formatDuration,
+  formatLogDate,
   getCheckInStreak,
   getMonthLogs,
   getPlanStats,
@@ -69,18 +71,12 @@ function HomePageContent({ bundle }: { bundle: PlanBundle }) {
   const monthLogs = getMonthLogs(bundle.dailyLogs, month.id);
   const monthCheckInDays = new Set(monthLogs.map((log) => log.logDate)).size;
   const monthMinutes = monthLogs.reduce((sum, log) => sum + log.minutes, 0);
-  const daysUntilStart = Math.max(
-    0,
-    differenceInCalendarDays(parseISO(bundle.plan.startDate), parseISO(today))
-  );
   const heroCheckInLine =
-    checkInState === "before_start"
-      ? `打卡从 ${format(parseISO(bundle.plan.startDate), "M月d日")} 开始 · 还有 ${daysUntilStart} 天`
-      : checkInState === "ended"
-        ? `计划已结束 · 累计投入 ${formatDuration(stats.totalMinutes)}`
-        : todayMinutes > 0
-          ? `今天已打卡 ${todayMinutes} 分钟${streak > 0 ? ` · 连续 ${streak} 天` : ""}`
-          : `今天还没打卡${streak > 0 ? ` · 连续 ${streak} 天` : ""}`;
+    checkInState === "ended"
+      ? `计划已结束 · 累计投入 ${formatDuration(stats.totalMinutes)}`
+      : todayMinutes > 0
+        ? `今天已打卡 ${todayMinutes} 分钟${streak > 0 ? ` · 连续 ${streak} 天` : ""}`
+        : `今天还没打卡${streak > 0 ? ` · 连续 ${streak} 天` : " · 去记一笔"}`;
   const contactEmail = profile.links.showEmail ? profile.links.email : "";
   const initials =
     profile.displayName.length > 0 && profile.displayName.length <= 2
@@ -231,6 +227,11 @@ function HomePageContent({ bundle }: { bundle: PlanBundle }) {
             <p className="home-checkin-lede">
               每天记录学习时长、卡点和打卡照片。打卡只记录过程，不会自动完成本月。
             </p>
+            {checkInState === "before_start" && (
+              <p className="home-checkin-note">
+                计划 {format(parseISO(bundle.plan.startDate), "M月d日")} 正式开始；今天想学也可以先记一笔。
+              </p>
+            )}
           </div>
           <div className="home-checkin-stats">
             <span>
@@ -245,50 +246,23 @@ function HomePageContent({ bundle }: { bundle: PlanBundle }) {
           </div>
         </div>
         <div className="home-checkin-grid">
-          {checkInState === "active" ? (
-            <DailyCheckInCard month={month} date={today} />
-          ) : (
-            <div
-              className={cn(
-                "checkin-locked",
-                checkInState === "ended" && "checkin-locked-ended"
-              )}
-            >
-              {checkInState === "before_start" ? (
-                <>
-                  <span className="checkin-locked-icon">
-                    <CalendarDays size={22} />
-                  </span>
-                  <p className="eyebrow">开营倒计时</p>
-                  <h3>
-                    计划 {format(parseISO(bundle.plan.startDate), "M月d日")} 开始
-                  </h3>
-                  <div className="checkin-locked-count">
-                    <strong>{daysUntilStart}</strong>
-                    <span>天后开营</span>
-                  </div>
-                  <p>开营前可以先回顾计划，打卡表单会在开营后出现。</p>
-                  <p className="quiet-copy">
-                    日历已经可以查看：开营后每天都能在这里留下记录。
-                  </p>
-                </>
-              ) : (
-                <>
-                  <span className="checkin-locked-icon">
-                    <LockKeyhole size={22} />
-                  </span>
-                  <p className="eyebrow">只读</p>
-                  <h3>计划已结束</h3>
-                  <p>
-                    计划周期已走完，打卡记录和照片保留为只读，不再接受新的打卡。
-                  </p>
-                  <p className="quiet-copy">
-                    累计投入 {formatDuration(stats.totalMinutes)}，完成{" "}
-                    {stats.completedMonths} / {stats.totalMonths} 个月验收。
-                  </p>
-                </>
-              )}
+          {checkInState === "ended" ? (
+            <div className="checkin-locked checkin-locked-ended">
+              <span className="checkin-locked-icon">
+                <LockKeyhole size={22} />
+              </span>
+              <p className="eyebrow">只读</p>
+              <h3>计划已结束</h3>
+              <p>
+                计划周期已走完，打卡记录和照片保留为只读，不再接受新的打卡。
+              </p>
+              <p className="quiet-copy">
+                累计投入 {formatDuration(stats.totalMinutes)}，完成{" "}
+                {stats.completedMonths} / {stats.totalMonths} 个月验收。
+              </p>
             </div>
+          ) : (
+            <DailyCheckInCard month={month} date={today} />
           )}
           <CheckInCalendar
             months={bundle.months}
@@ -297,6 +271,46 @@ function HomePageContent({ bundle }: { bundle: PlanBundle }) {
             initialMonthId={month.id}
           />
         </div>
+        <section className="home-checkin-records" aria-label="每日记录">
+          <div className="home-checkin-records-head">
+            <div>
+              <p className="eyebrow">每日记录</p>
+              <h3>最近打卡</h3>
+            </div>
+            <span className="quiet-copy">
+              本月 {monthCheckInDays} 天 · {monthLogs.length} 条记录
+            </span>
+          </div>
+          {monthLogs.length > 0 ? (
+            <div className="daily-log-list">
+              {monthLogs.slice(0, 7).map((log) => (
+                <article className="daily-log-item" key={log.id}>
+                  <div className="log-date-block">
+                    <strong>{formatLogDate(log.logDate)}</strong>
+                    <span>{formatDuration(log.minutes)}</span>
+                  </div>
+                  <div>
+                    <p>{log.note || "完成今日学习记录"}</p>
+                    <small>由 {log.authorName} 记录</small>
+                    <PhotoStrip
+                      attachments={getLogPhotos(bundle.attachments, log.id)}
+                      size="sm"
+                      altPrefix={`${log.logDate} 打卡照片`}
+                    />
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <p className="quiet-copy">本月还没有每日记录，今天开始记一笔。</p>
+          )}
+          <Link
+            to={`${base}/months/${month.monthKey}#daily-record`}
+            className="text-link"
+          >
+            查看本月全部记录 <ArrowRight size={15} />
+          </Link>
+        </section>
       </section>
 
       <section className="panel home-about">

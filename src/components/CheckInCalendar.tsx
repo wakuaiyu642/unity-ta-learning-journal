@@ -81,10 +81,29 @@ export function CheckInCalendar({
     return map;
   }, [logs]);
   const today = todayInShanghai();
+  const monthLogs = useMemo(
+    () => logs.filter((log) => log.monthId === month?.id),
+    [logs, month?.id]
+  );
   const cells = useMemo<CalendarCell[]>(() => {
     if (!month) return [];
     const result: CalendarCell[] = [];
-    const first = parseISO(month.startDate);
+    // 首月开营前允许把今天（同自然月）和已存在的开营前记录显示在日历里。
+    const earliestPreStartLog = monthLogs.reduce<string | null>(
+      (earliest, log) =>
+        log.logDate < month.startDate &&
+        (!earliest || log.logDate < earliest)
+          ? log.logDate
+          : earliest,
+      null
+    );
+    const todayInSameMonth =
+      today.slice(0, 7) === month.monthKey ? today : null;
+    const firstDate =
+      [month.startDate, earliestPreStartLog, todayInSameMonth]
+        .filter((value): value is string => Boolean(value))
+        .sort()[0] ?? month.startDate;
+    const first = parseISO(firstDate);
     const last = parseISO(month.endDate);
     const leadingBlanks = (first.getDay() + 6) % 7;
     for (let index = 0; index < leadingBlanks; index += 1) {
@@ -115,7 +134,7 @@ export function CheckInCalendar({
       });
     }
     return result;
-  }, [month, logsByDate, today]);
+  }, [month, monthLogs, logsByDate, today]);
 
   if (!month) return null;
 

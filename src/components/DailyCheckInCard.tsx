@@ -17,6 +17,7 @@ import {
   formatDuration,
   formatLogDate,
   getAnyLogForDate,
+  getCheckInDateFloor,
   getDailyLogForDate
 } from "../lib/date";
 import { cn } from "../lib/utils";
@@ -336,7 +337,7 @@ export function DailyCheckInCard({
               <TextInput
                 type="date"
                 value={date}
-                min={month.startDate}
+                min={getCheckInDateFloor(month)}
                 max={month.endDate}
                 onChange={(event) => onDateChange?.(event.target.value)}
                 required

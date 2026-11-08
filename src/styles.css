@@ -5801,3 +5801,41 @@ p {
     font-size: 38px;
   }
 }
+
+/* ---------- 首页每日记录列表 ---------- */
+
+.home-checkin-note {
+  margin: 7px 0 0;
+  color: var(--ink-faint);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.home-checkin-records {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.home-checkin-records-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px 18px;
+}
+
+.home-checkin-records-head h3 {
+  margin: 4px 0 0;
+  font-size: 17px;
+}
+
+.home-checkin-records .daily-log-list {
+  margin: 0;
+}
+
+.home-checkin-records > .text-link {
+  justify-self: start;
+}

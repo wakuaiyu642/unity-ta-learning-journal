@@ -157,9 +157,29 @@ export function getReviewForWeek(
 
 export function getSuggestedLogDate(month: PlanMonth) {
   const today = todayInShanghai();
-  if (today < month.startDate) return month.startDate;
+  if (today < month.startDate) {
+    // 首月开营前如果今天与该月同属一个自然月，允许先记录今天。
+    return month.monthKey === today.slice(0, 7) ? today : month.startDate;
+  }
   if (today > month.endDate) return month.endDate;
   return today;
+}
+
+/** 打卡日期下界：首月如果从月中开始，允许整个自然月提前记录（如计划 11-09 开始，11-08 也能先记）。 */
+export function getCheckInDateFloor(month: PlanMonth) {
+  const monthFirstDay = `${month.monthKey}-01`;
+  if (
+    month.startDate.slice(0, 7) === month.monthKey &&
+    month.startDate > monthFirstDay
+  ) {
+    return monthFirstDay;
+  }
+  return month.startDate;
+}
+
+/** 打卡日期是否允许（下界到月末），用于月页 ?date= 与日期输入。 */
+export function isCheckInDate(month: PlanMonth, date: string) {
+  return date >= getCheckInDateFloor(month) && date <= month.endDate;
 }
 
 export function getCurrentWeekStart(month: PlanMonth) {

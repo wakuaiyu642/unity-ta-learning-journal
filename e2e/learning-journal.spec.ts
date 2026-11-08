@@ -233,6 +233,54 @@ test("homepage check-in saves text and photo, then opens the monthly record", as
   await expect(activeLog.locator(".photo-thumb img")).toBeVisible();
 });
 
+test("homepage check-in works before the plan starts on 2026-11-08", async ({
+  page
+}) => {
+  // 开营前一天（2026-11-08）也应该能在首页打卡，而不是只显示倒计时。
+  await page.clock.setFixedTime(new Date("2026-11-08T02:00:00Z"));
+  await page.reload();
+
+  const homeCheckin = page.locator(".home-checkin");
+  await expect(homeCheckin).toBeVisible();
+  await expect(homeCheckin.locator("form")).toHaveCount(0);
+  await expect(page.locator(".home-checkin-note")).toContainText("11月9日");
+
+  await page.getByRole("button", { name: "开始体验" }).click();
+  await expect(homeCheckin.locator("form")).toBeVisible();
+
+  await page.getByLabel("学习时长").fill("45");
+  await page
+    .getByLabel(/今天做了什么/)
+    .fill("开营前先记录：完成 Unity 阴影基础练习。");
+  await page.getByRole("button", { name: "今日打卡" }).click();
+  await expect(page.getByText("今日打卡已写入")).toBeVisible();
+
+  const todayCell = page.locator('.calendar-day[data-date="2026-11-08"]');
+  await expect(todayCell).toHaveClass(/is-checked/);
+  await expect(todayCell.locator(".calendar-day-dot")).toBeVisible();
+  await expect(page.locator(".home-checkin-records")).toContainText(
+    "开营前先记录：完成 Unity 阴影基础练习。"
+  );
+
+  await page.reload();
+  await expect(page.locator(".home-checkin-records")).toContainText(
+    "开营前先记录：完成 Unity 阴影基础练习。"
+  );
+
+  await page.locator('.calendar-day[data-date="2026-11-08"]').click();
+  await expect(page.locator(".checkin-day-detail")).toContainText(
+    "开营前先记录：完成 Unity 阴影基础练习。"
+  );
+  await page.getByRole("link", { name: /在月度记录中查看/ }).click();
+  await expect(page).toHaveURL(
+    /\/plans\/unity-ta\/months\/2026-11\?date=2026-11-08#daily-record$/
+  );
+  await expect(page.getByLabel("日期")).toHaveValue("2026-11-08");
+  await expect(page.locator(".daily-log-item-active")).toContainText(
+    "开营前先记录：完成 Unity 阴影基础练习。"
+  );
+});
+
 test("portfolio edits, attachments and roadmap stay inside the viewport", async ({
   page
 }) => {

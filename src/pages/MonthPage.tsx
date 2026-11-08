@@ -42,7 +42,7 @@ import {
   getMonthWeekSlots,
   getReviewForWeek,
   getSuggestedLogDate,
-  isDateInMonth,
+  isCheckInDate,
   todayInShanghai
 } from "../lib/date";
 import { downloadLocalFile } from "../lib/local-files";
@@ -431,7 +431,7 @@ function MonthPageContent({
   const validDateParam =
     requestedDate &&
     /^\d{4}-\d{2}-\d{2}$/.test(requestedDate) &&
-    isDateInMonth(month, requestedDate)
+    isCheckInDate(month, requestedDate)
       ? requestedDate
       : null;
   const [statusBusy, setStatusBusy] = useState(false);
